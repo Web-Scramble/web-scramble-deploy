@@ -5,6 +5,7 @@ interface AuthState {
   token: string;
   user:User;
   updateToken: (newToken: string) => void;
+  updateUser: (newUser: User) => void;
 }
 export const authStore = create<AuthState>()((set) => ({
   token: "",
@@ -14,6 +15,8 @@ export const authStore = create<AuthState>()((set) => ({
     email: "",
     phone:"",
     balance:"",
+    profile_picture:""
   },
-  updateToken: (by) => set((state) => ({ token: by })),
+  updateToken: (by) => set(() => ({ token: by })),
+  updateUser: (by) => set(() => ({ user: by })),
 }));

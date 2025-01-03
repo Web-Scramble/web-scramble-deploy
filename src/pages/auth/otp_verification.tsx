@@ -32,7 +32,7 @@ const OTPVerification = () => {
   const { phone } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const {token,updateToken} = authStore()
+  const {updateToken,updateUser} = authStore()
 
 
   const validateOtpMutation = useMutation({
@@ -51,7 +51,7 @@ const OTPVerification = () => {
         console.log(data)
         setItemToLocalStorage("USER_DATA", data.user);
         updateToken(data.token)
-        console.log(token,"otp verification")
+        updateUser(data.user)
         navigate("/challenge")
       }
       // navigate(`/otp/${phone}`)
@@ -74,7 +74,6 @@ const OTPVerification = () => {
       toast({
         description: "OTP sent",
       });
-      navigate(`/username/${phone}`)
     },
     onError: (error) => {
       toast({
@@ -147,6 +146,7 @@ const OTPVerification = () => {
             <Button
               variant="link"
               className="p-0 h-auto text-primary hover:text-primary/80"
+              onClick={() => sendOtpMutation.mutate(phone)}
             >
               Resend code
             </Button>

@@ -97,18 +97,6 @@ const ProfilePage = () => {
                     <Calendar className="h-4 w-4 mr-1" />
                     Joined March 2023
                   </div>
-                  <div className="flex items-center">
-                    <LinkIcon className="h-4 w-4 mr-1" />
-                    <a href="#" className="text-primary">portfolio.com</a>
-                  </div>
-                  <div className="flex gap-2">
-                    <Button variant="ghost" size="icon">
-                      <Twitter className="h-4 w-4" />
-                    </Button>
-                    <Button variant="ghost" size="icon">
-                      <Github className="h-4 w-4" />
-                    </Button>
-                  </div>
                 </div>
               </div>
             </CardContent>

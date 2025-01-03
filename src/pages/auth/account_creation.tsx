@@ -27,7 +27,7 @@ const UsernameSetup = () => {
   const { phone } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const { updateToken } = authStore();
+  const { updateToken,updateUser } = authStore();
 
   const handleUserCreation = (values: UserCreationInputs) => {
     createUserMutation.mutate({
@@ -49,6 +49,7 @@ const UsernameSetup = () => {
       if (data.message === "Registration successful") {
         setItemToLocalStorage("USER_DATA", data.user);
         updateToken(data.token);
+        updateUser(data.user)
         navigate(`/challenge`);
       } 
     },

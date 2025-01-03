@@ -23,10 +23,14 @@ import { Inputs } from "@/types/authentication";
 import { useToast } from "@/hooks/use-toast";
 import { LoadingSpinner } from "@/components/ui/shared/loader";
 import { useNavigate } from "react-router";
+import { setItemToLocalStorage } from "@/services/localStorage";
+import { authStore } from "@/store/authstore";
 
 const AuthPage = () => {
   const navigate = useNavigate();
   const [phone, setPhone] = useState("");
+  const {updateToken,updateUser} = authStore()
+  
   const sendOtpMutation = useMutation({
     mutationFn: sendOtp,
     mutationKey: ["sendOtp"],
@@ -53,10 +57,14 @@ const AuthPage = () => {
       // Invalidate and refetch
       // queryClient.invalidateQueries({ queryKey: ['todos'] })
       toast({
-        description: "Your OTP has been sent.",
+        description: "Signup Successfull",
       });
       console.log(data)
-      // navigate(`/otp/${phone}`);
+        setItemToLocalStorage("USER_DATA", data.user);
+        updateToken(data.token)
+        updateUser(data.user)
+        navigate("/challenge")
+      
     },
     onError: (error) => {
       toast({
@@ -96,9 +104,9 @@ const AuthPage = () => {
       const token = credential.accessToken;
       const user = result.user;
       console.log(user, token);
-      socialAuthMutation.mutate({
-        token:token
-      })
+      auth?.currentUser?.getIdToken(/* forceRefresh */ true).then((idToken)=> socialAuthMutation.mutate({
+        token:idToken
+      }))
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {

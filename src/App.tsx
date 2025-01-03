@@ -6,7 +6,13 @@ import {
   AuthPage,
   UsernameSetup,
 } from "./pages/auth";
-import { ChallengeFeed } from "./pages/game";
+import {
+  ChallengeCreator,
+  ChallengeFeed,
+  ChallengeSubmissions,
+  ChallengeSubmission,
+  ProfilePage,
+} from "./pages/game";
 import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
 
@@ -32,7 +38,10 @@ function App() {
         <Route path="/username/:phone" element={<UsernameSetup />} />
         {/* protected routes start here */}
         <Route path="/challenge" element={<ChallengeFeed />} />
-        <Route path="/challenge" element={<ChallengeFeed />} />
+        <Route path="/create" element={<ChallengeCreator />} />
+        <Route path="/judge_panel" element={<ChallengeSubmissions />} />
+        <Route path="/submission" element={<ChallengeSubmission />} />
+        <Route path="/profile" element={<ProfilePage />} />
         {/* <Route
           path="/challenge"
           element={
