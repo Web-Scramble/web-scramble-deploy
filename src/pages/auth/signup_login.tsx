@@ -1,6 +1,8 @@
-import React,{useState} from "react";
+import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
+import { signInWithPopup, GoogleAuthProvider } from "firebase/auth";
+import { auth } from "@/firebase";
 import {
   Card,
   CardContent,
@@ -12,7 +14,7 @@ import {
 import { Label } from "@/components/ui/label";
 import { ArrowRight } from "lucide-react";
 import { Separator } from "@/components/ui/separator";
-import { sendOtp } from "@/services/api";
+import { sendOtp, socialAuth } from "@/services/api";
 import { useMutation } from "@tanstack/react-query";
 import { phoneSchema } from "@/schema/signup_validation_schema";
 import { useForm, SubmitHandler } from "react-hook-form";
@@ -23,8 +25,8 @@ import { LoadingSpinner } from "@/components/ui/shared/loader";
 import { useNavigate } from "react-router";
 
 const AuthPage = () => {
-const navigate = useNavigate();
-const [phone, setPhone] = useState("")
+  const navigate = useNavigate();
+  const [phone, setPhone] = useState("");
   const sendOtpMutation = useMutation({
     mutationFn: sendOtp,
     mutationKey: ["sendOtp"],
@@ -34,15 +36,35 @@ const [phone, setPhone] = useState("")
       toast({
         description: "Your OTP has been sent.",
       });
-      navigate(`/otp/${phone}`)
+      navigate(`/otp/${phone}`);
     },
     onError: (error) => {
       toast({
         variant: "destructive",
-        title: "Otp not sent,try again",
-        description: error.message,
+        title: error.response.data.message,
+        description: "Otp not sent,try again",
       });
-    }
+    },
+  });
+  const socialAuthMutation = useMutation({
+    mutationFn: socialAuth,
+    mutationKey: ["SocialAuth"],
+    onSuccess: (data) => {
+      // Invalidate and refetch
+      // queryClient.invalidateQueries({ queryKey: ['todos'] })
+      toast({
+        description: "Your OTP has been sent.",
+      });
+      console.log(data)
+      // navigate(`/otp/${phone}`);
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: error.response.data.message,
+        description: "authentication failed,please try again",
+      });
+    },
   });
   const { toast } = useToast();
   const {
@@ -59,15 +81,36 @@ const [phone, setPhone] = useState("")
   console.log(watch("phone"));
 
   const handleOtpRequest = (values: Inputs) => {
-    setPhone(values.phone)
+    setPhone(values.phone);
     sendOtpMutation.mutate(values);
+  };
+  const SignupWithGoogle = async () => {
+    try {
+      const provider = new GoogleAuthProvider();
+      const result = await signInWithPopup(auth, provider);
+      const credential = GoogleAuthProvider.credentialFromResult(result);
+      if (!credential) {
+        console.error("Error in user Credential");
+        return;
+      }
+      const token = credential.accessToken;
+      const user = result.user;
+      console.log(user, token);
+      socialAuthMutation.mutate({
+        token:user
+      })
+
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    } catch (error: any) {
+      console.log(error)
+      const errorCode = error.code;
+      const errorMessage = error.message;
+      const email = error.customData.email;
+      const credential = GoogleAuthProvider.credentialFromError(error);
+    }
   };
 
 
-
-  if (sendOtpMutation.isPending) {
-    <LoadingSpinner />;
-  }
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
       <Card className="w-full max-w-md">
@@ -123,7 +166,7 @@ const [phone, setPhone] = useState("")
               "/images/apple.png",
               "/images/facebook.png",
             ].map((provider) => (
-              <Button key={provider} variant="outline" className="w-full">
+              <Button key={provider} variant="outline" className="w-full" onClick={SignupWithGoogle}>
                 {/* <div className="w-5 h-5 mr-2 bg-muted rounded-sm flex flex-row items-center justify-center"></div> */}
                 <img src={provider} alt="google" width={25} height={25} />
                 {/* <span className="sr-only">Continue with {provider}</span> */}

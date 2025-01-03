@@ -8,8 +8,10 @@ import {
 } from "@/components/ui/card";
 import { ArrowRight,CircleDollarSign ,Users,SquarePen} from "lucide-react";
 import { Link } from "react-router";
+import { authStore } from "@/store/authstore";
 
 const LandingPage = () => {
+  const {token,updateToken} = authStore()
   const features = [
     {
       title: "Create and Customize Challenges",
@@ -55,9 +57,11 @@ const LandingPage = () => {
               Get Started <ArrowRight className="w-4 h-4" />
             </Button>
             </Link>
+            <Link to={"/challenge"}>
             <Button size="lg" variant="outline">
               Learn More
             </Button>
+            </Link>
           </div>
         </div>
       </section>

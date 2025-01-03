@@ -24,55 +24,72 @@ import { useToast } from "@/hooks/use-toast";
 import { sendOtp } from "@/services/api";
 import { LoadingSpinner } from "@/components/ui/shared/loader";
 import { useParams } from "react-router";
-
+import { useNavigate } from "react-router";
+import { setItemToLocalStorage } from "@/services/localStorage";
+import { authStore } from "@/store/authstore";
 
 const OTPVerification = () => {
-const { phone } = useParams();
+  const { phone } = useParams();
+  const navigate = useNavigate();
   const { toast } = useToast();
+  const {token,updateToken} = authStore()
+
+
   const validateOtpMutation = useMutation({
     mutationFn: ValidateOtp,
     mutationKey: ["ValidateOTP"],
-    onSuccess: () => {
+    onSuccess: (data) => {
       // Invalidate and refetch
       // queryClient.invalidateQueries({ queryKey: ['todos'] })
       toast({
         description: "OTP Verification successfull.",
       });
+      if (data.message === "Complete registration required") {
+        navigate(`/username/${phone}`);
+      } else {
+        console.log(data)
+        setItemToLocalStorage("USER_DATA", data.user);
+        updateToken(data.token)
+        console.log(token,"otp verification")
+        navigate("/challenge")
+      }
       // navigate(`/otp/${phone}`)
     },
     onError: (error) => {
       toast({
         variant: "destructive",
-        title: "Otp not sent,try again",
-        description: error.message,
+        title: error.response.data.message,
+        description: "please try again",
       });
-    }
+    },
   });
   const sendOtpMutation = useMutation({
     mutationFn: sendOtp,
     mutationKey: ["sendOtp"],
-    onSuccess: () => {
+    onSuccess: (data) => {
       // Invalidate and refetch
       // queryClient.invalidateQueries({ queryKey: ['todos'] })
+      console.log(data);
       toast({
         description: "OTP sent",
       });
-      // navigate(`/otp/${phone}`)
+      navigate(`/username/${phone}`)
     },
     onError: (error) => {
       toast({
         variant: "destructive",
         title: " failed to resend OTP",
-        description: error.message,
+        description: validateOtpMutation.error.response.data.message,
       });
-    }
+    },
   });
 
   const handleOtpVerification = (values: ValidateInputs) => {
-    console.log(values.otp,phone)
     validateOtpMutation.mutate({
-      phone,otp: values.otp
+      phone,
+      otp: values.otp,
     });
+
   };
   // const handleRefetch = () => {
   // };
@@ -84,7 +101,8 @@ const { phone } = useParams();
   } = useForm<ValidateInputs>({
     resolver: yupResolver(otpSchema),
   });
-  const onSubmit: SubmitHandler<ValidateInputs> = (data) => handleOtpVerification(data);
+  const onSubmit: SubmitHandler<ValidateInputs> = (data) =>
+    handleOtpVerification(data);
   console.log(watch("otp"));
 
   return (
@@ -100,7 +118,7 @@ const { phone } = useParams();
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
-            {sendOtpMutation.isPending && <LoadingSpinner /> }
+          {sendOtpMutation.isPending && <LoadingSpinner />}
           <form
             onSubmit={handleSubmit(onSubmit)}
             className="space-y-4 text-center flex flex-col items-center"
