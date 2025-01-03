@@ -2,14 +2,16 @@
 import React from 'react';
 import { Button } from "@/components/ui/button";
 import { Home, User, FileText,Menu } from 'lucide-react';
-import Link from 'next/link';
+// import Link from 'next/link';
+import { Link } from 'react-router';
+
 
 
 const Navbar = () => {
       const navItems = [
-        { icon: Home, label: 'Home', href: '/game' },
-        { icon: FileText, label: 'Challenge', href: '/game/challenge-posts' },
-        { icon: User, label: 'Profile', href: '/game/profile' },
+        // { icon: Home, label: 'Home', href: '/game' },
+        { icon: FileText, label: 'Challenge', href: '/challenge' },
+        { icon: User, label: 'Profile', href: '/profile' },
         // { icon: Wallet, label: 'Top Up', href: '#' },
       ];
     
@@ -28,7 +30,7 @@ const Navbar = () => {
         className="text-muted-foreground hover:text-primary"
         asChild
       >
-        <Link href={item.href} className="flex items-center gap-2">
+        <Link to={item.href} className="flex items-center gap-2">
           <item.icon className="h-4 w-4" />
           <span>{item.label}</span>
         </Link>

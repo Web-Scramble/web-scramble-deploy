@@ -23,6 +23,7 @@ import {
   ThumbsUp,
   Rocket,
 } from "lucide-react";
+import Layout from "@/components/ui/shared/layout";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import {
@@ -163,8 +164,10 @@ const GameChallenge = () => {
   };
 
   return (
-    // <Card className="w-full max-w-xl mx-auto bg-white shadow-lg">
+    <Layout>
+
     <Card className="w-full max-w-xl mx-auto bg-white shadow-lg">
+    {/* // <Card className="w-full max-w-xl mx-auto bg-white shadow-lg"> */}
       <CardHeader className="space-y-1 p-4">
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-3">
@@ -518,6 +521,7 @@ const GameChallenge = () => {
         </Link>
       </CardFooter>
     </Card>
+    </Layout>
   );
 };
 

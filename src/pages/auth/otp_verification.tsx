@@ -44,6 +44,7 @@ const OTPVerification = () => {
       toast({
         description: "OTP Verification successfull.",
       });
+      console.log(data)
       if (data.message === "Complete registration required") {
         navigate(`/username/${phone}`);
       } else {

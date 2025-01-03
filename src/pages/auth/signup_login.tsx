@@ -97,16 +97,12 @@ const AuthPage = () => {
       const user = result.user;
       console.log(user, token);
       socialAuthMutation.mutate({
-        token:user
+        token:token
       })
 
       // eslint-disable-next-line @typescript-eslint/no-explicit-any
     } catch (error: any) {
       console.log(error)
-      const errorCode = error.code;
-      const errorMessage = error.message;
-      const email = error.customData.email;
-      const credential = GoogleAuthProvider.credentialFromError(error);
     }
   };
 
