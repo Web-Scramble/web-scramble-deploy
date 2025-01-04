@@ -4,6 +4,7 @@ import { Input } from "@/components/ui/input";
 import { Slider } from "@/components/ui/slider";
 import { Card, CardContent } from "@/components/ui/card";
 import { DollarSign } from 'lucide-react';
+import Layout from '@/components/ui/shared/layout';
 
 const BoostRewardPage = () => {
   const [amount, setAmount] = useState(20);
@@ -14,6 +15,8 @@ const BoostRewardPage = () => {
   };
 
   return (
+    <Layout>
+
     <div className="min-h-screen bg-background">
       {/* Main Content */}
       <main className="container mx-auto px-4 py-6 max-w-md">
@@ -93,6 +96,7 @@ const BoostRewardPage = () => {
         </div>
       </main>
     </div>
+    </Layout>
   );
 };
 

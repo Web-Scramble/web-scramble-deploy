@@ -18,6 +18,7 @@ import {
   DialogTitle,
 } from "@/components/ui/dialog";
 import { Alert, AlertDescription } from "@/components/ui/alert";
+import Layout from "@/components/ui/shared/layout";
 
 // Media Viewer Component
 const MediaViewer = ({ media }) => {
@@ -358,27 +359,29 @@ const ChallengeSubmissions = () => {
   };
 
   return (
-    <div className="max-w-2xl mx-auto p-4">
-      <header className="mb-6">
-        <h1 className="text-2xl font-bold text-gray-900">
-          Challenge Submissions
-        </h1>
-        <p className="text-gray-600 text-sm mt-1">
-          {isJudge ? "Judge Review Panel" : "Community Review"}
-        </p>
-      </header>
+    <Layout>
+      <div className="max-w-2xl mx-auto p-4">
+        <header className="mb-6">
+          <h1 className="text-2xl font-bold text-gray-900">
+            Challenge Submissions
+          </h1>
+          <p className="text-gray-600 text-sm mt-1">
+            {isJudge ? "Judge Review Panel" : "Community Review"}
+          </p>
+        </header>
 
-      <div className="space-y-4">
-        {submissions.map((submission) => (
-          <ChallengeSubmissionCard
-            key={submission.id}
-            submission={submission}
-            isJudge={isJudge}
-            onVote={handleVote}
-          />
-        ))}
+        <div className="space-y-4">
+          {submissions.map((submission) => (
+            <ChallengeSubmissionCard
+              key={submission.id}
+              submission={submission}
+              isJudge={isJudge}
+              onVote={handleVote}
+            />
+          ))}
+        </div>
       </div>
-    </div>
+    </Layout>
   );
 };
 

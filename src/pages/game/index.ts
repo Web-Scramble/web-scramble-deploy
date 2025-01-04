@@ -5,6 +5,8 @@ import ProfilePage from "./profile";
 import ChallengeSubmission from "./submission";
 import ChallengeSubmissions from "./judge_panel";
 import LeaderboardCard from "./leaderboard";
+import EditProfile from "./edit_profile";
+import SettingsScreen from "./settings";
 
 export {
   LeaderboardCard,
@@ -14,4 +16,6 @@ export {
   ProfilePage,
   ChallengeSubmission,
   ChallengeSubmissions,
+  EditProfile,
+  SettingsScreen,
 };

@@ -12,6 +12,9 @@ import {
   ChallengeSubmissions,
   ChallengeSubmission,
   ProfilePage,
+  BoostRewardPage,
+  EditProfile,
+  SettingsScreen,
 } from "./pages/game";
 import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
@@ -37,19 +40,22 @@ function App() {
         <Route path="/otp/:phone" element={<OTPVerification />} />
         <Route path="/username/:phone" element={<UsernameSetup />} />
         {/* protected routes start here */}
-        <Route path="/challenge" element={<ChallengeFeed />} />
+        {/* <Route path="/challenge" element={<ChallengeFeed />} /> */}
         <Route path="/create" element={<ChallengeCreator />} />
-        <Route path="/judge_panel" element={<ChallengeSubmissions />} />
+        <Route path="/judge-panel" element={<ChallengeSubmissions />} />
         <Route path="/submission" element={<ChallengeSubmission />} />
         <Route path="/profile" element={<ProfilePage />} />
-        {/* <Route
+        <Route path="/boost-reward" element={<BoostRewardPage />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/settings" element={<SettingsScreen />} />
+        <Route
           path="/challenge"
           element={
             <RequireAuth redirectTo="/">
               <ChallengeFeed />
             </RequireAuth>
           }
-        /> */}
+        />
 
         {/* <Route
           path="/Genealogy"

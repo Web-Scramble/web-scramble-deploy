@@ -58,6 +58,8 @@ import {
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router";
+import { LoadingSpinner } from "@/components/ui/shared/loader";
+import { NavLink } from "react-router";
 
 const GameChallenge = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -162,10 +164,9 @@ const GameChallenge = () => {
     if (!newComment.trim()) return;
     setNewComment("");
   };
-
+//  return <LoadingSpinner size={30} />
   return (
     <Layout>
-
     <Card className="w-full max-w-xl mx-auto bg-white shadow-lg">
     {/* // <Card className="w-full max-w-xl mx-auto bg-white shadow-lg"> */}
       <CardHeader className="space-y-1 p-4">
@@ -187,18 +188,22 @@ const GameChallenge = () => {
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem>
+              <NavLink to="/create">
+              <DropdownMenuItem className="text-gray-500">
                 <Edit2 className="w-4 h-4 mr-2" /> Edit Challenge
               </DropdownMenuItem>
+              </NavLink>
               <DropdownMenuItem>
                 <UserPlus className="w-4 h-4 mr-2" /> Invite Participants
               </DropdownMenuItem>
               <DropdownMenuItem>
                 <Trophy className="w-4 h-4 mr-2" /> Add Judges
               </DropdownMenuItem>
-              <DropdownMenuItem>
+              <Link to="/judge-panel">
+              <DropdownMenuItem className="text-gray-500">
                 <Square className="w-4 h-4 mr-2" /> Vote
               </DropdownMenuItem>
+              </Link>
               <DropdownMenuSeparator />
               <DropdownMenuItem className="text-red-600">
                 <Trash2 className="w-4 h-4 mr-2" /> Delete Challenge
@@ -237,9 +242,11 @@ const GameChallenge = () => {
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-green-500">$1,200</span>
+            <Link to={"/boost-reward"}>
             <Button variant="ghost" size="sm" className="p-0">
               <Plus className="w-4 h-4 text-green-500" />
             </Button>
+            </Link>
           </div>
         </div>
 
@@ -311,9 +318,11 @@ const GameChallenge = () => {
               <Rocket className="w-5 h-5 text-gray-600" />
             </Button>
           </div>
+          <Link to="/submission">
           <Button variant="outline" size="sm" className="text-green-500">
             Join
           </Button>
+          </Link>
         </div>
 
         {showRemarks && (
@@ -521,7 +530,7 @@ const GameChallenge = () => {
         </Link>
       </CardFooter>
     </Card>
-    </Layout>
+     </Layout>
   );
 };
 

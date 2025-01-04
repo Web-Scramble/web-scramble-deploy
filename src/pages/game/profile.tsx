@@ -15,6 +15,9 @@ import {
   Twitter,
   Github,
 } from "lucide-react";
+import Layout from "@/components/ui/shared/layout";
+import { Link} from "react-router";
+
 
 const ProfilePage = () => {
   const userStats = [
@@ -48,6 +51,7 @@ const ProfilePage = () => {
   ];
 
   return (
+    <Layout>
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-4xl mx-auto space-y-6">
         {/* Profile Header */}
@@ -56,7 +60,7 @@ const ProfilePage = () => {
           <div className="h-48 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500" />
           
           {/* Profile Info */}
-          <div className="absolute -bottom-16 left-6 flex items-end space-x-4">
+          <div className="absolute -bottom-10 left-6 flex items-end space-x-4">
             <Avatar className="h-32 w-32 border-4 border-background">
               <AvatarImage src="" />
               <AvatarFallback>AB</AvatarFallback>
@@ -69,13 +73,17 @@ const ProfilePage = () => {
           
           {/* Actions */}
           <div className="absolute right-6 bottom-4 flex space-x-2">
+            <Link to="/edit-profile">
             <Button size="sm" variant="secondary">
               <Edit className="h-4 w-4 mr-2" />
               Edit Profile
             </Button>
+            </Link>
+            <Link to="/settings">
             <Button size="sm" variant="secondary">
               <Settings className="h-4 w-4" />
             </Button>
+            </Link>
           </div>
         </div>
 
@@ -102,7 +110,7 @@ const ProfilePage = () => {
             </CardContent>
           </Card>
 
-          {/* Stats Grid */}
+          {/* Stats Grid
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {userStats.map((stat, index) => (
               <Card key={index}>
@@ -114,7 +122,7 @@ const ProfilePage = () => {
                 </CardContent>
               </Card>
             ))}
-          </div>
+          </div> */}
 
           {/* Activity Tabs */}
           <Tabs defaultValue="recent">
@@ -158,6 +166,8 @@ const ProfilePage = () => {
         </div>
       </div>
     </div>
+    </Layout>
+
   );
 };
 

@@ -24,13 +24,17 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import Layout from '@/components/ui/shared/layout';
+import { useNavigate } from "react-router";
+import InvitationPopup from "@/components/modals/invitation_modat";
 
 const ChallengeCreator = () => {
-  const [challengeType, setChallengeType] = useState("prize");
+  const [challengeType, setChallengeType] = useState("task");
   const [isPrivate, setIsPrivate] = useState(true);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [isScheduled, setIsScheduled] = useState(false);
+  const [showInvitationModal, setShowInvitationModal] = useState(false);
   const [duration, setDuration] = useState({
     value: 1,
     unit: "hours",
@@ -44,7 +48,7 @@ const ChallengeCreator = () => {
     color: "black",
     size: "normal",
   });
-
+ const navigate = useNavigate()
   const handleFormatChange = (format) => {
     setTextFormat((prev) => ({
       ...prev,
@@ -60,10 +64,13 @@ const ChallengeCreator = () => {
   };
 
   return (
+    <Layout>
+  {showInvitationModal && <InvitationPopup isOpen={showInvitationModal}
+        onClose={() => setShowInvitationModal(false)}/>}
     <div className="bg-white w-full max-w-xl min-w-96 mx-auto p-3 rounded-lg shadow-md">
       {/* Header with Close Button */}
       <div className="flex justify-end">
-        <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+        <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => navigate(-1)}>
           <X className="h-4 w-4" />
         </Button>
       </div>
@@ -200,7 +207,7 @@ const ChallengeCreator = () => {
           Select Challenge Type
         </Label>
         <div className="flex flex-wrap gap-2">
-          <Button
+          {/* <Button
             variant={challengeType === "prize" ? "default" : "outline"}
             size="sm"
             className="flex items-center gap-2 bg-gray-900"
@@ -208,7 +215,7 @@ const ChallengeCreator = () => {
           >
             <Trophy className="h-4 w-4" />
             Prize Challenge
-          </Button>
+          </Button> */}
           <Button
             variant={challengeType === "task" ? "default" : "outline"}
             size="sm"
@@ -218,7 +225,7 @@ const ChallengeCreator = () => {
             <Clock className="h-4 w-4" />
             Task
           </Button>
-          <Button
+          {/* <Button
             variant={challengeType === "blog" ? "default" : "outline"}
             size="sm"
             className="flex items-center gap-2"
@@ -226,7 +233,7 @@ const ChallengeCreator = () => {
           >
             <AlignLeft className="h-4 w-4" />
             Blog
-          </Button>
+          </Button> */}
         </div>
       </div>
 
@@ -348,10 +355,11 @@ const ChallengeCreator = () => {
       </div>
 
       {/* Create Button */}
-      <Button className="w-full h-12 text-base font-medium bg-gray-900 hover:bg-gray-800">
+      <Button className="w-full h-12 text-base font-medium bg-gray-900 hover:bg-gray-800" onClick={()=>setShowInvitationModal(true)}>
         {isScheduled ? "Schedule Challenge" : "Create Challenge Now"}
       </Button>
     </div>
+    </Layout>
   );
 };
 
