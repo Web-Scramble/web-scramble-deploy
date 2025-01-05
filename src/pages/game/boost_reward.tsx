@@ -71,6 +71,9 @@ const BoostRewardPage = () => {
 
             {/* Custom Amount Input */}
             <div>
+            <p className="text-xs text-gray-500 my-1">
+              Enter custom amount
+            </p>
               <Input
                 type="number"
                 value={amount}

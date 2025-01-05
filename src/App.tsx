@@ -42,7 +42,7 @@ function App() {
         {/* protected routes start here */}
         <Route path="/challenge" element={<ChallengeFeed />} />
         <Route path="/create" element={<ChallengeCreator />} />
-        <Route path="/judge-panel" element={<ChallengeSubmissions />} />
+        <Route path="/review-panel" element={<ChallengeSubmissions />} />
         <Route path="/submission" element={<ChallengeSubmission />} />
         <Route path="/profile" element={<ProfilePage />} />
         <Route path="/boost-reward" element={<BoostRewardPage />} />

@@ -55,7 +55,7 @@ export const ChallengeHeader = ({
             <DropdownMenuItem>
               <Trophy className="w-4 h-4 mr-2" /> Add Judges
             </DropdownMenuItem>
-            <Link to="/judge-panel">
+            <Link to="/review-panel">
               <DropdownMenuItem className="text-gray-500">
                 <Square className="w-4 h-4 mr-2" /> Vote
               </DropdownMenuItem>
