@@ -1,14 +1,14 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import {
   X,
   PenLine,
   Paperclip,
-  Trophy,
   Clock,
   AlignLeft,
   AlignCenter,
   AlignRight,
   Globe,
+  Trophy,
   Lock,
   List,
   Code,
@@ -35,6 +35,7 @@ const ChallengeCreator = () => {
   const [content, setContent] = useState("");
   const [isScheduled, setIsScheduled] = useState(false);
   const [showInvitationModal, setShowInvitationModal] = useState(false);
+  const [isTimeLimited, setIsTimeLimited] = useState(false)
   const [duration, setDuration] = useState({
     value: 1,
     unit: "hours",
@@ -67,7 +68,7 @@ const ChallengeCreator = () => {
     <Layout>
   {showInvitationModal && <InvitationPopup isOpen={showInvitationModal}
         onClose={() => setShowInvitationModal(false)}/>}
-    <div className="bg-white w-full max-w-xl min-w-96 mx-auto p-3 rounded-lg shadow-md">
+    <div className="bg-white w-full max-w-xl min-w-88 mx-auto p-3 rounded-lg shadow-md">
       {/* Header with Close Button */}
       <div className="flex justify-end">
         <Button variant="ghost" size="sm" className="h-8 w-8 p-0" onClick={() => navigate(-1)}>
@@ -203,20 +204,11 @@ const ChallengeCreator = () => {
 
       {/* Challenge Type Selection */}
       <div className="mb-4">
-        <Label className="text-sm font-medium mb-2 block">
+        <Label className="text-sm font-medium mb-2 block text-left">
           Select Challenge Type
         </Label>
         <div className="flex flex-wrap gap-2">
-          {/* <Button
-            variant={challengeType === "prize" ? "default" : "outline"}
-            size="sm"
-            className="flex items-center gap-2 bg-gray-900"
-            onClick={() => setChallengeType("prize")}
-          >
-            <Trophy className="h-4 w-4" />
-            Prize Challenge
-          </Button> */}
-          <Button
+        <Button
             variant={challengeType === "task" ? "default" : "outline"}
             size="sm"
             className="flex items-center gap-2"
@@ -225,7 +217,17 @@ const ChallengeCreator = () => {
             <Clock className="h-4 w-4" />
             Task
           </Button>
-          {/* <Button
+          <Button
+            variant={challengeType === "prize" ? "default" : "outline"}
+            size="sm"
+            className="flex items-center gap-2"
+            onClick={() => setChallengeType("prize")}
+          >
+            <Trophy className="h-4 w-4" />
+            Prize Challenge
+          </Button>
+          
+          <Button
             variant={challengeType === "blog" ? "default" : "outline"}
             size="sm"
             className="flex items-center gap-2"
@@ -233,16 +235,23 @@ const ChallengeCreator = () => {
           >
             <AlignLeft className="h-4 w-4" />
             Blog
-          </Button> */}
+          </Button>
         </div>
       </div>
 
       {/* Duration Settings */}
-      <div className="mb-4">
-        <Label className="text-sm font-medium mb-2 block">Time Limit</Label>
+        <div className="flex items-center justify-between mb-2">
+
+        <Label className="text-sm font-medium mb-2 block text-left">Time Limit</Label>
+        <Switch
+          checked={isTimeLimited}
+          onCheckedChange={setIsTimeLimited}
+        />
+        </div>
+      {isTimeLimited && <div className="mb-4">
         <div className="flex gap-2 items-end">
           <div className="flex-1">
-            <Label className="text-xs text-gray-500 mb-1">Duration</Label>
+            <Label className="text-xs text-gray-500 mb-1 text-left flex">Duration</Label>
             <Input
               type="number"
               min="1"
@@ -257,7 +266,7 @@ const ChallengeCreator = () => {
             />
           </div>
           <div className="flex-1">
-            <Label className="text-xs text-gray-500 mb-1">Unit</Label>
+            <Label className="text-xs text-gray-500 mb-1 pl-1 text-left flex">Unit</Label>
             <Select
               value={duration.unit}
               onValueChange={(value) =>
@@ -276,11 +285,11 @@ const ChallengeCreator = () => {
             </Select>
           </div>
         </div>
-      </div>
+      </div>}
 
       {/* Reward */}
       <div className="mb-4">
-        <Label className="text-xs text-gray-500 mb-1">Reward</Label>
+        <Label className="text-xs text-gray-500 mb-1 text-left flex">Reward</Label>
         <Input type="text" placeholder="Enter prize" className="h-9" />
       </div>
 
@@ -308,7 +317,7 @@ const ChallengeCreator = () => {
       {/* Participant Invitation */}
       {isPrivate && (
         <div className="mb-4">
-          <Label className="text-xs text-gray-500 mb-1">
+          <Label className="text-xs text-gray-500 mb-1 text-left flex">
             Invite Participants
           </Label>
           <div className="flex gap-2">
@@ -323,7 +332,7 @@ const ChallengeCreator = () => {
 
       {/* Judge Invitation */}
       <div className="mb-4">
-        <Label className="text-xs text-gray-500 mb-1">Invite Judges</Label>
+        <Label className="text-xs text-gray-500 mb-1 text-left flex">Invite Judges</Label>
         <div className="flex gap-2">
           <Input
             placeholder="Enter judge names"

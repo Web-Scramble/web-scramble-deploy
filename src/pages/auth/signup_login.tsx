@@ -89,8 +89,10 @@ const AuthPage = () => {
   console.log(watch("phone"));
 
   const handleOtpRequest = (values: Inputs) => {
-    setPhone(values.phone);
-    sendOtpMutation.mutate(values);
+     const removePhoneSpaces = values.phone.replace(/\s/g, '');
+     console.log(values)  
+    setPhone(removePhoneSpaces);
+    sendOtpMutation.mutate({phone:removePhoneSpaces});
   };
   const SignupWithGoogle = async () => {
     try {

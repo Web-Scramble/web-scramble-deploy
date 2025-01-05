@@ -104,6 +104,11 @@ const OTPVerification = () => {
   const onSubmit: SubmitHandler<ValidateInputs> = (data) =>
     handleOtpVerification(data);
   console.log(watch("otp"));
+  const handleKeyDown = (event:React.FormEvent<HTMLInputElement>) => {
+    if (event.key === 'Enter') {
+      handleSubmit(onSubmit)
+    }
+  }
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -124,7 +129,7 @@ const OTPVerification = () => {
             className="space-y-4 text-center flex flex-col items-center"
           >
             <div className="space-y-2">
-              <InputOTP maxLength={6} {...register("otp")}>
+              <InputOTP maxLength={6} onKeyDown={handleKeyDown} {...register("otp")}>
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />

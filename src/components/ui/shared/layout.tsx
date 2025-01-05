@@ -6,7 +6,7 @@ type LayoutProps = {
 
 const Layout = ({ children }: LayoutProps) => {
   return (
-    <div className="w-screen m-0 p-0 border">
+    <div className="w-screen m-0 p-0 pb-4">
       <Navbar />
       <>{children}</>
     </div>

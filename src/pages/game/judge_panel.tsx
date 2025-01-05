@@ -184,7 +184,7 @@ const RatingDialog = ({ isOpen, onClose, onSubmit, challenge, isJudge }) => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700"
+            className="w-full text-white py-2 px-4 rounded-md "
           >
             Submit Evaluation
           </button>
@@ -274,7 +274,7 @@ const ChallengeSubmissionCard = ({ submission, isJudge, onVote }) => {
 
             <button
               onClick={() => setIsRatingOpen(true)}
-              className="w-full bg-blue-600 text-white px-4 py-2 rounded-md text-sm hover:bg-blue-700"
+              className="w-full text-white px-4 py-2 rounded-md text-sm "
             >
               Evaluate Submission
             </button>

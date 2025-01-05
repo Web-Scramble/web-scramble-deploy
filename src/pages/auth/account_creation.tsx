@@ -108,9 +108,9 @@ const UsernameSetup = () => {
                 email
               </Label>
               <Input
-                id="username"
+                id="email"
                 type="email"
-                placeholder="Enter username"
+                placeholder="Enter email"
                 className="w-full"
                 {...register("email")}
               />

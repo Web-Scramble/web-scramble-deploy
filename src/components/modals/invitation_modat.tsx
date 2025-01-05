@@ -34,7 +34,7 @@ const InvitationPopup = ({ isOpen, onClose, defaultType = 'judge' }) => {
         <Card className="w-full border-0 shadow-none">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">
-              Invite {inviteType === 'judge' ? 'Judges' : 'Participants'}
+              Invite External {inviteType === 'judge' ? 'Judges' : 'Participants'}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">

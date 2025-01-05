@@ -40,11 +40,12 @@ const SettingsScreen = () => {
       <Card className="max-w-md mx-auto">
         <CardContent className="p-6 space-y-6">
           <SettingsSection title="General">
-            <SettingsItem icon={User} label="Personal Details" />
+            {/* <SettingsItem icon={User} label="Personal Details" /> */}
             <SettingsItem icon={MapPin} label="Location" />
             <SettingsItem icon={Flag} label="Created Challenges" />
             <SettingsItem icon={CheckSquare} label="Completed" />
             <SettingsItem icon={Lock} label="Change Password" />
+            <SettingsItem icon={User} label="Delete Account" />
           </SettingsSection>
 
           <SettingsSection title="Support">

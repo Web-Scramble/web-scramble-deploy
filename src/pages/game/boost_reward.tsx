@@ -33,7 +33,7 @@ const BoostRewardPage = () => {
             {/* Current Amount Display */}
             <div className="text-center space-y-2">
               <div className="text-muted-foreground text-sm">Current Amount</div>
-              <div className="flex items-center justify-center text-5xl font-bold text-green-600">
+              <div className="flex items-center justify-center text-5xl font-bold">
                 <DollarSign className="h-8 w-8" />
                 {amount}
               </div>
@@ -89,7 +89,7 @@ const BoostRewardPage = () => {
         {/* Bottom Action Button */}
         <div className="mt-6">
           <Button 
-            className="w-full bg-green-600 hover:bg-green-700 text-white h-12 text-lg"
+            className="w-full text-white h-12 text-lg"
           >
             Add Money
           </Button>

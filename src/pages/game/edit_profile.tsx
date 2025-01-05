@@ -41,9 +41,9 @@ const EditProfile = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-6">
             {/* Avatar Upload Section */}
-            <div className="flex flex-col items-center space-y-4">
+            <div className="flex flex-col items-center space-y-4 ">
               <div className="relative">
-                <Avatar className="h-24 w-24">
+                <Avatar className="h-24 w-24 ">
                   <AvatarImage src={formData.avatar} alt="Profile" />
                   <AvatarFallback>AB</AvatarFallback>
                 </Avatar>
@@ -60,7 +60,7 @@ const EditProfile = () => {
             {/* Form Fields */}
             <div className="space-y-4">
               <div>
-                <Label htmlFor="username">Username</Label>
+                <Label htmlFor="username" className='text-left flex mb-4'>Username</Label>
                 <Input
                   id="username"
                   name="username"
@@ -71,7 +71,7 @@ const EditProfile = () => {
               </div>
 
               <div>
-                <Label htmlFor="email">Email</Label>
+                <Label htmlFor="email" className='text-left flex mb-4'>Email</Label>
                 <Input
                   id="email"
                   name="email"
@@ -83,7 +83,7 @@ const EditProfile = () => {
               </div>
 
               <div>
-                <Label htmlFor="bio">Bio</Label>
+                <Label htmlFor="bio" className='text-left flex mb-4'>Bio</Label>
                 <Textarea
                   id="bio"
                   name="bio"

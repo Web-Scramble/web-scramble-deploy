@@ -1,14 +1,14 @@
 import { Button } from "@/components/ui/button";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { User, FileText, Menu } from 'lucide-react';
+import { User, FileText, Menu } from "lucide-react";
 import { authStore } from "@/store/authstore";
-import { Link } from 'react-router';
-import { useState } from 'react';
+import { Link } from "react-router";
+import { useState } from "react";
 
 const Navbar = () => {
   const navItems = [
-    { icon: FileText, label: 'Challenge', href: '/challenge' },
-    { icon: User, label: 'Profile', href: '/profile' },
+    { icon: FileText, label: "Challenge", href: "/challenge" },
+    { icon: User, label: "Profile", href: "/profile" },
   ];
   const { user } = authStore();
   const [isOpen, setIsOpen] = useState(false);
@@ -34,7 +34,22 @@ const Navbar = () => {
 
   return (
     <header className="border-b mb-4 mt-0">
-      <div className="flex h-16 items-center px-4 md:px-6">
+      <div className="flex h-16 items-center justify-start  px-4 md:px-6">
+        {/* Mobile Navigation */}
+        <div>
+          <Sheet open={isOpen} onOpenChange={setIsOpen}>
+            <SheetTrigger asChild className="md:hidden ml-auto">
+              <Button variant="ghost" size="icon" className=" border">
+                <Menu className="h-6 w-6" />
+              </Button>
+            </SheetTrigger>
+            <SheetContent side="left" className="w-64">
+              <nav className="flex flex-col space-y-4 mt-6">
+                <NavLinks onClick={() => setIsOpen(false)} />
+              </nav>
+            </SheetContent>
+          </Sheet>
+        </div>
         <div className="w-20 h-8 bg-muted rounded mr-4 md:mr-8">
           <h1 className="w-24 text-xl font-bold tracking-tight mb-6 bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent">
             {user.username}
@@ -45,26 +60,9 @@ const Navbar = () => {
         <nav className="hidden md:flex items-center space-x-4 lg:space-x-6 mx-6 flex-1">
           <NavLinks />
         </nav>
-
-        {/* Mobile Navigation */}
-        <Sheet open={isOpen} onOpenChange={setIsOpen}>
-          <SheetTrigger asChild className="md:hidden ml-auto">
-            <Button variant="ghost" size="icon">
-              <Menu className="h-6 w-6" />
-            </Button>
-          </SheetTrigger>
-          <SheetContent side="right" className="w-64">
-            <nav className="flex flex-col space-y-4 mt-6">
-              <NavLinks onClick={() => setIsOpen(false)} />
-            </nav>
-          </SheetContent>
-        </Sheet>
       </div>
     </header>
   );
 };
 
 export default Navbar;
-
-
-
