@@ -15,13 +15,6 @@ import Layout from "@/components/ui/shared/layout";
 import { Link } from "react-router";
 
 const ProfilePage = () => {
-  const userStats = [
-    { label: "Challenges Won", value: "32" },
-    { label: "Total Points", value: "1,240" },
-    { label: "Participations", value: "45" },
-    { label: "Success Rate", value: "71%" },
-  ];
-
   const recentActivities = [
     {
       type: "win",

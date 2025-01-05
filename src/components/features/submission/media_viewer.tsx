@@ -7,7 +7,7 @@ interface MediaViewerProps {
   media: Media;
 }
 
-export const MediaViewerMediaViewerProps = ({ media }:MediaViewerProps ) => {
+export const MediaViewer = ({ media }:MediaViewerProps ) => {
   const getMediaComponent = () => {
     switch (media.type) {
       case "video":

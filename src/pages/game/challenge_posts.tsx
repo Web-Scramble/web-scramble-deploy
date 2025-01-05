@@ -1,6 +1,6 @@
 import React from "react";
 import ChallengeCard from "@/components/features/challenge/challenge";
-import { mockChallenges } from "@/constants/mockData";
+import { mockChallenges } from "@/constants/mockChallenges";
 import Layout from "@/components/ui/shared/layout";
 
 const ChallengeFeed: React.FC = () => {
