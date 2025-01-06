@@ -4,7 +4,8 @@ import { Button } from '@/components/ui/button';
 import { CardContent } from '@/components/ui/card';
 import { Link } from 'react-router';
 import { Challenge } from '@/types/challenge';
-import RemarksSection from './Remarks';
+import RemarksSection from './remarks';
+
 
 interface ChallengeContentProps {
   challenge: Challenge;
