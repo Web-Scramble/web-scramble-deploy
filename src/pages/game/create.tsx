@@ -1,17 +1,11 @@
 import { useState } from "react";
 import {
-  X,
   PenLine,
-  Paperclip,
   Clock,
   AlignLeft,
-  AlignCenter,
-  AlignRight,
   Globe,
   Trophy,
   Lock,
-  List,
-  Code,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -29,12 +23,16 @@ import { useNavigate } from "react-router";
 import InvitationPopup from "@/components/modals/invitation_modal";
 // import TiptapEditor from "@/components/ui/shared/tiptap";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
+import { Paperclip, Image, Video, FileText, X } from 'lucide-react';
+
+// Add to your component state
 
 const ChallengeCreator = () => {
+  const [attachments, setAttachments] = useState([]);
   const [challengeType, setChallengeType] = useState("task");
   const [isPrivate, setIsPrivate] = useState(true);
   const [title, setTitle] = useState("");
-  const [content, setContent] = useState("");
+ 
   const [isScheduled, setIsScheduled] = useState(false);
   const [showInvitationModal, setShowInvitationModal] = useState(false);
   const [isTimeLimited, setIsTimeLimited] = useState(false);
@@ -42,29 +40,11 @@ const ChallengeCreator = () => {
     value: 1,
     unit: "hours",
   });
-  const [textFormat, setTextFormat] = useState({
-    bold: false,
-    italic: false,
-    underline: false,
-    strikethrough: false,
-    align: "left",
-    color: "black",
-    size: "normal",
-  });
-  const navigate = useNavigate();
-  const handleFormatChange = (format) => {
-    setTextFormat((prev) => ({
-      ...prev,
-      [format]: !prev[format],
-    }));
-  };
 
-  const handleAlignmentChange = (alignment) => {
-    setTextFormat((prev) => ({
-      ...prev,
-      align: alignment,
-    }));
-  };
+  const navigate = useNavigate();
+
+
+ 
 
   return (
     <Layout>
@@ -101,121 +81,96 @@ const ChallengeCreator = () => {
         </div>
 
         <TiptapEditor
-        //  content="<p>Home<p>"
-        //  onChange={setContent}
         />
-        {/* Content Editor */}
-        {/* <div className="mb-4 rounded-lg border">
-        <div className="relative">
-          <textarea
-            placeholder="Write your challenge description..."
-            className="w-full min-h-[120px] p-3 text-base resize-none border-none focus:outline-none rounded-t-lg"
-            value={content}
-            onChange={(e) => setContent(e.target.value)}
-            style={{
-              textAlign: textFormat.align,
-              color: textFormat.color,
-              fontWeight: textFormat.bold ? "bold" : "normal",
-              fontStyle: textFormat.italic ? "italic" : "normal",
-              textDecoration: `${textFormat.underline ? "underline" : ""} ${
-                textFormat.strikethrough ? "line-through" : ""
-              }`.trim(),
-              fontSize:
-                textFormat.size === "small"
-                  ? "0.875rem"
-                  : textFormat.size === "large"
-                  ? "1.25rem"
-                  : "1rem",
-            }}
-          />
-        </div> */}
-
-        {/* Editor Toolbar */}
-        {/* <div className="flex items-center justify-between border-t p-2">
-          <div className="flex items-center space-x-1">
-            <div className="flex items-center border-r pr-1">
-              <Button
-                variant={textFormat.bold ? "secondary" : "ghost"}
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() => handleFormatChange("bold")}
-              >
-                <span className="font-bold">B</span>
-              </Button>
-              <Button
-                variant={textFormat.italic ? "secondary" : "ghost"}
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() => handleFormatChange("italic")}
-              >
-                <span className="italic">I</span>
-              </Button>
-              <Button
-                variant={textFormat.underline ? "secondary" : "ghost"}
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() => handleFormatChange("underline")}
-              >
-                <span className="underline">U</span>
-              </Button>
-              <Button
-                variant={textFormat.strikethrough ? "secondary" : "ghost"}
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() => handleFormatChange("strikethrough")}
-              >
-                <span className="line-through">S</span>
-              </Button>
-            </div> */}
-
-        {/* Alignment Group */}
-        {/* <div className="flex items-center border-r pr-1">
-              <Button
-                variant={textFormat.align === "left" ? "secondary" : "ghost"}
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() => handleAlignmentChange("left")}
-              >
-                <AlignLeft className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={textFormat.align === "center" ? "secondary" : "ghost"}
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() => handleAlignmentChange("center")}
-              >
-                <AlignCenter className="h-4 w-4" />
-              </Button>
-              <Button
-                variant={textFormat.align === "right" ? "secondary" : "ghost"}
-                size="sm"
-                className="h-8 w-8 p-0"
-                onClick={() => handleAlignmentChange("right")}
-              >
-                <AlignRight className="h-4 w-4" />
-              </Button>
-            </div> */}
-
-        {/* Lists and Code */}
-        {/* <div className="flex items-center">
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                <List className="h-4 w-4" />
-              </Button>
-              <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-                <Code className="h-4 w-4" />
-              </Button>
-            </div>
-          </div> */}
-
-        {/* Right-aligned upload button */}
-        {/* <div>
-            <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
-              <Paperclip className="h-4 w-4" />
-            </Button>
-          </div>
+        <div className="mb-4">
+  <Label className="text-sm font-medium mb-2 block text-left">
+    Attachments
+  </Label>
+  
+  {/* File Upload Area */}
+  <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 mb-2">
+    <div className="flex flex-col items-center justify-center gap-2">
+      <Input
+        type="file"
+        multiple
+        id="file-upload"
+        className="hidden"
+        onChange={(e) => {
+          const files = Array.from(e.target.files || []);
+          setAttachments((prev) => [
+            ...prev,
+            ...files.map((file,index) => ({
+              id:index,
+              file,
+              type: file.type.split('/')[0],
+              name: file.name,
+              size: file.size,
+            })),
+          ]);
+        }}
+        accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov"
+      />
+      <label
+        htmlFor="file-upload"
+        className="cursor-pointer flex flex-col items-center"
+      >
+        <div className="bg-gray-50 rounded-full p-3 mb-2">
+          <Paperclip className="h-6 w-6 text-gray-500" />
         </div>
-      </div> */}
+        <p className="text-sm text-gray-600">
+          Click to upload or drag and drop
+        </p>
+        <p className="text-xs text-gray-500 mt-1">
+          Support for documents, images, and videos
+        </p>
+      </label>
+    </div>
+  </div>
 
+  {/* Attachment List */}
+  {attachments.length > 0 && (
+    <div className="space-y-2">
+      {attachments.map((attachment) => (
+        <div
+          key={attachment.id}
+          className="flex items-center justify-between bg-gray-50 rounded-lg p-2"
+        >
+          <div className="flex items-center gap-2">
+            {attachment.type === 'image' && (
+              <Image className="h-4 w-4 text-gray-500" />
+            )}
+            {attachment.type === 'video' && (
+              <Video className="h-4 w-4 text-gray-500" />
+            )}
+            {attachment.type === 'application' && (
+              <FileText className="h-4 w-4 text-gray-500" />
+            )}
+            <div className="flex flex-col">
+              <span className="text-sm font-medium truncate max-w-[200px]">
+                {attachment.name}
+              </span>
+              <span className="text-xs text-gray-500">
+                {Math.round(attachment.size / 1024)} KB
+              </span>
+            </div>
+          </div>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="h-8 w-8 p-0 text-gray-500 hover:text-red-500"
+            onClick={() =>
+              setAttachments((prev) =>
+                prev.filter((item) => item.id !== attachment.id)
+              )
+            }
+          >
+            <X className="h-4 w-4" />
+          </Button>
+        </div>
+      ))}
+    </div>
+  )}
+</div>
         {/* Challenge Type Selection */}
         <div className="mb-4">
           <Label className="text-sm font-medium mb-2 block text-left">

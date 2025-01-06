@@ -18,18 +18,13 @@ import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 import Layout from "@/components/ui/shared/layout";
+import TiptapEditor from "@/components/ui/shared/tiptap_editor";
 
 const ChallengeSubmission = () => {
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState("");
-  const [description, setDescription] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [textFormat, setTextFormat] = useState({
-    bold: false,
-    italic: false,
-    underline: false,
-    align: "left",
-  });
+
 
   const handleDrop = (e) => {
     e.preventDefault();
@@ -46,19 +41,7 @@ const ChallengeSubmission = () => {
     setFiles((prev) => prev.filter((_, index) => index !== indexToRemove));
   };
 
-  const handleFormatChange = (format) => {
-    setTextFormat((prev) => ({
-      ...prev,
-      [format]: !prev[format],
-    }));
-  };
 
-  const handleAlignmentChange = (alignment) => {
-    setTextFormat((prev) => ({
-      ...prev,
-      align: alignment,
-    }));
-  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -105,127 +88,10 @@ const ChallengeSubmission = () => {
           </div>
 
           {/* Description Editor */}
-          <div className="mb-6">
             <Label className="text-sm font-medium mb-2 block">
               Description
             </Label>
-            <div className="rounded-lg border">
-              <textarea
-                placeholder="Describe your solution..."
-                className="w-full min-h-[200px] p-3 text-base resize-none border-none focus:outline-none rounded-t-lg"
-                value={description}
-                onChange={(e) => setDescription(e.target.value)}
-                style={{
-                  textAlign: textFormat.align,
-                  fontWeight: textFormat.bold ? "bold" : "normal",
-                  fontStyle: textFormat.italic ? "italic" : "normal",
-                  textDecoration: textFormat.underline ? "underline" : "none",
-                }}
-              />
-
-              {/* Formatting Toolbar */}
-              <div className="flex items-center justify-between border-t p-2">
-                <div className="flex items-center space-x-1">
-                  <div className="flex items-center border-r pr-1">
-                    <Button
-                      variant={textFormat.bold ? "secondary" : "ghost"}
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleFormatChange("bold")}
-                      type="button"
-                    >
-                      <span className="font-bold">B</span>
-                    </Button>
-                    <Button
-                      variant={textFormat.italic ? "secondary" : "ghost"}
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleFormatChange("italic")}
-                      type="button"
-                    >
-                      <span className="italic">I</span>
-                    </Button>
-                    <Button
-                      variant={textFormat.underline ? "secondary" : "ghost"}
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleFormatChange("underline")}
-                      type="button"
-                    >
-                      <span className="underline">U</span>
-                    </Button>
-                  </div>
-
-                  <div className="flex items-center border-r pr-1">
-                    <Button
-                      variant={
-                        textFormat.align === "left" ? "secondary" : "ghost"
-                      }
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleAlignmentChange("left")}
-                      type="button"
-                    >
-                      <AlignLeft className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={
-                        textFormat.align === "center" ? "secondary" : "ghost"
-                      }
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleAlignmentChange("center")}
-                      type="button"
-                    >
-                      <AlignCenter className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant={
-                        textFormat.align === "right" ? "secondary" : "ghost"
-                      }
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      onClick={() => handleAlignmentChange("right")}
-                      type="button"
-                    >
-                      <AlignRight className="h-4 w-4" />
-                    </Button>
-                  </div>
-
-                  <div className="flex items-center">
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      type="button"
-                    >
-                      <List className="h-4 w-4" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="sm"
-                      className="h-8 w-8 p-0"
-                      type="button"
-                    >
-                      <Code className="h-4 w-4" />
-                    </Button>
-                  </div>
-                </div>
-
-                <div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0"
-                    type="button"
-                  >
-                    <Link className="h-4 w-4" />
-                  </Button>
-                </div>
-              </div>
-            </div>
-          </div>
-
+            <TiptapEditor/>
           {/* File Upload */}
           <div className="mb-6">
             <Label className="text-sm font-medium mb-2 block">

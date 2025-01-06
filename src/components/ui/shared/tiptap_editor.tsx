@@ -7,8 +7,15 @@ import Document from '@tiptap/extension-document'
 import Dropcursor from '@tiptap/extension-dropcursor'
 import Image from '@tiptap/extension-image'
 import Paragraph from '@tiptap/extension-paragraph'
+import FileHandler from '@tiptap-pro/extension-file-handler'
 import Text from '@tiptap/extension-text'
 import Code from '@tiptap/extension-code'
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { Button } from '@/components/ui/button';
 import {
   AlignLeft,
@@ -21,9 +28,6 @@ import {
   Strikethrough,
   Highlighter,
   Heading1,
-  Heading2,
-  Heading3,
-  TextQuote,
   Paperclip,
   Code as LinkCode
 } from 'lucide-react';
@@ -43,40 +47,40 @@ const MenuBar = ({ editor }) => {
     <div className="flex items-center justify-between border-t p-2">
       <div className="flex items-center space-x-1 ">
         {/* Headings Group */}
-        {/* <div className="flex items-center border-r pr-1 gap-1">
-          <Button
+         {/* <div className="flex items-center border-r pr-1 gap-1"> */}
+          {/* <Button
             variant={editor.isActive('heading', { level: 1 }) ? "default" : "ghost"}
             size="sm"
             className="h-8 w-8 p-0"
             onClick={() => editor.chain().focus().toggleHeading({ level: 1}).run()}
           >
             <Heading1 className="h-4 w-4" />
-          </Button>
-          <Button
+          </Button> */}
+          {/* <Button
             variant={editor.isActive('heading', { level: 2 }) ? "default" : "ghost"}
             size="sm"
             className="h-8 w-8 p-0"
             onClick={() => editor.chain().focus().toggleHeading({ level: 2 }).run()}
           >
             <Heading2 className="h-4 w-4" />
-          </Button>
+          </Button> */}
           <Button
             variant={editor.isActive('heading', { level: 3 }) ? "default" : "ghost"}
             size="sm"
             className="h-8 w-8 p-0"
             onClick={() => editor.chain().focus().toggleHeading({ level: 3 }).run()}
           >
-            <Heading3 className="h-4 w-4" />
+            <Heading1 className="h-4 w-4" />
           </Button>
-          <Button
+          {/* <Button
             variant={editor.isActive('paragraph') ? "default" : "ghost"}
             size="sm"
             className="h-8 w-8 p-0"
             onClick={() => editor.chain().focus().setParagraph().run()}
           >
             <TextQuote className="h-4 w-4" />
-          </Button>
-        </div> */}
+          </Button> */}
+        {/* </div>  */}
 
         {/* Text Formatting Group */}
         <div className="flex items-center border-r pr-1  gap-1">
@@ -169,9 +173,19 @@ const MenuBar = ({ editor }) => {
 
       {/* Right-aligned upload button */}
       <div>
-        <Button onClick={addImage} variant="ghost" size="sm" className="h-8 w-8 p-0">
+      <TooltipProvider>
+      <Tooltip>
+        <TooltipTrigger asChild>
+          <Button onClick={addImage} variant="ghost" size="sm" className="h-8 w-8 p-0">
           <Paperclip className="h-4 w-4" />
         </Button>
+        </TooltipTrigger>
+        <TooltipContent>
+          <p>Embbed Image</p>
+        </TooltipContent>
+      </Tooltip>
+    </TooltipProvider>
+        
       </div>
     </div>
   );
@@ -181,7 +195,7 @@ const TiptapEditor = () => {
   const editor = useEditor({
     editorProps: {
                 attributes: {
-                  class: 'prose prose-sm sm:prose lg:prose-lg xl:prose-2xl mx-auto focus:outline-none border rounded-md p-4',
+                  class: 'prose prose-sm sm:prose  mx-auto focus:outline-none border rounded-md p-4',
                 },
               },
     extensions: [
@@ -200,25 +214,53 @@ const TiptapEditor = () => {
         HTMLAttributes: {
           class: 'bg-amber-50',
         },
-      })
+      }),FileHandler.configure({
+        allowedMimeTypes: ['image/png', 'image/jpeg', 'image/gif', 'image/webp'],
+        onDrop: (currentEditor, files, pos) => {
+          files.forEach(file => {
+            const fileReader = new FileReader()
+
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () => {
+              currentEditor.chain().insertContentAt(pos, {
+                type: 'image',
+                attrs: {
+                  src: fileReader.result,
+                },
+              }).focus().run()
+            }
+          })
+        },
+        onPaste: (currentEditor, files, htmlContent) => {
+          files.forEach(file => {
+            if (htmlContent) {
+              // if there is htmlContent, stop manual insertion & let other extensions handle insertion via inputRule
+              // you could extract the pasted file from this url string and upload it to a server for example
+              console.log(htmlContent) // eslint-disable-line no-console
+              return false
+            }
+
+            const fileReader = new FileReader()
+
+            fileReader.readAsDataURL(file)
+            fileReader.onload = () => {
+              currentEditor.chain().insertContentAt(currentEditor.state.selection.anchor, {
+                type: 'image',
+                attrs: {
+                  src: fileReader.result,
+                },
+              }).focus().run()
+            }
+          })
+        },
+      }),
     ],
     content: `
-      <h3 style="text-align:center">
-        Devs Just Want to Have Fun by Cyndi Lauper
+      <h3 style="text-align:left">
+        Enter your challenge here
       </h3>
-      <p style="text-align:center">
-        I come home in the morning light<br>
-        My mother says, <mark>"When you gonna live your life right?"</mark><br>
-        Oh mother dear we're not the fortunate ones<br>
-        And devs, they wanna have fun<br>
-        Oh devs just want to have fun</p>
-      <p style="text-align:center">
-        The phone rings in the middle of the night<br>
-        My father yells, "What you gonna do with your life?"<br>
-        Oh daddy dear, you know you're still number one<br>
-        But <s>girls</s>devs, they wanna have fun<br>
-        Oh devs just want to have
-      </p>
+      <p style="text-align:left">
+        drag and drop images to add to editor<br></p>
     `,
   });
 

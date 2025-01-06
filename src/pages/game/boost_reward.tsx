@@ -10,7 +10,7 @@ const BoostRewardPage = () => {
   const [amount, setAmount] = useState(20);
   const presetAmounts = [5, 10, 20, 50, 100];
 
-  const handleSliderChange = (value) => {
+  const handleSliderChange = (value:number[]) => {
     setAmount(value[0]);
   };
 

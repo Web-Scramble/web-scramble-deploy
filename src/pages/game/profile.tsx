@@ -85,10 +85,6 @@ const ProfilePage = () => {
                     the community.
                   </p>
                   <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                    {/* <div className="flex items-center">
-                      <MapPin className="h-4 w-4 mr-1" />
-                      San Francisco, CA
-                    </div> */}
                     <div className="flex items-center">
                       <AtSign className="h-4 w-4 mr-1" />
                       ndeoswaldnji@gmail.com
