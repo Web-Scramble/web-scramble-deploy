@@ -1,8 +1,33 @@
-# React + TypeScript + Vite
+# Documentation for Web Scramble Next js 15 Web App
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+## Getting Started
 
-Currently, two official plugins are available:
+First, navigate to project:
+
+```bash
+cd web-scramble-deploy
+
+```
+
+then install dependencies
+
+```bash
+npm install
+
+```
+
+create a .env file and paste the api url provided.
+
+
+
+then run the project
+
+```bash
+npm run dev
+
+```
+
+Open [http://localhost:3000](http://localhost:5137) with your browser to see the result.
 
 - [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
 - [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh

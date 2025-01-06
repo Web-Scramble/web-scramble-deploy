@@ -24,27 +24,97 @@ import InvitationPopup from "@/components/modals/invitation_modal";
 // import TiptapEditor from "@/components/ui/shared/tiptap";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
 import { Paperclip, Image, Video, FileText, X } from 'lucide-react';
+import { useForm, Controller } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
+import { challengeSchema } from "@/schema/challenge_creation_validation";
+import { ChallengeFormData } from "@/types/challenge";
 
 // Add to your component state
 
 const ChallengeCreator = () => {
   const [attachments, setAttachments] = useState([]);
   const [challengeType, setChallengeType] = useState("task");
-  const [isPrivate, setIsPrivate] = useState(true);
-  const [title, setTitle] = useState("");
+  const [isTimeLimited, setIsTimeLimited] = useState(false)
+  const [isPrivate, setIsPrivate] = useState(false)
+  const [isScheduled  , setIsScheduled] = useState(false)
+  const [EditorContent, setEditorContent] = useState(`
+      <h3 style="text-align:left">
+        Enter your challenge here
+      </h3>
+      <p style="text-align:left">
+        drag and drop images to add to editor<br></p>
+    `)
  
-  const [isScheduled, setIsScheduled] = useState(false);
   const [showInvitationModal, setShowInvitationModal] = useState(false);
-  const [isTimeLimited, setIsTimeLimited] = useState(false);
   const [duration, setDuration] = useState({
     value: 1,
     unit: "hours",
   });
 
   const navigate = useNavigate();
+  const {
+    control,
+    handleSubmit,
+    watch,
+    formState: { errors },
+    register,
+  } = useForm<ChallengeFormData>({
+    resolver: yupResolver(challengeSchema),
+    defaultValues: {
+      challengeType: 'task',
+      isPrivate: true,
+      isTimeLimited: false,
+      isScheduled: false,
+      duration: {
+        value: 1,
+        unit: 'hours',
+      },
+    },
+  });
 
+  const handleCreateChallenge = (data:ChallengeFormData) => {
 
- 
+    const formData = new FormData();
+    
+    // Append basic fields
+    Object.keys(data).forEach(key => {
+      if (key !== 'attachments') {
+        // Handle nested objects
+        if (typeof data[key] === 'object') {
+          formData.append(key, JSON.stringify(data[key]));
+        } else {
+          formData.append(key, data[key]);
+        }
+      }
+    });
+    
+    // Append attachments
+    if (data.attachments) {
+      data.attachments.forEach((file, index) => {
+        formData.append(`attachments`, file);
+      });
+    }
+  }
+  
+
+  // console.log(watch('isPrivate'))
+  // console.log(watch('isTimeLimited'))
+  // console.log(watch('isScheduled'))
+  // console.log(watch('attachments'))
+  // console.log(watch('title'))
+  // console.log(watch('attachments'))
+  // console.log(watch('attachments'))
+  // console.log(watch('attachments'))
+
+  const onSubmit = async (data: ChallengeFormData) => {
+    console.log(data)
+  };
+
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setValue('attachments', files);
+  };
+
 
   return (
     <Layout>
@@ -72,15 +142,16 @@ const ChallengeCreator = () => {
           <div className="relative flex flex-row justify-start gap-2 items-center">
             <PenLine className=" h-4 w-4 text-gray-400" />
             <Input
-              value={title}
-              onChange={(e) => setTitle(e.target.value)}
               className="text-lg font-normal border-none shadow-none focus-visible:ring-0 pl-8 px-2 py-1"
               placeholder="Enter challenge title..."
+              {...register("title")}
             />
           </div>
         </div>
 
         <TiptapEditor
+        editorContent={EditorContent}
+        getEditorContent={setEditorContent}
         />
         <div className="mb-4">
   <Label className="text-sm font-medium mb-2 block text-left">

@@ -7,6 +7,7 @@ import ChallengeSubmissions from "./review_panel";
 import LeaderboardCard from "./leaderboard";
 import EditProfile from "./edit_profile";
 import SettingsScreen from "./settings";
+import TopUpPage from "./top_up";
 
 export {
   LeaderboardCard,
@@ -18,4 +19,5 @@ export {
   ChallengeSubmissions,
   EditProfile,
   SettingsScreen,
+  TopUpPage
 };

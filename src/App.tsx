@@ -15,6 +15,7 @@ import {
   BoostRewardPage,
   EditProfile,
   SettingsScreen,
+  TopUpPage,
 } from "./pages/game";
 import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
@@ -48,6 +49,7 @@ function App() {
         <Route path="/boost-reward" element={<BoostRewardPage />} />
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/settings" element={<SettingsScreen />} />
+        <Route path="/top-up" element={<TopUpPage />} />
         {/* <Route
           path="/challenge"
           element={

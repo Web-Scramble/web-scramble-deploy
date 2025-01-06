@@ -3,7 +3,7 @@ import ChallengeCard from "@/components/features/challenge/challenge";
 import { mockChallenges } from "@/constants/mockChallenges";
 import Layout from "@/components/ui/shared/layout";
 
-const ChallengeFeed: React.FC = () => {
+const ChallengeFeed = () => {
   const handleJoin = (challengeId: string) => {
     console.log(`Joining challenge: ${challengeId}`);
   };

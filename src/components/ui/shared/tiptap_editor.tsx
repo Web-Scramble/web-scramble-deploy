@@ -32,6 +32,10 @@ import {
   Code as LinkCode
 } from 'lucide-react';
 
+export type EditorProps = {
+  editorContent?:string;
+  getEditorContent:(data:string)=>void;
+}
 const MenuBar = ({ editor }) => {
   if (!editor) return null;
 
@@ -191,7 +195,7 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-const TiptapEditor = () => {
+const TiptapEditor = ({editorContent,getEditorContent}:EditorProps) => {
   const editor = useEditor({
     editorProps: {
                 attributes: {
@@ -256,13 +260,14 @@ const TiptapEditor = () => {
       //   },
       // }),
     ],
-    content: `
-      <h3 style="text-align:left">
+    content: editorContent?editorContent:`<h3 style="text-align:left">
         Enter your challenge here
       </h3>
       <p style="text-align:left">
-        drag and drop images to add to editor<br></p>
-    `,
+        drag and drop images to add to editor<br></p>`,
+    onUpdate({ editor }) {
+      getEditorContent(editor.getHTML());
+    },
   });
 
 

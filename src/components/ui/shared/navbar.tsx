@@ -9,6 +9,7 @@ const Navbar = () => {
   const navItems = [
     { icon: FileText, label: "Challenge", href: "/challenge" },
     { icon: User, label: "Profile", href: "/profile" },
+    { icon: Menu, label: "Top up", href: "/top-up" },
   ];
   const { user } = authStore();
   const [isOpen, setIsOpen] = useState(false);

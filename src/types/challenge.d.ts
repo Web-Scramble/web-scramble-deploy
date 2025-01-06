@@ -42,3 +42,21 @@ export interface Attachment {
     remarks: Remark[];
     rankings: Ranking[];
   }
+  export interface ChallengeFormData {
+    title: string;
+    description: string;
+    challengeType: 'task' | 'prize' | 'blog';
+    isTimeLimited: boolean;
+    duration?: {
+      value: number;
+      unit: 'minutes' | 'hours' | 'days' | 'weeks';
+    };
+    reward?: string;
+    isPrivate: boolean;
+    participants?: string[];
+    judges?: string[];
+    isScheduled: boolean;
+    startTime?: string;
+    endTime?: string;
+    attachments?: File[];
+  }

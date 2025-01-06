@@ -1,5 +1,6 @@
 import axios from "axios";
 import { Inputs, UserCreationInputs, ValidateInputs } from "@/types/authentication";
+import { ChallengeFormData } from "@/types/challenge";
 
 const baseURL = import.meta.env.VITE_API_URL
 
@@ -22,6 +23,16 @@ export const socialAuth = async (values:any) => {
   const response = await axios.post(`${baseURL}auth/social`,values);
   return response.data;
 };
+export const createChallenge = async (data: ChallengeFormData) => {
+    
+    const { data: response } = await axios.post('/challenges', data, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    
+    return response;
+  }
 export const updateServer = async ({
   id,
   data,
