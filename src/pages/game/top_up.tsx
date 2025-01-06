@@ -1,143 +1,79 @@
-import React, { useState } from 'react';
-import {
-  CreditCard,
-  DollarSign,
-  Wallet,
-  Star,
-  CheckCircle2,
-  Clock,
-  ChevronLeft
-} from 'lucide-react';
+import { useState } from 'react';
+import { CreditCard } from 'lucide-react';
 import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Card,
-  CardHeader,
-  CardTitle,
-  CardDescription,
-  CardContent,
-  CardFooter,
-} from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import Layout from '@/components/ui/shared/layout';
+import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
+import { Label } from '@/components/ui/label';
+import { Card, CardContent } from '@/components/ui/card';
+import { ApplePayForm } from '@/components/features/payment/apple_pay';
+import PayPalForm from '@/components/features/payment/paypal';
+import { CardPaymentForm } from '@/components/features/payment/card';
 
-export default function TopUpPage() {
-  const [selectedAmount, setSelectedAmount] = useState('');
-  const [customAmount, setCustomAmount] = useState('');
-  
-  const predefinedAmounts = [
-    { value: '10', label: '$10' },
-    { value: '25', label: '$25' },
-    { value: '50', label: '$50' },
-    { value: '100', label: '$100' },
-  ];
+function ApplePayIcon() {
+  return (
+    <svg className="h-6 w-6" viewBox="0 0 24 24">
+      <path d="M12 2C6.477 2 2 6.477 2 12c0 4.41 2.865 8.138 6.84 9.466V16.5h-2.063v-2.97H6.84v-2.256c0-2.035 1.21-3.156 3.067-3.156.89 0 1.82.156 1.82.156v1.996h-1.024c-1.01 0-1.326.626-1.326 1.27v1.52h2.256l-.36 2.97h-1.896V21.5C19.135 20.172 22 16.444 22 12c0-5.523-4.477-10-10-10z" />
+    </svg>
+  );
+}
+
+export default function PaymentPage() {
+  const [paymentMethod, setPaymentMethod] = useState('card');
 
   return (
-    <Layout>
-    <div className="max-w-2xl mx-auto p-4">
-      <div className="grid gap-6">
-        {/* Current Balance Card */}
-        <Card>
-          <CardContent className="pt-6">
-            <div className="flex items-center justify-between">
-              <div className="flex items-center space-x-4">
-                <div className="p-2 bg-green-50 rounded-full">
-                  <Wallet className="h-6 w-6 text-green-600" />
-                </div>
-                <div>
-                  <p className="text-sm text-gray-500">Current Balance</p>
-                  <p className="text-2xl font-semibold">$45.00</p>
-                </div>
+    <div className="max-w-md mx-auto p-4 space-y-6">
+      <Card>
+        <CardContent className="pt-6">
+          <RadioGroup 
+            value={paymentMethod} 
+            onValueChange={setPaymentMethod}
+            className="space-y-4"
+          >
+            <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem  value="card" id="card" />
+                <Label htmlFor="card" className="flex items-center space-x-2">
+                  <CreditCard className="h-5 w-5" />
+                  <span>Credit Card</span>
+                </Label>
               </div>
-              <Button variant="outline" size="sm" className="flex items-center">
-                <Clock className="h-4 w-4 mr-2" />
-                Transaction History
-              </Button>
             </div>
-          </CardContent>
-        </Card>
 
-        {/* Amount Selection */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Select Amount</CardTitle>
-            <CardDescription>Choose an amount to top up</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid grid-cols-2 gap-4">
-              {predefinedAmounts.map((amount) => (
-                <Button
-                  key={amount.value}
-                  variant={selectedAmount === amount.value ? "default" : "outline"}
-                  className="h-16"
-                  onClick={() => {
-                    setSelectedAmount(amount.value);
-                    setCustomAmount('');
-                  }}
-                >
-                  <DollarSign className="h-4 w-4 mr-2" />
-                  {amount.label}
-                </Button>
-              ))}
-            </div>
-            
-            <div className="relative">
-              <div className="absolute inset-y-0 left-3 flex items-center pointer-events-none">
-                <DollarSign className="h-4 w-4 text-gray-400" />
+            <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem value="apple-pay" id="apple-pay"/>
+                <Label htmlFor="apple-pay" className="flex items-center space-x-2">
+                  <ApplePayIcon />
+                  <span>Apple Pay</span>
+                </Label>
               </div>
-              <Input
-                type="number"
-                placeholder="Enter custom amount"
-                value={customAmount}
-                onChange={(e) => {
-                  setCustomAmount(e.target.value);
-                  setSelectedAmount('');
-                }}
-                className="pl-10"
-              />
             </div>
-          </CardContent>
-        </Card>
 
-        {/* Payment Method */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Payment Method</CardTitle>
-            <CardDescription>Select your preferred payment method</CardDescription>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div className="grid gap-4">
-              <div className="flex items-center justify-between p-4 border rounded-lg bg-gray-50">
-                <div className="flex items-center space-x-4">
-                  <CreditCard className="h-5 w-5 text-gray-600" />
-                  <div>
-                    <p className="font-medium">Credit Card ending in 4242</p>
-                    <p className="text-sm text-gray-500">Expires 12/24</p>
-                  </div>
-                </div>
-                <CheckCircle2 className="h-5 w-5 text-green-600" />
+            <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+              <div className="flex items-center space-x-3">
+                <RadioGroupItem value="paypal" id="paypal" />
+                <Label htmlFor="paypal" className="flex items-center space-x-2">
+                  {/* <PaypalIcon className="h-5 w-5" /> */}
+                  <span>PayPal</span>
+                </Label>
               </div>
-              
-              <Button variant="outline" className="flex items-center justify-center">
-                <CreditCard className="h-4 w-4 mr-2" />
-                Add New Card
-              </Button>
             </div>
-          </CardContent>
-          <CardFooter>
+          </RadioGroup>
+        </CardContent>
+      </Card>
+
+      <Card>
+        <CardContent className="pt-6">
+          {paymentMethod === 'card' && <CardPaymentForm />}
+          {paymentMethod === 'paypal' && <PayPalForm />}
+          {paymentMethod === 'apple-pay' && <ApplePayForm />}
+
+          <div className="mt-6">
             <Button className="w-full" size="lg">
-              Pay ${selectedAmount || customAmount || '0'}
+              Pay $50.00
             </Button>
-          </CardFooter>
-        </Card>
-      </div>
+          </div>
+        </CardContent>
+      </Card>
     </div>
-    </Layout>
   );
 }

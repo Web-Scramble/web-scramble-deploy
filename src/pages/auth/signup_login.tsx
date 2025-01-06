@@ -61,6 +61,7 @@ const AuthPage = () => {
       });
       console.log(data)
         setItemToLocalStorage("USER_DATA", data.user);
+        setItemToLocalStorage("TOKEN", data.token);
         updateToken(data.token)
         updateUser(data.user)
         navigate("/challenge")

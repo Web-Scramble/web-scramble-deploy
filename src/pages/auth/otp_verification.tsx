@@ -32,8 +32,7 @@ const OTPVerification = () => {
   const { phone } = useParams();
   const navigate = useNavigate();
   const { toast } = useToast();
-  const {updateToken,updateUser} = authStore()
-
+  const { updateToken, updateUser } = authStore();
 
   const validateOtpMutation = useMutation({
     mutationFn: ValidateOtp,
@@ -44,15 +43,17 @@ const OTPVerification = () => {
       toast({
         description: "OTP Verification successfull.",
       });
-      console.log(data)
+      console.log(data);
       if (data.message === "Complete registration required") {
         navigate(`/username/${phone}`);
       } else {
-        console.log(data)
+        console.log(data);
         setItemToLocalStorage("USER_DATA", data.user);
-        updateToken(data.token)
-        updateUser(data.user)
-        navigate("/challenge")
+        setItemToLocalStorage("TOKEN", data.token);
+
+        updateToken(data.token);
+        updateUser(data.user);
+        navigate("/challenge");
       }
       // navigate(`/otp/${phone}`)
     },
@@ -89,7 +90,6 @@ const OTPVerification = () => {
       phone,
       otp: values.otp,
     });
-
   };
   // const handleRefetch = () => {
   // };
@@ -104,11 +104,11 @@ const OTPVerification = () => {
   const onSubmit: SubmitHandler<ValidateInputs> = (data) =>
     handleOtpVerification(data);
   console.log(watch("otp"));
-  const handleKeyDown = (event:React.FormEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleSubmit(onSubmit)
+  const handleKeyDown = (event: React.FormEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSubmit(onSubmit);
     }
-  }
+  };
 
   return (
     <div className="min-h-screen bg-background flex items-center justify-center p-4">
@@ -129,7 +129,11 @@ const OTPVerification = () => {
             className="space-y-4 text-center flex flex-col items-center"
           >
             <div className="space-y-2">
-              <InputOTP maxLength={6} onKeyDown={handleKeyDown} {...register("otp")}>
+              <InputOTP
+                maxLength={6}
+                onKeyDown={handleKeyDown}
+                {...register("otp")}
+              >
                 <InputOTPGroup>
                   <InputOTPSlot index={0} />
                   <InputOTPSlot index={1} />

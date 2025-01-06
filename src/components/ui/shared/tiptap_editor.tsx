@@ -34,7 +34,7 @@ import {
 
 export type EditorProps = {
   editorContent?:string;
-  getEditorContent:(data:string)=>void;
+  setEditorContent:(data:string)=>void;
 }
 const MenuBar = ({ editor }) => {
   if (!editor) return null;
@@ -195,7 +195,7 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-const TiptapEditor = ({editorContent,getEditorContent}:EditorProps) => {
+const TiptapEditor = ({editorContent,setEditorContent}:EditorProps) => {
   const editor = useEditor({
     editorProps: {
                 attributes: {
@@ -266,7 +266,7 @@ const TiptapEditor = ({editorContent,getEditorContent}:EditorProps) => {
       <p style="text-align:left">
         drag and drop images to add to editor<br></p>`,
     onUpdate({ editor }) {
-      getEditorContent(editor.getHTML());
+      setEditorContent(editor.getHTML());
     },
   });
 

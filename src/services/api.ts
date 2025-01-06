@@ -24,14 +24,13 @@ export const socialAuth = async (values:any) => {
   return response.data;
 };
 export const createChallenge = async (data: ChallengeFormData) => {
-    
-    const { data: response } = await axios.post('/challenges', data, {
+    const response = await axios.post(`${baseURL}challenge`, data, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
     });
     
-    return response;
+    return response.data;
   }
 export const updateServer = async ({
   id,

@@ -1,12 +1,5 @@
-import { useState } from "react";
-import {
-  PenLine,
-  Clock,
-  AlignLeft,
-  Globe,
-  Trophy,
-  Lock,
-} from "lucide-react";
+import { useState, useEffect } from "react";
+import { PenLine, Clock, AlignLeft, Globe, Trophy, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -23,37 +16,30 @@ import { useNavigate } from "react-router";
 import InvitationPopup from "@/components/modals/invitation_modal";
 // import TiptapEditor from "@/components/ui/shared/tiptap";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
-import { Paperclip, Image, Video, FileText, X } from 'lucide-react';
-import { useForm, Controller } from 'react-hook-form';
-import { yupResolver } from '@hookform/resolvers/yup';
+import { Paperclip, Image, Video, FileText, X } from "lucide-react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { challengeSchema } from "@/schema/challenge_creation_validation";
 import { ChallengeFormData } from "@/types/challenge";
+import { getRandomValues } from "crypto";
 
 // Add to your component state
 
 const ChallengeCreator = () => {
   const [attachments, setAttachments] = useState([]);
   const [challengeType, setChallengeType] = useState("task");
-  const [isTimeLimited, setIsTimeLimited] = useState(false)
-  const [isPrivate, setIsPrivate] = useState(false)
-  const [isScheduled  , setIsScheduled] = useState(false)
-  const [EditorContent, setEditorContent] = useState(`
-      <h3 style="text-align:left">
-        Enter your challenge here
-      </h3>
-      <p style="text-align:left">
-        drag and drop images to add to editor<br></p>
-    `)
- 
-  const [showInvitationModal, setShowInvitationModal] = useState(false);
-  const [duration, setDuration] = useState({
-    value: 1,
-    unit: "hours",
-  });
+  const [isTimeLimited, setIsTimeLimited] = useState(false);
+  const [isPrivate, setIsPrivate] = useState(true);
+  const [isScheduled, setIsScheduled] = useState(false);
+  const [editorContent, setEditorContent] = useState(``);
 
+  const [showInvitationModal, setShowInvitationModal] = useState(false);
+  const [duration, setDuration] = useState( "hours",);
+  useEffect(() => {
+console.log(editorContent,challengeType,isPrivate,duration)
+  });
   const navigate = useNavigate();
   const {
-    control,
     handleSubmit,
     watch,
     formState: { errors },
@@ -61,41 +47,48 @@ const ChallengeCreator = () => {
   } = useForm<ChallengeFormData>({
     resolver: yupResolver(challengeSchema),
     defaultValues: {
-      challengeType: 'task',
+      challengeType: "task",
       isPrivate: true,
       isTimeLimited: false,
       isScheduled: false,
       duration: {
         value: 1,
-        unit: 'hours',
+        unit: "hours",
       },
     },
   });
 
-  const handleCreateChallenge = (data:ChallengeFormData) => {
-
+  const handleCreateChallenge = (data: ChallengeFormData) => {
     const formData = new FormData();
-    
+    formData.append("challengeType",challengeType)
+    formData.append("name",data.title)
+    formData.append("description",editorContent)
+    formData.append("isPublic",JSON.stringify(isPrivate))
+    formData.append("rewardPool",JSON.stringify(data.reward))
+    formData.append("judges",JSON.stringify(["bla","bla","bla"]))
+    formData.append("participants",JSON.stringify(["pla","pla","pla"]))
+    formData.append("startTime",J)
+    formData.append("endTime",challengeType)
+
     // Append basic fields
-    Object.keys(data).forEach(key => {
-      if (key !== 'attachments') {
+    Object.keys(data).forEach((key) => {
+      if (key !== "attachments") {
         // Handle nested objects
-        if (typeof data[key] === 'object') {
+        if (typeof data[key] === "object") {
           formData.append(key, JSON.stringify(data[key]));
         } else {
           formData.append(key, data[key]);
         }
       }
     });
-    
+
     // Append attachments
     if (data.attachments) {
       data.attachments.forEach((file, index) => {
         formData.append(`attachments`, file);
       });
     }
-  }
-  
+  };
 
   // console.log(watch('isPrivate'))
   // console.log(watch('isTimeLimited'))
@@ -104,17 +97,16 @@ const ChallengeCreator = () => {
   // console.log(watch('title'))
   // console.log(watch('attachments'))
   // console.log(watch('attachments'))
-  // console.log(watch('attachments'))
+  console.log(watch('attachments'))
 
   const onSubmit = async (data: ChallengeFormData) => {
-    console.log(data)
+    console.log(data);
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setValue('attachments', files);
+    setValue("attachments", files);
   };
-
 
   return (
     <Layout>
@@ -124,7 +116,11 @@ const ChallengeCreator = () => {
           onClose={() => setShowInvitationModal(false)}
         />
       )}
-      <div className="bg-white w-full max-w-xl min-w-88 mx-auto p-3 rounded-lg shadow-md">
+
+      <form
+        onSubmit={handleSubmit(onSubmit)}
+        className="bg-white w-full max-w-xl min-w-88 mx-auto p-3 rounded-lg shadow-md"
+      >
         {/* Header with Close Button */}
         <div className="flex justify-end">
           <Button
@@ -150,98 +146,98 @@ const ChallengeCreator = () => {
         </div>
 
         <TiptapEditor
-        editorContent={EditorContent}
-        getEditorContent={setEditorContent}
+          editorContent={editorContent}
+          setEditorContent={setEditorContent}
         />
         <div className="mb-4">
-  <Label className="text-sm font-medium mb-2 block text-left">
-    Attachments
-  </Label>
-  
-  {/* File Upload Area */}
-  <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 mb-2">
-    <div className="flex flex-col items-center justify-center gap-2">
-      <Input
-        type="file"
-        multiple
-        id="file-upload"
-        className="hidden"
-        onChange={(e) => {
-          const files = Array.from(e.target.files || []);
-          setAttachments((prev) => [
-            ...prev,
-            ...files.map((file,index) => ({
-              id:index,
-              file,
-              type: file.type.split('/')[0],
-              name: file.name,
-              size: file.size,
-            })),
-          ]);
-        }}
-        accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov"
-      />
-      <label
-        htmlFor="file-upload"
-        className="cursor-pointer flex flex-col items-center"
-      >
-        <div className="bg-gray-50 rounded-full p-3 mb-2">
-          <Paperclip className="h-6 w-6 text-gray-500" />
-        </div>
-        <p className="text-sm text-gray-600">
-          Click to upload or drag and drop
-        </p>
-        <p className="text-xs text-gray-500 mt-1">
-          Support for documents, images, and videos
-        </p>
-      </label>
-    </div>
-  </div>
+          <Label className="text-sm font-medium mb-2 block text-left">
+            Attachments
+          </Label>
 
-  {/* Attachment List */}
-  {attachments.length > 0 && (
-    <div className="space-y-2">
-      {attachments.map((attachment) => (
-        <div
-          key={attachment.id}
-          className="flex items-center justify-between bg-gray-50 rounded-lg p-2"
-        >
-          <div className="flex items-center gap-2">
-            {attachment.type === 'image' && (
-              <Image className="h-4 w-4 text-gray-500" />
-            )}
-            {attachment.type === 'video' && (
-              <Video className="h-4 w-4 text-gray-500" />
-            )}
-            {attachment.type === 'application' && (
-              <FileText className="h-4 w-4 text-gray-500" />
-            )}
-            <div className="flex flex-col">
-              <span className="text-sm font-medium truncate max-w-[200px]">
-                {attachment.name}
-              </span>
-              <span className="text-xs text-gray-500">
-                {Math.round(attachment.size / 1024)} KB
-              </span>
+          {/* File Upload Area */}
+          <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 mb-2">
+            <div className="flex flex-col items-center justify-center gap-2">
+              <Input
+                type="file"
+                multiple
+                id="file-upload"
+                className="hidden"
+                onChange={(e) => {
+                  const files = Array.from(e.target.files || []);
+                  setAttachments((prev) => [
+                    ...prev,
+                    ...files.map((file, index) => ({
+                      id:index+Date.now(),
+                      file,
+                      type: file.type.split("/")[0],
+                      name: file.name,
+                      size: file.size,
+                    })),
+                  ]);
+                }}
+                accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov"
+              />
+              <label
+                htmlFor="file-upload"
+                className="cursor-pointer flex flex-col items-center"
+              >
+                <div className="bg-gray-50 rounded-full p-3 mb-2">
+                  <Paperclip className="h-6 w-6 text-gray-500" />
+                </div>
+                <p className="text-sm text-gray-600">
+                  Click to upload or drag and drop
+                </p>
+                <p className="text-xs text-gray-500 mt-1">
+                  Support for documents, images, and videos
+                </p>
+              </label>
             </div>
           </div>
-          <Button
-            variant="ghost"
-            size="sm"
-            className="h-8 w-8 p-0 text-gray-500 hover:text-red-500"
-            onClick={() =>
-              setAttachments((prev) =>
-                prev.filter((item) => item.id !== attachment.id)
-              )
-            }
-          >
-            <X className="h-4 w-4" />
-          </Button>
+
+          {/* Attachment List */}
+          {attachments.length > 0 && (
+            <div className="space-y-2">
+              {attachments.map((attachment) => (
+                <div
+                  key={attachment.id}
+                  className="flex items-center justify-between bg-gray-50 rounded-lg p-2"
+                >
+                  <div className="flex items-center gap-2">
+                    {attachment.type === "image" && (
+                      <Image className="h-4 w-4 text-gray-500" />
+                    )}
+                    {attachment.type === "video" && (
+                      <Video className="h-4 w-4 text-gray-500" />
+                    )}
+                    {attachment.type === "application" && (
+                      <FileText className="h-4 w-4 text-gray-500" />
+                    )}
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium truncate max-w-[200px]">
+                        {attachment.name}
+                      </span>
+                      <span className="text-xs text-gray-500">
+                        {Math.round(attachment.size / 1024)} KB
+                      </span>
+                    </div>
+                  </div>
+                  <Button
+                    variant="ghost"
+                    size="sm"
+                    className="h-8 w-8 p-0 text-gray-500 hover:text-red-500"
+                    onClick={() =>
+                      setAttachments((prev) =>
+                        prev.filter((item) => item.id !== attachment.id)
+                      )
+                    }
+                  >
+                    <X className="h-4 w-4" />
+                  </Button>
+                </div>
+              ))}
+            </div>
+          )}
         </div>
-      ))}
-    </div>
-  )}
-</div>
         {/* Challenge Type Selection */}
         <div className="mb-4">
           <Label className="text-sm font-medium mb-2 block text-left">
@@ -296,14 +292,8 @@ const ChallengeCreator = () => {
                 <Input
                   type="number"
                   min="1"
-                  value={duration.value}
-                  onChange={(e) =>
-                    setDuration((prev) => ({
-                      ...prev,
-                      value: parseInt(e.target.value),
-                    }))
-                  }
                   className="h-9"
+                  {...register("duration_value")}
                 />
               </div>
               <div className="flex-1">
@@ -311,9 +301,9 @@ const ChallengeCreator = () => {
                   Unit
                 </Label>
                 <Select
-                  value={duration.unit}
+                  value={duration}
                   onValueChange={(value) =>
-                    setDuration((prev) => ({ ...prev, unit: value }))
+                    setDuration(value)
                   }
                 >
                   <SelectTrigger className="h-9">
@@ -336,7 +326,9 @@ const ChallengeCreator = () => {
           <Label className="text-xs text-gray-500 mb-1 text-left flex">
             Reward
           </Label>
-          <Input type="text" placeholder="Enter prize" className="h-9" />
+                  <Input type="text" placeholder="Enter prize" className="h-9" 
+                  {...register("reward")}
+                   />
         </div>
 
         {/* Privacy Toggle */}
@@ -395,7 +387,9 @@ const ChallengeCreator = () => {
           <div className="flex flex-row items-center gap-4 ">
             <div>
               <Label className="text-xs text-gray-500 ">Start Time</Label>
-              <Input type="datetime-local" className="h-9" />
+                  <Input type="datetime-local" className="h-9" 
+                  {...register("startTime")}
+                  />
             </div>
             <div className="flex items-center justify-end gap-4 mt-2 w-full ">
               <Label className="text-sm font-medium">Schedule for Later</Label>
@@ -407,7 +401,7 @@ const ChallengeCreator = () => {
             <div className="grid grid-cols-2 gap-3 mt-2">
               <div>
                 <Label className="text-xs text-gray-500 mb-1">End Time</Label>
-                <Input type="datetime-local" className="h-9" />
+                <Input type="datetime-local" className="h-9" {...register("endTime")}/>
               </div>
             </div>
           )}
@@ -420,7 +414,7 @@ const ChallengeCreator = () => {
         >
           {isScheduled ? "Schedule Challenge" : "Create Challenge Now"}
         </Button>
-      </div>
+      </form>
     </Layout>
   );
 };
