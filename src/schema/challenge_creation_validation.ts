@@ -3,17 +3,17 @@ import * as yup from "yup";
 export const challengeSchema = yup.object({
  title: yup
    .string()
-   .required("Title is required")
+   .required("Please enter a challenge title")
    .min(3, "Title must be at least 3 characters"),
  description: yup
    .string()
-   .required("Description is required") 
-   .min(10, "Description must be at least 10 characters"),
+   .required("Please enter a description for your challenge") 
+   .min(10, "Description must be at least 100 characters"),
  challengeType: yup
    .string()
    .oneOf(["task", "prize", "blog"], "Invalid challenge type")
    .required("Challenge type is required"),
- isTimeLimited: yup.boolean(),
+//  isTimeLimited: yup.boolean(),
  duration: yup.object({
    value: yup.number().when("isTimeLimited", {
      is: (value: boolean) => value === true,
@@ -30,12 +30,12 @@ export const challengeSchema = yup.object({
    then: (schema) => schema.required("Reward is required for prize challenges")
  }),
  isPrivate: yup.boolean(),
- participants: yup.string().when("isPrivate", {
-   is: (value: boolean) => value === true,
-   then: (schema) => schema.required("Participants are required for private challenges")
- }),
- judges: yup.string().required("Judges are required"),
- isScheduled: yup.boolean(),
+//  participants: yup.string().when("isPrivate", {
+//    is: (value: boolean) => value === true,
+//    then: (schema) => schema.required("Participants are required for private challenges")
+//  }),
+//  judges: yup.string().required("Judges are required"),
+//  isScheduled: yup.boolean(),
  startTime: yup.string().when("isScheduled", {
    is: (value: boolean) => value === true,
    then: (schema) => schema.required("Start time is required")

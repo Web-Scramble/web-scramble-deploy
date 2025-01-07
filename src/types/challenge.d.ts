@@ -1,3 +1,5 @@
+import { User } from "./authentication";
+
 export interface Attachment {
     type: 'image' | 'video' | 'document';
     name: string;
@@ -46,16 +48,16 @@ export interface Attachment {
     title: string;
     description: string;
     challengeType: 'task' | 'prize' | 'blog';
-    isTimeLimited: boolean;
+    // isTimeLimited: boolean;
     duration_value: number;
     duration_unit: 'minutes' | 'hours' | 'days' | 'weeks';
-    reward?: string;
+    reward: string;
     isPrivate: boolean;
-    participants?: string[];
-    judges?: string[];
-    isScheduled: boolean;
-    startTime?: string;
-    endTime?: string;
+    participants?: User[];
+    judges?: User[];
+    // isScheduled: boolean;
+    startTime?: Date;
+    endTime?: Date;
     attachments?: File[];
   }
 

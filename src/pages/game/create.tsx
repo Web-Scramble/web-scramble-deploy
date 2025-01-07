@@ -14,80 +14,98 @@ import {
 import Layout from "@/components/ui/shared/layout";
 import { useNavigate } from "react-router";
 import InvitationPopup from "@/components/modals/invitation_modal";
-// import TiptapEditor from "@/components/ui/shared/tiptap";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
 import { Paperclip, Image, Video, FileText, X } from "lucide-react";
-import { useForm, Controller } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
 import { challengeSchema } from "@/schema/challenge_creation_validation";
 import { ChallengeFormData } from "@/types/challenge";
-import { getRandomValues } from "crypto";
-
-// Add to your component state
+import { useCreateChallenge } from "@/hooks/useCreateChallenge";
+import { useMutation,useQueryClient } from "@tanstack/react-query";
+import { searchUser } from "@/services/user";
+import { useToast } from "@/hooks/use-toast";
+import ParticipantDropdown from "@/components/features/challenge/add_participants";
+import { DatePicker } from "@/components/ui/shared/calendar";
 
 const ChallengeCreator = () => {
   const [attachments, setAttachments] = useState([]);
-  const [challengeType, setChallengeType] = useState("task");
+  const [challengeType, setChallengeType] =
+    useState<ChallengeFormData["challengeType"]>("task");
   const [isTimeLimited, setIsTimeLimited] = useState(false);
   const [isPrivate, setIsPrivate] = useState(true);
   const [isScheduled, setIsScheduled] = useState(false);
   const [editorContent, setEditorContent] = useState(``);
+  const [startDate, setStartdate] = useState<Date | undefined>(new Date());
+  const [endDate, setEnddate] = useState<Date | undefined>(new Date());
+  const { toast } = useToast();
+  const queryClient = useQueryClient();
+
 
   const [showInvitationModal, setShowInvitationModal] = useState(false);
-  const [duration, setDuration] = useState( "hours",);
-  useEffect(() => {
-console.log(editorContent,challengeType,isPrivate,duration)
-  });
+  const [duration, setDuration] = useState("hours");
+
   const navigate = useNavigate();
   const {
     handleSubmit,
     watch,
     formState: { errors },
     register,
+    setValue,
   } = useForm<ChallengeFormData>({
     resolver: yupResolver(challengeSchema),
     defaultValues: {
-      challengeType: "task",
       isPrivate: true,
-      isTimeLimited: false,
-      isScheduled: false,
-      duration: {
-        value: 1,
-        unit: "hours",
-      },
+      // isScheduled: false,
+      duration_value: 1,
+      duration_unit: "hours",
     },
   });
 
+  useEffect(() => {
+    console.log(editorContent, challengeType, isPrivate, duration);
+    setValue("challengeType", challengeType);
+    setValue("description", editorContent);
+  }, [editorContent]);
+  const { mutate: createMutate, isLoading, isError } = useCreateChallenge();
   const handleCreateChallenge = (data: ChallengeFormData) => {
-    const formData = new FormData();
-    formData.append("challengeType",challengeType)
-    formData.append("name",data.title)
-    formData.append("description",editorContent)
-    formData.append("isPublic",JSON.stringify(isPrivate))
-    formData.append("rewardPool",JSON.stringify(data.reward))
-    formData.append("judges",JSON.stringify(["bla","bla","bla"]))
-    formData.append("participants",JSON.stringify(["pla","pla","pla"]))
-    formData.append("startTime",J)
-    formData.append("endTime",challengeType)
-
-    // Append basic fields
-    Object.keys(data).forEach((key) => {
-      if (key !== "attachments") {
-        // Handle nested objects
-        if (typeof data[key] === "object") {
-          formData.append(key, JSON.stringify(data[key]));
-        } else {
-          formData.append(key, data[key]);
-        }
-      }
-    });
-
-    // Append attachments
-    if (data.attachments) {
-      data.attachments.forEach((file, index) => {
-        formData.append(`attachments`, file);
-      });
+    const formdata:ChallengeFormData = {
+      challengeType:challengeType,
+      isPublic:!isPrivate,
+      rewardPool:data.reward,
+      duration_value:data.duration_value,
+      duration_unit:data.duration_unit,
+      judges:[{ name: "pla" }, { name: "pla" }, { name: "pla" }],
+      participants:[{ name: "pla" }, { name: "pla" }, { name: "pla" }],
+      startTime:startDate,
+      endTime:endDate
     }
+    const taskTypeDetails = {
+      title:data.title,
+      description:editorContent,
+      doc:["sasd"]
+    }
+    // const formData = new FormData();
+    // formData.append("challengeType", challengeType);
+    // formData.append("isPublic", JSON.stringify(!isPrivate));
+    // formData.append("rewardPool", data.reward);
+    // formData.append("duration_value", JSON.stringify(data.duration_value));
+    // formData.append("duration_unit", JSON.stringify(data.duration_unit));
+    // formData.append("taskTypeDetails", JSON.stringify(taskTypeDetails));
+    // formData.append(
+    //   "judges",
+    //   JSON.stringify([{ name: "pla" }, { name: "pla" }, { name: "pla" }])
+    // );
+    // formData.append(
+    //   "participants",
+    //   JSON.stringify([{ name: "pla" }, { name: "pla" }, { name: "pla" }])
+    // );
+    // formData.append("startTime", JSON.stringify(startDate));
+    // formData.append("endTime", JSON.stringify(endDate));
+
+    // attachments.forEach((item) => {
+    //   formData.append("doc", item);
+    // });
+    createMutate(formdata);
   };
 
   // console.log(watch('isPrivate'))
@@ -97,17 +115,46 @@ console.log(editorContent,challengeType,isPrivate,duration)
   // console.log(watch('title'))
   // console.log(watch('attachments'))
   // console.log(watch('attachments'))
-  console.log(watch('attachments'))
+  console.log(watch("attachments"));
+  console.log(errors);
 
-  const onSubmit = async (data: ChallengeFormData) => {
-    console.log(data);
-  };
+  const onSubmit = async (data: ChallengeFormData) =>
+    handleCreateChallenge(data);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     setValue("attachments", files);
   };
+  const searchUserMutation = useMutation({
+    mutationFn: searchUser,
+    mutationKey: ["searchUser"],
+    onSuccess: (data) => {
+      // Invalidate and refetch
+      queryClient.invalidateQueries({ queryKey: ['searchUser'] })
+      console.log(data);
+      toast({
+        description: "OTP sent",
+      });
+    },
+    onError: (error) => {
+      toast({
+        variant: "destructive",
+        title: " failed to resend OTP",
+        description: searchUserMutation?.error.response.data.message,
+      });
+    },
+  });
+  const availableUsers = [
+    { id: 1, name: "John Doe", role: "Developer" },
+    { id: 2, name: "Jane Smith", role: "Designer" },
+    { id: 3, name: "Robert Johnson", role: "Product Manager" },
+    { id: 4, name: "Emily Davis", role: "Engineer" },
+    { id: 5, name: "Michael Wilson", role: "Marketing" },
+  ];
 
+  const [selectedParticipants, setSelectedParticipants] = useState([
+  ]);
+  const [selectedJudges, setSelectedJudges] = useState([])
   return (
     <Layout>
       {showInvitationModal && (
@@ -134,6 +181,9 @@ console.log(editorContent,challengeType,isPrivate,duration)
         </div>
 
         {/* Title Input Field */}
+        {errors.title && (
+          <span className="text-red-500 text-xs">{errors.title?.message}</span>
+        )}
         <div className="mb-4">
           <div className="relative flex flex-row justify-start gap-2 items-center">
             <PenLine className=" h-4 w-4 text-gray-400" />
@@ -144,11 +194,20 @@ console.log(editorContent,challengeType,isPrivate,duration)
             />
           </div>
         </div>
-
+        {errors.description && (
+          <span className="text-red-500 text-xs">
+            {errors.description?.message}
+          </span>
+        )}
         <TiptapEditor
           editorContent={editorContent}
           setEditorContent={setEditorContent}
         />
+        {errors.attachments && (
+          <span className="text-red-500 text-xs">
+            {errors.attachments?.message}
+          </span>
+        )}
         <div className="mb-4">
           <Label className="text-sm font-medium mb-2 block text-left">
             Attachments
@@ -167,7 +226,7 @@ console.log(editorContent,challengeType,isPrivate,duration)
                   setAttachments((prev) => [
                     ...prev,
                     ...files.map((file, index) => ({
-                      id:index+Date.now(),
+                      id: index + Date.now(),
                       file,
                       type: file.type.split("/")[0],
                       name: file.name,
@@ -184,9 +243,7 @@ console.log(editorContent,challengeType,isPrivate,duration)
                 <div className="bg-gray-50 rounded-full p-3 mb-2">
                   <Paperclip className="h-6 w-6 text-gray-500" />
                 </div>
-                <p className="text-sm text-gray-600">
-                  Click to upload or drag and drop
-                </p>
+                <p className="text-sm text-gray-600">Click to upload</p>
                 <p className="text-xs text-gray-500 mt-1">
                   Support for documents, images, and videos
                 </p>
@@ -302,9 +359,7 @@ console.log(editorContent,challengeType,isPrivate,duration)
                 </Label>
                 <Select
                   value={duration}
-                  onValueChange={(value) =>
-                    setDuration(value)
-                  }
+                  onValueChange={(value) => setDuration(value)}
                 >
                   <SelectTrigger className="h-9">
                     <SelectValue placeholder="Select unit" />
@@ -326,9 +381,12 @@ console.log(editorContent,challengeType,isPrivate,duration)
           <Label className="text-xs text-gray-500 mb-1 text-left flex">
             Reward
           </Label>
-                  <Input type="text" placeholder="Enter prize" className="h-9" 
-                  {...register("reward")}
-                   />
+          <Input
+            type="text"
+            placeholder="Enter prize"
+            className="h-9"
+            {...register("reward")}
+          />
         </div>
 
         {/* Privacy Toggle */}
@@ -351,66 +409,53 @@ console.log(editorContent,challengeType,isPrivate,duration)
             onCheckedChange={(checked) => setIsPrivate(!checked)}
           />
         </div>
-
-        {/* Participant Invitation */}
-        {isPrivate && (
-          <div className="mb-4">
-            <Label className="text-xs text-gray-500 mb-1 text-left flex">
-              Invite Participants
-            </Label>
-            <div className="flex gap-2">
-              <Input
-                placeholder="Enter participant names"
-                className="h-9 flex-1"
-                type="text"
-              />
-            </div>
-          </div>
-        )}
-
-        {/* Judge Invitation */}
-        <div className="mb-4">
-          <Label className="text-xs text-gray-500 mb-1 text-left flex">
-            Invite Judges
-          </Label>
-          <div className="flex gap-2">
-            <Input
-              placeholder="Enter judge names"
-              className="h-9 flex-1"
-              type="text"
-            />
-          </div>
-        </div>
+        <ParticipantDropdown
+          availableUsers={availableUsers}
+          selectedUsers={selectedParticipants}
+          setSelectedUsers={setSelectedParticipants}
+          label="Invite participants"
+          placeholder="Search participants..."
+        />
+        <ParticipantDropdown
+          availableUsers={availableUsers}
+          selectedUsers={selectedJudges}
+          setSelectedUsers={setSelectedJudges}
+          label="judges"
+          placeholder="Search judges..."
+        />
 
         {/* Schedule Toggle */}
-        <div className="mb-4">
-          <div className="flex flex-row items-center gap-4 ">
-            <div>
-              <Label className="text-xs text-gray-500 ">Start Time</Label>
-                  <Input type="datetime-local" className="h-9" 
-                  {...register("startTime")}
-                  />
-            </div>
-            <div className="flex items-center justify-end gap-4 mt-2 w-full ">
-              <Label className="text-sm font-medium">Schedule for Later</Label>
-              <Switch checked={isScheduled} onCheckedChange={setIsScheduled} />
-            </div>
+        <div className=" flex flex-row items-start justify-center mb-4">
+          <div className="flex flex-col">
+            <Label className="text-xs text-gray-500 mb-1 text-left">Start Time</Label>
+            <DatePicker
+              date={startDate}
+              setDate={setStartdate}
+              // className="rounded-md border"
+            />
           </div>
-
-          {isScheduled && (
-            <div className="grid grid-cols-2 gap-3 mt-2">
-              <div>
-                <Label className="text-xs text-gray-500 mb-1">End Time</Label>
-                <Input type="datetime-local" className="h-9" {...register("endTime")}/>
-              </div>
-            </div>
-          )}
+          <div className="flex flex-row items-center justify-end gap-4 mt-4  w-full ">
+            <Label className="text-sm font-medium">Schedule for Later</Label>
+            <Switch checked={isScheduled} onCheckedChange={setIsScheduled} />
+          </div>
         </div>
+
+        {isScheduled && (
+          <div className="flex flex-col items-start gap-3 my-2">
+            <Label className="text-xs text-gray-500 mb-1">End Time</Label>
+            <DatePicker
+              date={endDate}
+              setDate={setEnddate}
+              // className="rounded-md border"
+            />
+          </div>
+        )}
 
         {/* Create Button */}
         <Button
           className="w-full h-12 text-base font-medium bg-gray-900 hover:bg-gray-800"
-          onClick={() => setShowInvitationModal(true)}
+          // onClick={() => setShowInvitationModal(true)}
+          type="submit"
         >
           {isScheduled ? "Schedule Challenge" : "Create Challenge Now"}
         </Button>

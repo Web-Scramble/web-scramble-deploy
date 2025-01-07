@@ -1,12 +1,13 @@
-import { useState } from 'react';
-import { CreditCard } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { RadioGroup, RadioGroupItem } from '@/components/ui/radio-group';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent } from '@/components/ui/card';
-import { ApplePayForm } from '@/components/features/payment/apple_pay';
-import PayPalForm from '@/components/features/payment/paypal';
-import { CardPaymentForm } from '@/components/features/payment/card';
+import { useState } from "react";
+import { CreditCard } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Label } from "@/components/ui/label";
+import { Card, CardContent } from "@/components/ui/card";
+import { ApplePayForm } from "@/components/features/payment/apple_pay";
+import PayPalForm from "@/components/features/payment/paypal";
+import { CardPaymentForm } from "@/components/features/payment/card";
+import Layout from "@/components/ui/shared/layout";
 
 function ApplePayIcon() {
   return (
@@ -17,63 +18,71 @@ function ApplePayIcon() {
 }
 
 export default function PaymentPage() {
-  const [paymentMethod, setPaymentMethod] = useState('card');
+  const [paymentMethod, setPaymentMethod] = useState("card");
 
   return (
-    <div className="max-w-md mx-auto p-4 space-y-6">
-      <Card>
-        <CardContent className="pt-6">
-          <RadioGroup 
-            value={paymentMethod} 
-            onValueChange={setPaymentMethod}
-            className="space-y-4"
-          >
-            <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-              <div className="flex items-center space-x-3">
-                <RadioGroupItem  value="card" id="card" />
-                <Label htmlFor="card" className="flex items-center space-x-2">
-                  <CreditCard className="h-5 w-5" />
-                  <span>Credit Card</span>
-                </Label>
+    <Layout>
+      <div className="max-w-md mx-auto p-4 space-y-6">
+        <Card>
+          <CardContent className="pt-6">
+            <RadioGroup
+              value={paymentMethod}
+              onValueChange={setPaymentMethod}
+              className="space-y-4"
+            >
+              <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                <div className="flex items-center space-x-3">
+                  <RadioGroupItem value="card" id="card" />
+                  <Label htmlFor="card" className="flex items-center space-x-2">
+                    <CreditCard className="h-5 w-5" />
+                    <span>Credit Card</span>
+                  </Label>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-              <div className="flex items-center space-x-3">
-                <RadioGroupItem value="apple-pay" id="apple-pay"/>
-                <Label htmlFor="apple-pay" className="flex items-center space-x-2">
-                  <ApplePayIcon />
-                  <span>Apple Pay</span>
-                </Label>
+              <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                <div className="flex items-center space-x-3">
+                  <RadioGroupItem value="apple-pay" id="apple-pay" />
+                  <Label
+                    htmlFor="apple-pay"
+                    className="flex items-center space-x-2"
+                  >
+                    <ApplePayIcon />
+                    <span>Apple Pay</span>
+                  </Label>
+                </div>
               </div>
-            </div>
 
-            <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
-              <div className="flex items-center space-x-3">
-                <RadioGroupItem value="paypal" id="paypal" />
-                <Label htmlFor="paypal" className="flex items-center space-x-2">
-                  {/* <PaypalIcon className="h-5 w-5" /> */}
-                  <span>PayPal</span>
-                </Label>
+              <div className="flex items-center justify-between p-4 border rounded-lg hover:bg-gray-50">
+                <div className="flex items-center space-x-3">
+                  <RadioGroupItem value="paypal" id="paypal" />
+                  <Label
+                    htmlFor="paypal"
+                    className="flex items-center space-x-2"
+                  >
+                    {/* <PaypalIcon className="h-5 w-5" /> */}
+                    <span>PayPal</span>
+                  </Label>
+                </div>
               </div>
+            </RadioGroup>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardContent className="pt-6">
+            {paymentMethod === "card" && <CardPaymentForm />}
+            {paymentMethod === "paypal" && <PayPalForm />}
+            {paymentMethod === "apple-pay" && <ApplePayForm />}
+
+            <div className="mt-6">
+              <Button className="w-full" size="lg">
+                Pay $50.00
+              </Button>
             </div>
-          </RadioGroup>
-        </CardContent>
-      </Card>
-
-      <Card>
-        <CardContent className="pt-6">
-          {paymentMethod === 'card' && <CardPaymentForm />}
-          {paymentMethod === 'paypal' && <PayPalForm />}
-          {paymentMethod === 'apple-pay' && <ApplePayForm />}
-
-          <div className="mt-6">
-            <Button className="w-full" size="lg">
-              Pay $50.00
-            </Button>
-          </div>
-        </CardContent>
-      </Card>
-    </div>
+          </CardContent>
+        </Card>
+      </div>
+    </Layout>
   );
 }

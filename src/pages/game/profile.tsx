@@ -10,9 +10,11 @@ import {
   MapPin,
   AtSign,
   Link as LinkIcon,
+  DollarSign
 } from "lucide-react";
 import Layout from "@/components/ui/shared/layout";
 import { Link } from "react-router";
+import { authStore } from "@/store/authstore";
 
 const ProfilePage = () => {
   const recentActivities = [
@@ -35,6 +37,7 @@ const ProfilePage = () => {
       prize: "$750",
     },
   ];
+ const {user} = authStore()
 
   return (
     <Layout>
@@ -52,8 +55,8 @@ const ProfilePage = () => {
                 <AvatarFallback>AB</AvatarFallback>
               </Avatar>
               <div className="mb-4 space-y-1">
-                <h1 className="text-2xl font-bold text-white">Annette Black</h1>
-                <p className="text-white/90">@annetteblack</p>
+                <h1 className="text-2xl font-bold text-white">{user.username}</h1>
+                <p className="text-white/90">@{user.username}</p>
               </div>
             </div>
 
@@ -84,15 +87,27 @@ const ProfilePage = () => {
                     solve complex problems and create engaging challenges for
                     the community.
                   </p>
-                  <div className="flex flex-wrap gap-4 text-sm text-muted-foreground">
-                    <div className="flex items-center">
-                      <AtSign className="h-4 w-4 mr-1" />
-                      ndeoswaldnji@gmail.com
+                  <div className="flex flex-wrap gap-4 text-sm items-center text-muted-foreground">
+                    <div className="flex items-center gap-2">
+                      Email:
+                      {user.email}
+                      {/* <AtSign className="h-4 w-4 mr-1" /> */}
                     </div>
-                    <div className="flex items-center">
-                      <Calendar className="h-4 w-4 mr-1" />
-                      Joined March 2023
+                    <div className="flex items-center gap-2">
+                      {/* <Calendar className="h-4 w-4 mr-1" /> */}
+                      Joined:
+                      March 2024
                     </div>
+                    <div className="flex items-center gap-2">
+                      {/* <Calendar className="h-4 w-4 mr-1" /> */}
+                      phone:
+                     {user.phone}
+                    </div>
+                    <Button variant={"ghost"} className="flex items-center">
+                      Balance:
+                      <DollarSign className="h-4 w-4 mr-1" />
+                    {user.balance}
+                    </Button>
                   </div>
                 </div>
               </CardContent>
