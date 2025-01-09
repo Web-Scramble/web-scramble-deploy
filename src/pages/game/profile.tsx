@@ -51,7 +51,7 @@ const ProfilePage = () => {
             {/* Profile Info */}
             <div className="absolute -bottom-10 left-6 flex md:items-end space-x-4 flex-col items-center md:flex-row">
               <Avatar className="h-32 w-32 border-4 border-background">
-                <AvatarImage src="" />
+                <AvatarImage src={user.profile_picture} />
                 <AvatarFallback>AB</AvatarFallback>
               </Avatar>
               <div className="mb-4 space-y-1">

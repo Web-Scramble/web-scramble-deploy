@@ -1,7 +1,8 @@
-import React from "react";
 import ChallengeCard from "@/components/features/challenge/challenge";
 import { mockChallenges } from "@/constants/mockChallenges";
 import Layout from "@/components/ui/shared/layout";
+import { useChallenges } from "@/hooks/useChallenges";
+import { LoadingSpinner } from "@/components/ui/shared/loader";
 
 const ChallengeFeed = () => {
   const handleJoin = (challengeId: string) => {
@@ -15,6 +16,12 @@ const ChallengeFeed = () => {
   const handleEdit = (challengeId: string) => {
     console.log(`Editing challenge: ${challengeId}`);
   };
+
+  const { challenges, isLoading, error, refetch } = useChallenges();
+
+  if(!isLoading){
+    return <LoadingSpinner/>
+  }
 
   return (
     <Layout>

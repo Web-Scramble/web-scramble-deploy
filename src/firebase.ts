@@ -6,7 +6,7 @@ const firebaseConfig = {
     authDomain: import.meta.env.VITE_AUTHDOMAIN,
     projectId: import.meta.env.VITE_PROJECTID,
     appId: import.meta.env.VITE_APPID,
-    Storage:import.meta.env.VITE_STORAGE
+    storageBucket:import.meta.env.VITE_STORAGE,
   };
   const app = initializeApp(firebaseConfig);
   

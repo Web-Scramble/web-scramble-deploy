@@ -21,7 +21,7 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { challengeSchema } from "@/schema/challenge_creation_validation";
 import { ChallengeFormData } from "@/types/challenge";
 import { useCreateChallenge } from "@/hooks/useCreateChallenge";
-import { useMutation,useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { searchUser } from "@/services/user";
 import { useToast } from "@/hooks/use-toast";
 import ParticipantDropdown from "@/components/features/challenge/add_participants";
@@ -37,9 +37,9 @@ const ChallengeCreator = () => {
   const [editorContent, setEditorContent] = useState(``);
   const [startDate, setStartdate] = useState<Date | undefined>(new Date());
   const [endDate, setEnddate] = useState<Date | undefined>(new Date());
+  const [selectedParticipants, setSelectedParticipants] = useState([]);
+  const [selectedJudges, setSelectedJudges] = useState([]);
   const { toast } = useToast();
-  const queryClient = useQueryClient();
-
 
   const [showInvitationModal, setShowInvitationModal] = useState(false);
   const [duration, setDuration] = useState("hours");
@@ -66,57 +66,33 @@ const ChallengeCreator = () => {
     setValue("challengeType", challengeType);
     setValue("description", editorContent);
   }, [editorContent]);
-  const { mutate: createMutate, isLoading, isError } = useCreateChallenge();
-  const handleCreateChallenge = (data: ChallengeFormData) => {
-    const formdata:ChallengeFormData = {
-      challengeType:challengeType,
-      isPublic:!isPrivate,
-      rewardPool:data.reward,
-      duration_value:data.duration_value,
-      duration_unit:data.duration_unit,
-      judges:[{ name: "pla" }, { name: "pla" }, { name: "pla" }],
-      participants:[{ name: "pla" }, { name: "pla" }, { name: "pla" }],
-      startTime:startDate,
-      endTime:endDate
-    }
-    const taskTypeDetails = {
-      title:data.title,
-      description:editorContent,
-      doc:["sasd"]
-    }
-    // const formData = new FormData();
-    // formData.append("challengeType", challengeType);
-    // formData.append("isPublic", JSON.stringify(!isPrivate));
-    // formData.append("rewardPool", data.reward);
-    // formData.append("duration_value", JSON.stringify(data.duration_value));
-    // formData.append("duration_unit", JSON.stringify(data.duration_unit));
-    // formData.append("taskTypeDetails", JSON.stringify(taskTypeDetails));
-    // formData.append(
-    //   "judges",
-    //   JSON.stringify([{ name: "pla" }, { name: "pla" }, { name: "pla" }])
-    // );
-    // formData.append(
-    //   "participants",
-    //   JSON.stringify([{ name: "pla" }, { name: "pla" }, { name: "pla" }])
-    // );
-    // formData.append("startTime", JSON.stringify(startDate));
-    // formData.append("endTime", JSON.stringify(endDate));
+  const {
+    mutate: createMutate,
+    isLoading,
+    isError,
+    isSuccess,
+  } = useCreateChallenge();
 
-    // attachments.forEach((item) => {
-    //   formData.append("doc", item);
-    // });
-    createMutate(formdata);
+  const handleCreateChallenge = (data: ChallengeFormData) => {
+    const formData = new FormData();
+    formData.append("challengeType", challengeType);
+    formData.append("title", data.title);
+    formData.append("isPublic", JSON.stringify(!isPrivate));
+    formData.append("rewardPool", data.reward);
+    formData.append("duration_value", JSON.stringify(data.duration_value));
+    formData.append("duration_unit", data.duration_unit);
+    formData.append("judges", JSON.stringify(setSelectedJudges));
+    formData.append("participants", JSON.stringify(setSelectedParticipants));
+    formData.append("startTime", JSON.stringify(startDate));
+    formData.append("endTime", JSON.stringify(endDate));
+    // formData.append("taskTypeDetails[title]", data.title);
+    // formData.append("taskTypeDetails[description]", editorContent);
+    attachments.forEach((item) => {
+      formData.append("documents", item);
+    });
+    createMutate(formData);
   };
 
-  // console.log(watch('isPrivate'))
-  // console.log(watch('isTimeLimited'))
-  // console.log(watch('isScheduled'))
-  // console.log(watch('attachments'))
-  // console.log(watch('title'))
-  // console.log(watch('attachments'))
-  // console.log(watch('attachments'))
-  console.log(watch("attachments"));
-  console.log(errors);
 
   const onSubmit = async (data: ChallengeFormData) =>
     handleCreateChallenge(data);
@@ -125,36 +101,7 @@ const ChallengeCreator = () => {
     const files = Array.from(e.target.files || []);
     setValue("attachments", files);
   };
-  const searchUserMutation = useMutation({
-    mutationFn: searchUser,
-    mutationKey: ["searchUser"],
-    onSuccess: (data) => {
-      // Invalidate and refetch
-      queryClient.invalidateQueries({ queryKey: ['searchUser'] })
-      console.log(data);
-      toast({
-        description: "OTP sent",
-      });
-    },
-    onError: (error) => {
-      toast({
-        variant: "destructive",
-        title: " failed to resend OTP",
-        description: searchUserMutation?.error.response.data.message,
-      });
-    },
-  });
-  const availableUsers = [
-    { id: 1, name: "John Doe", role: "Developer" },
-    { id: 2, name: "Jane Smith", role: "Designer" },
-    { id: 3, name: "Robert Johnson", role: "Product Manager" },
-    { id: 4, name: "Emily Davis", role: "Engineer" },
-    { id: 5, name: "Michael Wilson", role: "Marketing" },
-  ];
 
-  const [selectedParticipants, setSelectedParticipants] = useState([
-  ]);
-  const [selectedJudges, setSelectedJudges] = useState([])
   return (
     <Layout>
       {showInvitationModal && (
@@ -199,102 +146,84 @@ const ChallengeCreator = () => {
             {errors.description?.message}
           </span>
         )}
-        <TiptapEditor
-          editorContent={editorContent}
-          setEditorContent={setEditorContent}
-        />
-        {errors.attachments && (
-          <span className="text-red-500 text-xs">
-            {errors.attachments?.message}
-          </span>
-        )}
-        <div className="mb-4">
-          <Label className="text-sm font-medium mb-2 block text-left">
-            Attachments
-          </Label>
-
-          {/* File Upload Area */}
-          <div className="border-2 border-dashed border-gray-200 rounded-lg p-4 mb-2">
-            <div className="flex flex-col items-center justify-center gap-2">
-              <Input
-                type="file"
-                multiple
-                id="file-upload"
-                className="hidden"
-                onChange={(e) => {
-                  const files = Array.from(e.target.files || []);
-                  setAttachments((prev) => [
-                    ...prev,
-                    ...files.map((file, index) => ({
-                      id: index + Date.now(),
-                      file,
-                      type: file.type.split("/")[0],
-                      name: file.name,
-                      size: file.size,
-                    })),
-                  ]);
-                }}
-                accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov"
-              />
-              <label
-                htmlFor="file-upload"
-                className="cursor-pointer flex flex-col items-center"
-              >
-                <div className="bg-gray-50 rounded-full p-3 mb-2">
-                  <Paperclip className="h-6 w-6 text-gray-500" />
-                </div>
-                <p className="text-sm text-gray-600">Click to upload</p>
-                <p className="text-xs text-gray-500 mt-1">
-                  Support for documents, images, and videos
-                </p>
-              </label>
-            </div>
-          </div>
-
-          {/* Attachment List */}
-          {attachments.length > 0 && (
-            <div className="space-y-2">
-              {attachments.map((attachment) => (
-                <div
-                  key={attachment.id}
-                  className="flex items-center justify-between bg-gray-50 rounded-lg p-2"
-                >
-                  <div className="flex items-center gap-2">
-                    {attachment.type === "image" && (
-                      <Image className="h-4 w-4 text-gray-500" />
-                    )}
-                    {attachment.type === "video" && (
-                      <Video className="h-4 w-4 text-gray-500" />
-                    )}
-                    {attachment.type === "application" && (
-                      <FileText className="h-4 w-4 text-gray-500" />
-                    )}
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium truncate max-w-[200px]">
-                        {attachment.name}
-                      </span>
-                      <span className="text-xs text-gray-500">
-                        {Math.round(attachment.size / 1024)} KB
-                      </span>
-                    </div>
-                  </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    className="h-8 w-8 p-0 text-gray-500 hover:text-red-500"
-                    onClick={() =>
-                      setAttachments((prev) =>
-                        prev.filter((item) => item.id !== attachment.id)
-                      )
-                    }
-                  >
-                    <X className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
-            </div>
-          )}
+        <div className="">
+          <TiptapEditor
+            editorContent={editorContent}
+            setEditorContent={setEditorContent}
+          />
+          <label
+            htmlFor="file-upload"
+            className="cursor-pointer relative bottom-12 right-2 float-end h-0 "
+          >
+              <Paperclip className="h-6 w-6 text-gray-500" />
+          </label>
         </div>
+
+        <Input
+          type="file"
+          multiple
+          id="file-upload"
+          className="hidden"
+          onChange={(e) => {
+            const files = Array.from(e.target.files || []);
+            console.log(attachments[0]);
+            setAttachments((prev) => [
+              ...prev,
+              ...files.map((file, index) => ({
+                id: index + Date.now(),
+                file,
+                type: file.type.split("/")[0],
+                name: file.name,
+                size: file.size,
+              })),
+            ]);
+          }}
+          accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov"
+        />
+
+        {/* Attachment List */}
+        {attachments.length > 0 && (
+          <div className="space-y-2">
+            {attachments.map((attachment) => (
+              <div
+                key={attachment.id}
+                className="flex items-center justify-between bg-gray-50 rounded-lg p-2"
+              >
+                <div className="flex items-center gap-2">
+                  {attachment.type === "image" && (
+                    <Image className="h-4 w-4 text-gray-500" />
+                  )}
+                  {attachment.type === "video" && (
+                    <Video className="h-4 w-4 text-gray-500" />
+                  )}
+                  {attachment.type === "application" && (
+                    <FileText className="h-4 w-4 text-gray-500" />
+                  )}
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium truncate max-w-[200px]">
+                      {attachment.name}
+                    </span>
+                    <span className="text-xs text-gray-500">
+                      {Math.round(attachment.size / 1024)} KB
+                    </span>
+                  </div>
+                </div>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="h-8 w-8 p-0 text-gray-500 hover:text-red-500"
+                  onClick={() =>
+                    setAttachments((prev) =>
+                      prev.filter((item) => item.id !== attachment.id)
+                    )
+                  }
+                >
+                  <X className="h-4 w-4" />
+                </Button>
+              </div>
+            ))}
+          </div>
+        )}
         {/* Challenge Type Selection */}
         <div className="mb-4">
           <Label className="text-sm font-medium mb-2 block text-left">
@@ -410,14 +339,14 @@ const ChallengeCreator = () => {
           />
         </div>
         <ParticipantDropdown
-          availableUsers={availableUsers}
+          // availableUsers={availableUsers}
           selectedUsers={selectedParticipants}
           setSelectedUsers={setSelectedParticipants}
           label="Invite participants"
           placeholder="Search participants..."
         />
         <ParticipantDropdown
-          availableUsers={availableUsers}
+          // availableUsers={availableUsers}
           selectedUsers={selectedJudges}
           setSelectedUsers={setSelectedJudges}
           label="judges"
@@ -427,15 +356,13 @@ const ChallengeCreator = () => {
         {/* Schedule Toggle */}
         <div className=" flex flex-row items-start justify-center mb-4">
           <div className="flex flex-col">
-            <Label className="text-xs text-gray-500 mb-1 text-left">Start Time</Label>
-            <DatePicker
-              date={startDate}
-              setDate={setStartdate}
-              // className="rounded-md border"
-            />
+            <Label className="text-xs text-gray-500 mb-1 text-left">
+              Start Time
+            </Label>
+            <DatePicker date={startDate} setDate={setStartdate} />
           </div>
           <div className="flex flex-row items-center justify-end gap-4 mt-4  w-full ">
-            <Label className="text-sm font-medium">Schedule for Later</Label>
+            <Label className=" text-xs md:text-sm font-medium">Schedule for Later</Label>
             <Switch checked={isScheduled} onCheckedChange={setIsScheduled} />
           </div>
         </div>
@@ -443,11 +370,7 @@ const ChallengeCreator = () => {
         {isScheduled && (
           <div className="flex flex-col items-start gap-3 my-2">
             <Label className="text-xs text-gray-500 mb-1">End Time</Label>
-            <DatePicker
-              date={endDate}
-              setDate={setEnddate}
-              // className="rounded-md border"
-            />
+            <DatePicker date={endDate} setDate={setEnddate} />
           </div>
         )}
 

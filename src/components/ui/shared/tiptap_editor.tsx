@@ -49,7 +49,7 @@ const MenuBar = ({ editor }) => {
 
   return (
     <div className="flex items-center justify-between border-t p-2">
-      <div className="flex items-center space-x-1 ">
+      <div className="flex items-center flex-wrap space-x-1 gap-1">
         {/* Headings Group */}
         {/* <div className="flex items-center border-r pr-1 gap-1"> */}
         {/* <Button
@@ -68,6 +68,28 @@ const MenuBar = ({ editor }) => {
           >
             <Heading2 className="h-4 w-4" />
           </Button> */}
+        {/* <Button
+          variant={
+            editor.isActive("heading", { level: 3 }) ? "default" : "ghost"
+          }
+          size="sm"
+          className="h-8 w-8 p-0"
+          onClick={() =>
+            editor.chain().focus().toggleHeading({ level: 3 }).run()
+          }
+        >
+          <Heading1 className="h-4 w-4" />
+        </Button> */}
+        {/* <Button
+            variant={editor.isActive('paragraph') ? "default" : "ghost"}
+            size="sm"
+            className="h-8 w-8 p-0"
+            onClick={() => editor.chain().focus().setParagraph().run()}
+          >
+            <TextQuote className="h-4 w-4" />
+          </Button> */}
+        {/* </div>  */}
+
         <Button
           variant={
             editor.isActive("heading", { level: 3 }) ? "default" : "ghost"
@@ -80,18 +102,6 @@ const MenuBar = ({ editor }) => {
         >
           <Heading1 className="h-4 w-4" />
         </Button>
-        {/* <Button
-            variant={editor.isActive('paragraph') ? "default" : "ghost"}
-            size="sm"
-            className="h-8 w-8 p-0"
-            onClick={() => editor.chain().focus().setParagraph().run()}
-          >
-            <TextQuote className="h-4 w-4" />
-          </Button> */}
-        {/* </div>  */}
-
-        {/* Text Formatting Group */}
-        <div className="flex items-center border-r pr-1  gap-1">
           <Button
             variant={editor.isActive("bold") ? "default" : "ghost"}
             size="sm"
@@ -140,10 +150,8 @@ const MenuBar = ({ editor }) => {
           >
             <LinkCode className="h-4 w-4" />
           </Button>
-        </div>
 
         {/* Alignment Group */}
-        <div className="flex items-center  gap-1">
           <Button
             variant={
               editor.isActive({ textAlign: "left" }) ? "default" : "ghost"
@@ -184,11 +192,10 @@ const MenuBar = ({ editor }) => {
           >
             <AlignJustify className="h-4 w-4" />
           </Button>
-        </div>
       </div>
 
       {/* Right-aligned upload button */}
-      <div>
+      {/* <div>
         <TooltipProvider>
           <Tooltip>
             <TooltipTrigger asChild>
@@ -206,7 +213,7 @@ const MenuBar = ({ editor }) => {
             </TooltipContent>
           </Tooltip>
         </TooltipProvider>
-      </div>
+      </div> */}
     </div>
   );
 };

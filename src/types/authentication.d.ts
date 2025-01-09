@@ -8,13 +8,17 @@ export type ValidateInputs = {
 export type UserCreationInputs = {
   username: string;
   email: string;
-  phone?:string
+  phone?: string;
 };
 export type User = {
   id: string;
   username: string;
   email: string;
-  phone?:string;
-  balance:string;
+  phone?: string;
+  balance: string;
+  social_id?: string;
+  created_at?: Date;
+  updated_at?: Date;
+  profile_picture?: string;
+  firebase_uid?: string;
 };
-

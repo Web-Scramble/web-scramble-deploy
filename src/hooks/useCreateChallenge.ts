@@ -14,7 +14,7 @@ export const useCreateChallenge = () => {
     mutationFn: (data: ChallengeFormData) => createChallenge(data),
     onSuccess: () => {
       toast({
-        description: "OTP Verification successfull.",
+        description: "challenge created successfully.",
       });
       navigate('/challenge');
     },
