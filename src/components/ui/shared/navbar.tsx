@@ -144,7 +144,7 @@ export default function Preview() {
                     <AvatarFallback>JD</AvatarFallback>
                   </Avatar>
                 </Button>
-               <p className='text-2xl md:text-3xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent'>{user.username}</p>
+               <p className='text-xl md:text-2xl font-bold tracking-tight bg-gradient-to-r from-blue-600 to-violet-600 bg-clip-text text-transparent'>{user.username}</p>
           </div>
         </Link>
         </div>
