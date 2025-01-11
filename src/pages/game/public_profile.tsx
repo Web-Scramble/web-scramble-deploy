@@ -11,12 +11,13 @@ import {
   AtSign,
   Link as LinkIcon,
   DollarSign,
+  Plus
 } from "lucide-react";
 import Layout from "@/components/ui/shared/layout";
 import { Link } from "react-router";
 import { authStore } from "@/store/authstore";
 
-const ProfilePage = () => {
+const PublicProfile = () => {
   const recentActivities = [
     {
       type: "win",
@@ -63,11 +64,11 @@ const ProfilePage = () => {
             </div>
 
             {/* Actions */}
-            <div className="absolute right-6 bottom-4 flex space-x-2">
+            {/* <div className="absolute right-6 bottom-4 flex space-x-2">
               <Link to="/edit-profile">
                 <Button size="sm" variant="secondary">
                   <Edit className="h-4 w-4 mr-2 " />
-                  <span className="hidden md:flex"> Profile Details</span>
+                  <span className="hidden md:flex">Edit Profile</span>
                 </Button>
               </Link>
               <Link to="/settings">
@@ -75,7 +76,7 @@ const ProfilePage = () => {
                   <Settings className="h-4 w-4" />
                 </Button>
               </Link>
-            </div>
+            </div> */}
           </div>
 
           {/* Profile Content */}
@@ -92,22 +93,11 @@ const ProfilePage = () => {
                       <span className="font-bold">1k</span> followers
                     </div>
                     <div className="flex items-center gap-2 ">
-                      <span className="font-bold">234</span> following
+                    <span className="font-bold">234</span> following
                     </div>
-                  </div>
-                  <div className="flex flex-wrap gap-4 text-sm items-center text-muted-foreground">
-                    <Button
-                      variant={"ghost"}
-                      className="flex items-center border w-24 justify-start"
-                    >
-                      <DollarSign className="h-4 w-4" />
-                      {user.balance}
-                    </Button>
-                    <Button
-                      variant={"ghost"}
-                      className="flex items-center border w-24"
-                    >
-                      Topup
+                    <Button variant={"ghost"} className="flex items-center">
+                        <Plus className="h-4 w-4"/>
+                        Follow
                     </Button>
                   </div>
                 </div>
@@ -118,7 +108,7 @@ const ProfilePage = () => {
             <Tabs defaultValue="recent">
               <TabsList>
                 <TabsTrigger value="recent">Recent Activity</TabsTrigger>
-                <TabsTrigger value="challenges">My Challenges</TabsTrigger>
+                <TabsTrigger value="challenges">Challenges</TabsTrigger>
                 <TabsTrigger value="submissions">Submissions</TabsTrigger>
               </TabsList>
               <TabsContent value="recent">
@@ -168,4 +158,4 @@ const ProfilePage = () => {
   );
 };
 
-export default ProfilePage;
+export default PublicProfile;

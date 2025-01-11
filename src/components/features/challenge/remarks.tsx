@@ -2,7 +2,8 @@ import { Challenge } from "@/types/challenge";
 import RankingsTab from "./ranking";
 import React from 'react';
 import CommentsTab from "./comments";
-// import { Link } from 'react-router';
+import { Button } from "@/components/ui/button";
+import { Link } from 'react-router';
 interface RemarksSectionProps {
     remarks: Challenge['remarks'];
     rankings: Challenge['rankings'];
@@ -47,6 +48,11 @@ interface RemarksSectionProps {
               Rankings
             </button>
           </div>
+          <Link to={"/submission"}>
+          <Button variant={"ghost"} className="border">
+            Vote
+          </Button>
+          </Link>
         </div>
   
         {activeTab === 'comments' && (

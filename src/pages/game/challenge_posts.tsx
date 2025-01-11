@@ -17,11 +17,11 @@ const ChallengeFeed = () => {
     console.log(`Editing challenge: ${challengeId}`);
   };
 
-  const { challenges, isLoading, error, refetch } = useChallenges();
+  const { challenges, isLoading,isFetching, error, refetch } = useChallenges();
 
-  if(!isLoading){
-    return <LoadingSpinner/>
-  }
+  // if(!isLoading){
+    // return <LoadingSpinner/>
+  // }
 
   return (
     <Layout>

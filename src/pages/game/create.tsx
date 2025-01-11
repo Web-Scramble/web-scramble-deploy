@@ -183,7 +183,7 @@ const ChallengeCreator = () => {
 
         {/* Attachment List */}
         {attachments.length > 0 && (
-          <div className="space-y-2">
+          <div className=" flex flex-row gap-2 flex-wrap items-center">
             {attachments.map((attachment) => (
               <div
                 key={attachment.id}

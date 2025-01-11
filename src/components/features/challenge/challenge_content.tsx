@@ -44,7 +44,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
   return (
     <CardContent className="p-4 space-y-4">
       <div>
-        <h4 className="font-medium">{challenge.title}</h4>
+        <h4 className="font-medium text-left">{challenge.title}</h4>
         <p className="text-sm text-gray-600 mt-1 text-left">
           {isExpanded ? challenge.description : `${challenge.description.slice(0, 100)}...`}
           <span

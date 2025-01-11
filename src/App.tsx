@@ -5,7 +5,7 @@ import {
   LandingPage,
   AuthPage,
   UsernameSetup,
-} from "./pages/auth";
+} from "@/pages/auth";
 import {
   ChallengeCreator,
   ChallengeFeed,
@@ -16,7 +16,9 @@ import {
   EditProfile,
   SettingsScreen,
   TopUpPage,
-} from "./pages/game";
+  PublicProfile,
+  NotificationsScreen,
+} from "@/pages/game";
 import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
 
@@ -50,6 +52,8 @@ function App() {
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/settings" element={<SettingsScreen />} />
         <Route path="/top-up" element={<TopUpPage />} />
+        <Route path="/public-profile" element={<PublicProfile />} />
+        <Route path="/notifications" element={<NotificationsScreen />} />
         {/* <Route
           path="/challenge"
           element={

@@ -8,6 +8,7 @@ import {
   Lock,
   HelpCircle,
   Mail,
+  Bell,
   Shield,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
@@ -41,10 +42,10 @@ const SettingsScreen = () => {
         <CardContent className="p-6 space-y-6">
           <SettingsSection title="General">
             {/* <SettingsItem icon={User} label="Personal Details" /> */}
-            <SettingsItem icon={MapPin} label="Location" />
+            {/* <SettingsItem icon={MapPin} label="Location" /> */}
             <SettingsItem icon={Flag} label="Created Challenges" />
             <SettingsItem icon={CheckSquare} label="Completed" />
-            <SettingsItem icon={Lock} label="Change Password" />
+            <SettingsItem icon={Bell} label="Notifications" />
             <SettingsItem icon={User} label="Delete Account" />
           </SettingsSection>
 

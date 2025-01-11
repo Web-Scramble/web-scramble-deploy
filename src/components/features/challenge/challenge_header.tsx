@@ -30,10 +30,12 @@ export const ChallengeHeader = ({
     <CardHeader className="space-y-1 p-4">
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
+          <Link to={"/public-profile"}>
           <Avatar>
             <AvatarImage src={creator.avatar} alt={creator.name} />
             <AvatarFallback>{creator.initials}</AvatarFallback>
           </Avatar>
+          </Link>
           <div>
             <h3 className="font-semibold">{creator.name}</h3>
           </div>

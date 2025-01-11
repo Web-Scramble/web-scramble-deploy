@@ -8,6 +8,8 @@ import LeaderboardCard from "./leaderboard";
 import EditProfile from "./edit_profile";
 import SettingsScreen from "./settings";
 import TopUpPage from "./top_up";
+import PublicProfile from "./public_profile";
+import NotificationsScreen from "./notification";
 
 export {
   LeaderboardCard,
@@ -18,6 +20,8 @@ export {
   ChallengeSubmission,
   ChallengeSubmissions,
   EditProfile,
+  PublicProfile,
   SettingsScreen,
-  TopUpPage
+  TopUpPage,
+  NotificationsScreen,
 };
