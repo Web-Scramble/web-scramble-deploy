@@ -126,7 +126,7 @@ const AuthPage = () => {
             Welcome back
           </CardTitle>
           <CardDescription>
-            Enter your Email or Phone to sign in to your account or create your
+            Enter your Email or Phone number to sign in to your account or create your
             account
           </CardDescription>
         </CardHeader>
@@ -136,7 +136,7 @@ const AuthPage = () => {
             className="space-y-4 flex flex-col gap-2"
           >
             <div className="space-y-2">
-              <Label htmlFor="email">Email/Phone</Label>
+              {/* <Label htmlFor="email">Email/Phone</Label> */}
               <Input
                 id="email"
                 type="text"

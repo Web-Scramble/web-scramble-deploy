@@ -50,8 +50,8 @@ const PublicProfile = () => {
             <div className="h-48 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500" />
 
             {/* Profile Info */}
-            <div className="absolute -bottom-10 left-6 flex md:items-end space-x-4 flex-col items-center md:flex-row">
-              <Avatar className="h-32 w-32 border-4 border-background">
+            <div className="absolute -bottom-10 left-6 flex md:items-end space-x-4 flex-col items-center">
+              <Avatar className=" h-24 md:h-32 w-24 md:w-32  border-background">
                 <AvatarImage src={user.profile_picture} />
                 <AvatarFallback>AB</AvatarFallback>
               </Avatar>
@@ -80,22 +80,22 @@ const PublicProfile = () => {
           </div>
 
           {/* Profile Content */}
-          <div className="mt-20 grid gap-6">
+          <div className="mt-20 grid gap-6 mr-8">
             {/* Bio and Info */}
             <Card>
               <CardContent className="pt-6">
                 <div className="space-y-4">
-                  <div className="flex flex-wrap gap-4 text-sm items-center text-muted-foreground">
-                    <div className="flex items-center gap-2">
+                  <div className="flex  gap-2 text-sm items-center text-muted-foreground">
+                    <div className="flex items-center gap-2 md:text-base text-xs">
                       Joined on March 2024
                     </div>
-                    <div className="flex items-center gap-2 ">
-                      <span className="font-bold">1k</span> followers
+                    <div className="flex items-center gap-2 text-xs md:text-base">
+                      <span className="font-bold text-xs md:text-base">1k</span> followers
                     </div>
-                    <div className="flex items-center gap-2 ">
-                    <span className="font-bold">234</span> following
+                    <div className="flex items-center gap-2 text-xs md:text-base">
+                    <span className="font-bold text-xs md:text-base">234</span> following
                     </div>
-                    <Button variant={"ghost"} className="flex items-center">
+                    <Button variant={"ghost"} className="flex items-center md:text-base">
                         <Plus className="h-4 w-4"/>
                         Follow
                     </Button>
@@ -107,11 +107,11 @@ const PublicProfile = () => {
             {/* Activity Tabs */}
             <Tabs defaultValue="recent">
               <TabsList>
-                <TabsTrigger value="recent">Recent Activity</TabsTrigger>
+                {/* <TabsTrigger value="recent">Recent Activity</TabsTrigger> */}
                 <TabsTrigger value="challenges">Challenges</TabsTrigger>
                 <TabsTrigger value="submissions">Submissions</TabsTrigger>
               </TabsList>
-              <TabsContent value="recent">
+              {/* <TabsContent value="recent">
                 <Card>
                   <ScrollArea className="h-[400px]">
                     <CardContent className="pt-6">
@@ -143,7 +143,7 @@ const PublicProfile = () => {
                     </CardContent>
                   </ScrollArea>
                 </Card>
-              </TabsContent>
+              </TabsContent> */}
               <TabsContent value="challenges">
                 {/* Challenges content */}
               </TabsContent>

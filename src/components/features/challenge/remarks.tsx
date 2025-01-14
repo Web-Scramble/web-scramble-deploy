@@ -48,7 +48,7 @@ interface RemarksSectionProps {
               Rankings
             </button>
           </div>
-          <Link to={"/submission"}>
+          <Link to={"/review-panel"}>
           <Button variant={"ghost"} className="border">
             Vote
           </Button>

@@ -12,17 +12,17 @@ import { CardHeader } from '@/components/ui/card';
 import { Link } from 'react-router';
 
 interface ChallengeHeaderProps {
-  creator: {
     name: string;
     avatar: string;
-    initials: string;
-  };
+    id: string;
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
 export const ChallengeHeader = ({
-  creator,
+  name,
+  avatar,
+  id,
   onEdit,
   onDelete,
 }: ChallengeHeaderProps) => {
@@ -32,12 +32,12 @@ export const ChallengeHeader = ({
         <div className="flex items-center space-x-3">
           <Link to={"/public-profile"}>
           <Avatar>
-            <AvatarImage src={creator.avatar} alt={creator.name} />
-            <AvatarFallback>{creator.initials}</AvatarFallback>
+            <AvatarImage src={avatar} alt={name} />
+            <AvatarFallback>{"PR"}</AvatarFallback>
           </Avatar>
           </Link>
           <div>
-            <h3 className="font-semibold">{creator.name}</h3>
+            <h3 className="font-semibold">{name}</h3>
           </div>
         </div>
 

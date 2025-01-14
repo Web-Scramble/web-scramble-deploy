@@ -26,8 +26,8 @@ export const challengeSchema = yup.object({
    })
  }).optional(),
  reward: yup.string().when("challengeType", {
-   is: (value: string) => value === "prize",
-   then: (schema) => schema.required("Reward is required for prize challenges")
+   is: (value: string) => value !== "",
+   then: (schema) => schema.required("Reward is required for challenges")
  }),
  isPrivate: yup.boolean(),
 //  participants: yup.string().when("isPrivate", {

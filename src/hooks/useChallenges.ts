@@ -19,7 +19,7 @@ export const useChallenges = () => {
     isFetching,
   } = useQuery({
     queryKey: CHALLENGES_QUERY_KEY,
-    queryFn:getChallenges })// Consider data fresh for 5 minutes
+    queryFn:getChallenges })
 
   return {
     challenges,

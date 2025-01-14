@@ -286,11 +286,12 @@ const TiptapEditor = ({ editorContent, setEditorContent }: EditorProps) => {
     ],
     content: editorContent
       ? editorContent
-      : `<h3 style="text-align:left">
-        Enter your challenge here
-      </h3>
+      // : `<h3 style="text-align:left">
+      //   Enter your challenge here
+      // </h3>
+      : `
       <p style="text-align:left">
-        drag and drop images to add to editor<br></p>`,
+        Enter your challenge details here<br></p>`,
     onUpdate({ editor }) {
       setEditorContent(editor.getHTML());
     },

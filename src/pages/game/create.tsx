@@ -74,23 +74,40 @@ const ChallengeCreator = () => {
   } = useCreateChallenge();
 
   const handleCreateChallenge = (data: ChallengeFormData) => {
-    const formData = new FormData();
-    formData.append("challengeType", challengeType);
-    formData.append("title", data.title);
-    formData.append("isPublic", JSON.stringify(!isPrivate));
-    formData.append("rewardPool", data.reward);
-    formData.append("duration_value", JSON.stringify(data.duration_value));
-    formData.append("duration_unit", data.duration_unit);
-    formData.append("judges", JSON.stringify(setSelectedJudges));
-    formData.append("participants", JSON.stringify(setSelectedParticipants));
-    formData.append("startTime", JSON.stringify(startDate));
-    formData.append("endTime", JSON.stringify(endDate));
+    // const formData = new FormData();
+    // formData.append("challengeType", challengeType);
+    // formData.append("title", data.title);
+    // formData.append("isPublic", JSON.stringify(!isPrivate));
+    // formData.append("rewardPool", data.reward);
+    // formData.append("duration_value", JSON.stringify(data.duration_value));
+    // formData.append("duration_unit", data.duration_unit);
+    // formData.append("judges", JSON.stringify(setSelectedJudges));
+    // formData.append("participants", JSON.stringify(setSelectedParticipants));
+    // formData.append("startTime", JSON.stringify(startDate));
+    // formData.append("endTime", JSON.stringify(endDate));
     // formData.append("taskTypeDetails[title]", data.title);
     // formData.append("taskTypeDetails[description]", editorContent);
-    attachments.forEach((item) => {
-      formData.append("documents", item);
-    });
-    createMutate(formData);
+    // attachments.forEach((item) => {
+    //   formData.append("documents", item);
+    // });
+    
+    const challengeData = {
+      challengeType:challengeType,
+      is_public:!isPrivate,
+      reward_pool:data.reward,
+      duration_value:data.duration_value,
+      duration_unit:data.duration_unit,
+      title:data.title,
+      description:editorContent,
+      // doc:[sasd],
+      judges:[{name:"pla"},{name:"pla"},{name:"pla"}],
+      participants:[{name:"pla"},{name:"pla"},{name:"pla"}],
+      start_time:"2025-01-07T19:13:56.028Z",
+      end_time:"2025-01-07T19:13:56.028Z"
+      
+    }
+    console.log(challengeData)
+    createMutate(challengeData);
   };
 
 
@@ -316,7 +333,13 @@ const ChallengeCreator = () => {
             className="h-9"
             {...register("reward")}
           />
+           {errors.reward && (
+          <span className="text-red-500 text-xs">
+            {errors.reward?.message}
+          </span>
+        )}
         </div>
+
 
         {/* Privacy Toggle */}
         <div className="flex items-center justify-between mb-4">

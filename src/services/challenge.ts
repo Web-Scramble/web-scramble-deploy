@@ -18,9 +18,9 @@ export const addServer = async (data: FormData) => {
 
 export const createChallenge = async (data: ChallengeFormData) => {
     console.log({Authorization: `Bearer ${token}`})
-  const response = await axios.post(`${baseURL}taskChallenge`, data, {
+  const response = await axios.post(`${baseURL}challenge/taskType`, data, {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
@@ -28,9 +28,9 @@ export const createChallenge = async (data: ChallengeFormData) => {
   return response.data;
 };
 export const getChallenges = async () => {
-  const response = await axios.get(`${baseURL}challenge`, {
+  const response = await axios.get(`${baseURL}challenge/fetch/all`, {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });

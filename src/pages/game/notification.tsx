@@ -82,7 +82,7 @@ export default function NotificationsScreen() {
             value="verified" 
             className="w-full rounded-none data-[state=active]:bg-accent h-full"
           >
-            Verified
+            Invitations
           </TabsTrigger>
           <TabsTrigger 
             value="mentions" 

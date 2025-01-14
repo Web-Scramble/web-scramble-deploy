@@ -3,6 +3,7 @@ import { Button } from "@/components/ui/button";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { useState } from "react";
 import {
   Settings,
   Edit,
@@ -15,6 +16,8 @@ import {
 import Layout from "@/components/ui/shared/layout";
 import { Link } from "react-router";
 import { authStore } from "@/store/authstore";
+import { BoostRewardModal } from "@/components/modals/amount_modal";
+import { useNavigate } from "react-router";
 
 const ProfilePage = () => {
   const recentActivities = [
@@ -38,9 +41,12 @@ const ProfilePage = () => {
     },
   ];
   const { user } = authStore();
+  const navigate = useNavigate()
+  const [isVisible, setIsVisible] = useState(false)
 
   return (
     <Layout>
+      <BoostRewardModal isOpen={isVisible} onOpenChange={setIsVisible} onSubmit={()=>navigate("/top-up")}/>
       <div className="min-h-screen bg-background p-6">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Profile Header */}
@@ -50,7 +56,7 @@ const ProfilePage = () => {
 
             {/* Profile Info */}
             <div className="absolute -bottom-10 left-6 flex md:items-end space-x-4 flex-col items-center md:flex-row">
-              <Avatar className="h-32 w-32 border-4 border-background">
+              <Avatar className=" h-32 w-32  border-background">
                 <AvatarImage src={user.profile_picture} />
                 <AvatarFallback>AB</AvatarFallback>
               </Avatar>
@@ -106,6 +112,7 @@ const ProfilePage = () => {
                     <Button
                       variant={"ghost"}
                       className="flex items-center border w-24"
+                      onClick={()=>setIsVisible(true)}
                     >
                       Topup
                     </Button>

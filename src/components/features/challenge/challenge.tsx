@@ -20,7 +20,9 @@ const ChallengeCard = ({
   return (
     <Card className="w-full max-w-xl mx-auto bg-white shadow-lg">
       <ChallengeHeader 
-        creator={challenge.creator}
+        name={challenge.creator_username}
+        avatar={challenge.creator_profile_pic}
+        id={challenge.creator_id}
         onEdit={() => onEdit?.(challenge.id)}
         onDelete={() => onDelete?.(challenge.id)}
       />

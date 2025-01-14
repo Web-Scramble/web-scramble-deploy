@@ -5,6 +5,8 @@ import { CardContent } from '@/components/ui/card';
 import { Link } from 'react-router';
 import { Challenge } from '@/types/challenge';
 import RemarksSection from './remarks';
+import { BoostRewardModal } from "@/components/modals/amount_modal";
+
 
 
 interface ChallengeContentProps {
@@ -20,6 +22,11 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
   const [showRemarks, setShowRemarks] = useState(false);
   const [activeTab, setActiveTab] = useState<'comments' | 'rankings'>('comments');
   const [newComment, setNewComment] = useState('');
+  const [isVisible, setIsVisible] = useState(false)
+
+
+  const endDate = challenge.endTime
+  console.log(challenge.endTime)
 
   const getAttachmentIcon = (type: string) => {
     switch (type) {
@@ -43,8 +50,9 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
 
   return (
     <CardContent className="p-4 space-y-4">
+        <BoostRewardModal isOpen={isVisible} onOpenChange={setIsVisible} onSubmit={()=>setIsVisible(false)}/>
       <div>
-        <h4 className="font-medium text-left">{challenge.title}</h4>
+        <h4 className="font-medium font-bold text-left">{challenge.title}</h4>
         <p className="text-sm text-gray-600 mt-1 text-left">
           {isExpanded ? challenge.description : `${challenge.description.slice(0, 100)}...`}
           <span
@@ -60,24 +68,22 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
             <Calendar className="w-4 h-4 mr-1" />
-            <span>Ends in {challenge.endTime}</span>
+            <span>Ends in {challenge.end_time}</span>
           </div>
           <div className="flex items-center">
             <Timer className="w-4 h-4 mr-1" />
-            <span>{challenge.duration} duration</span>
+            <span className='flex flex-row gap-2'>{challenge.duration_value}{challenge.duration_unit} duration</span>
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <span className="text-green-500">${challenge.reward}</span>
-          <Link to="/boost-reward">
-            <Button variant="ghost" size="sm" className="p-0">
+          <span className="text-green-500">${challenge.reward_pool}</span>
+            <Button variant="ghost" size="sm" className="p-0" onClick={()=>setIsVisible(true)}>
               <Plus className="w-4 h-4 text-green-500" />
             </Button>
-          </Link>
         </div>
       </div>
 
-      {challenge.attachments.length > 0 && (
+      {/* {challenge.attachments.length > 0 && (
         <div className="border rounded-lg p-2 space-y-4">
           <h5 className="text-sm font-medium">
             Attachments ({challenge.attachments.length})
@@ -93,13 +99,13 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
             ))}
           </div>
         </div>
-      )}
+      )} */}
 
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <span className="flex items-center space-x-2 text-gray-600">
             <Users2 className="w-5 h-5" />
-            <span>{challenge.participantCount}</span>
+            <span>{challenge.participant_count}</span>
           </span>
           <button
             onClick={() => setShowRemarks(!showRemarks)}
