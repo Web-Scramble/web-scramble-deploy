@@ -132,7 +132,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
 
       {showRemarks && (
         <RemarksSection
-          remarks={challenge.remarks}
+          remarks={challenge.comments}
           rankings={challenge.rankings}
           activeTab={activeTab}
           setActiveTab={setActiveTab}

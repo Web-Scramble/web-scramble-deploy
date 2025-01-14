@@ -1,5 +1,6 @@
 import "./App.css";
 import { Routes, Route, Navigate } from "react-router";
+import { useState, useEffect } from "react";
 import {
   OTPVerification,
   LandingPage,
@@ -21,8 +22,44 @@ import {
 } from "@/pages/game";
 import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements } from "@stripe/react-stripe-js";
+import { CheckoutForm, CompletePage } from "./pages/payment";
+import { getToken } from "./services/getToken";
 
 function App() {
+  // Make sure to call loadStripe outside of a component’s render to avoid
+  // recreating the Stripe object on every render.
+  // This is a public sample test API key.
+  // Don’t submit any personally identifiable information in requests made with this key.
+  // Sign in to see your own test API key embedded in code samples.
+  const stripePromise = loadStripe(
+    "pk_test_51Qc31ZCYjeTr7iKH3najWXrQeUqf2AEU2YJ4q8T6iudU9fTdbyixcTVK3TGVPWwIiKPtgJP7K1KoOHx3TP4ea6Mv00uFbXc7u4"
+  );
+  const authToken = getToken();
+
+  const [clientSecret, setClientSecret] = useState("");
+  const baseURL = import.meta.env.VITE_API_URL;
+  useEffect(() => {
+    // Create PaymentIntent as soon as the page loads
+    fetch(`${baseURL}payment/refill`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ amount: 50, paymentMethodId: "pm_card_visa" }),
+    })
+      .then((res) => res.json())
+      // .then((data) => console.log(data));
+    .then((data) => setClientSecret(data.clientSecret));
+  }, []);
+
+  const appearance = {
+    theme: "stripe",
+  };
+  // Enable the skeleton loader UI for optimal loading.
+  const loader = "auto";
   const { token } = authStore();
   function RequireAuth({
     children,
@@ -87,7 +124,18 @@ function App() {
             </RequireAuth>
           }
         /> */}
-      </Routes>
+      </Routes> {clientSecret && (
+            <Elements
+              options={{ clientSecret, appearance, loader }}
+              stripe={stripePromise}
+            >
+              <Routes>
+                <Route path="/checkout" element={<CheckoutForm />} />
+                <Route path="/complete" element={<CompletePage />} />
+              </Routes>
+            </Elements>
+          )}
+
       <Toaster />
     </>
   );

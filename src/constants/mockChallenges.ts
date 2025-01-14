@@ -19,7 +19,7 @@ export const mockChallenges: Challenge[] = [
       { type: 'image', name: 'Circuit_Example.png' }
     ],
     participantCount: 156,
-    remarks: [
+    comments: [
       {
         id: 1,
         user: 'Alex Thompson',

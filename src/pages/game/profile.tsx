@@ -40,13 +40,16 @@ const ProfilePage = () => {
       prize: "$750",
     },
   ];
-  const { user } = authStore();
+  const { user,updateRefillAmount } = authStore();
   const navigate = useNavigate()
   const [isVisible, setIsVisible] = useState(false)
 
   return (
     <Layout>
-      <BoostRewardModal isOpen={isVisible} onOpenChange={setIsVisible} onSubmit={()=>navigate("/top-up")}/>
+      <BoostRewardModal isOpen={isVisible} onOpenChange={setIsVisible} onSubmit={(amount)=>{
+        navigate("/checkout")
+        updateRefillAmount(amount)
+        }}/>
       <div className="min-h-screen bg-background p-6">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Profile Header */}
