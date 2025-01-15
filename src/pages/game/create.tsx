@@ -71,6 +71,7 @@ const ChallengeCreator = () => {
     isLoading,
     isError,
     isSuccess,
+    data
   } = useCreateChallenge();
 
   const handleCreateChallenge = (data: ChallengeFormData) => {
@@ -400,7 +401,7 @@ const ChallengeCreator = () => {
         {/* Create Button */}
         <Button
           className="w-full h-12 text-base font-medium bg-gray-900 hover:bg-gray-800"
-          // onClick={() => setShowInvitationModal(true)}
+          onClick={() => setShowInvitationModal(true)}
           type="submit"
         >
           {isScheduled ? "Schedule Challenge" : "Create Challenge Now"}

@@ -40,16 +40,22 @@ const ProfilePage = () => {
       prize: "$750",
     },
   ];
-  const { user,updateRefillAmount } = authStore();
-  const navigate = useNavigate()
-  const [isVisible, setIsVisible] = useState(false)
+  const { user, updateRefillAmount } = authStore();
+  const navigate = useNavigate();
+  const [isVisible, setIsVisible] = useState(false);
+
+  console.log(user.balance);
 
   return (
     <Layout>
-      <TopUpModal isOpen={isVisible} onOpenChange={setIsVisible} onSubmit={(amount)=>{
-        navigate("/checkout")
-        updateRefillAmount(amount)
-        }}/>
+      <TopUpModal
+        isOpen={isVisible}
+        onOpenChange={setIsVisible}
+        onSubmit={(amount) => {
+          navigate("/checkout");
+          updateRefillAmount(amount);
+        }}
+      />
       <div className="min-h-screen bg-background p-6">
         <div className="max-w-4xl mx-auto space-y-6">
           {/* Profile Header */}
@@ -115,10 +121,18 @@ const ProfilePage = () => {
                     <Button
                       variant={"ghost"}
                       className="flex items-center border w-24"
-                      onClick={()=>setIsVisible(true)}
+                      onClick={() => setIsVisible(true)}
                     >
                       Topup
                     </Button>
+                    <Link to={"/withdrawal"}>
+                      <Button
+                        variant={"ghost"}
+                        className="flex items-center border w-24"
+                      >
+                        withdraw
+                      </Button>
+                    </Link>
                   </div>
                 </div>
               </CardContent>

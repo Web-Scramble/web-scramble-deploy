@@ -1,11 +1,11 @@
 import { useQuery } from '@tanstack/react-query';
-import { getChallenges } from '@/services/challenge';
+import { deleteChallenge } from '@/services/challenge';
 
 
 
-export const CHALLENGES_QUERY_KEY = ['CHALLENGES'] as const;
+export const QUERY_KEY = ['DELETE_CHALLENGES'] as const;
 
-export const useChallenges = () => {
+export const useChallenges = (id:string) => {
 
   const {
     data: challenges,
@@ -14,8 +14,8 @@ export const useChallenges = () => {
     refetch,
     isFetching,
   } = useQuery({
-    queryKey: CHALLENGES_QUERY_KEY,
-    queryFn:getChallenges,  
+    queryKey: QUERY_KEY,
+    queryFn:deleteChallenge(id),  
   })
     
 

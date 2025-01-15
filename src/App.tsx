@@ -24,7 +24,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import { CheckoutForm, CompletePage, TransactionHistory } from "./pages/payment";
+import { CheckoutForm, CompletePage, TransactionHistory, WithdrawalForm } from "./pages/payment";
 import { getToken } from "./services/getToken";
 
 function App() {
@@ -133,6 +133,7 @@ function App() {
               <Routes>
                 <Route path="/checkout" element={<CheckoutForm />} />
                 <Route path="/complete" element={<CompletePage />} />
+                <Route path="/withdrawal" element={<WithdrawalForm />} />
               </Routes>
             </Elements>
           )}

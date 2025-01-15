@@ -53,6 +53,7 @@ const SettingsScreen = () => {
             <SettingsItem icon={HelpCircle} label="Need help? Let's connect" />
             <SettingsItem icon={Mail} label="Email Us" />
             <SettingsItem icon={Shield} label="Privacy Policy" />
+            <SettingsItem icon={Shield} label="Transactions" />
           </SettingsSection>
 
           <Button
