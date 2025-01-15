@@ -25,7 +25,7 @@ export const challengeSchema = yup.object({
        .required("Duration unit is required")
    })
  }).optional(),
- reward: yup.string().when("challengeType", {
+ reward: yup.number().when("challengeType", {
    is: (value: string) => value !== "",
    then: (schema) => schema.required("Reward is required for challenges")
  }),

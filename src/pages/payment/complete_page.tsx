@@ -2,9 +2,9 @@ import React, { useEffect, useState } from "react";
 import {
   useStripe,
 } from "@stripe/react-stripe-js";
-// import "./App.css";
-// import "./payment.css"
-
+import { Button } from '@/components/ui/button';
+import { Label } from "@/components/ui/label";
+import Layout from "@/components/ui/shared/layout";
 
 const SuccessIcon =
   <svg width="16" height="14" viewBox="0 0 16 14" fill="none" xmlns="http://www.w3.org/2000/svg">

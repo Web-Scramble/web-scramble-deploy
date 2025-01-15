@@ -24,7 +24,7 @@ import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import { CheckoutForm, CompletePage } from "./pages/payment";
+import { CheckoutForm, CompletePage, TransactionHistory } from "./pages/payment";
 import { getToken } from "./services/getToken";
 
 function App() {
@@ -91,6 +91,7 @@ function App() {
         <Route path="/top-up" element={<TopUpPage />} />
         <Route path="/public-profile" element={<PublicProfile />} />
         <Route path="/notifications" element={<NotificationsScreen />} />
+        <Route path="/transactions" element={<TransactionHistory />} />
         {/* <Route
           path="/challenge"
           element={

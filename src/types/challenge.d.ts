@@ -36,7 +36,8 @@ export interface Attachment {
     };
     title: string;
     description: string;
-    endTime: string;
+    end_time: Date;
+    start_time: Date;
     duration: string;
     reward: number;
     attachments: Attachment[];

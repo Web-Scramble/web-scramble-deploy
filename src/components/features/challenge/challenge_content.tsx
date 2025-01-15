@@ -1,13 +1,24 @@
-import React, { useState } from 'react';
-import { Calendar, Timer, Plus, Image, Video, FileText, Users2, MessageCircle, Rocket } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { CardContent } from '@/components/ui/card';
-import { Link } from 'react-router';
-import { Challenge } from '@/types/challenge';
-import RemarksSection from './remarks';
+import React, { useState } from "react";
+import {
+  Calendar,
+  Timer,
+  Plus,
+  Image,
+  Video,
+  FileText,
+  Users2,
+  MessageCircle,
+  Rocket,
+} from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { CardContent } from "@/components/ui/card";
+import { Link } from "react-router";
+import { Challenge } from "@/types/challenge";
+import RemarksSection from "./remarks";
 import { BoostRewardModal } from "@/components/modals/amount_modal";
-
-
+import { authStore } from "@/store/authstore";
+import { useToast } from "@/hooks/use-toast";
+import { useNavigate } from "react-router";
 
 interface ChallengeContentProps {
   challenge: Challenge;
@@ -20,21 +31,26 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
 }) => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [showRemarks, setShowRemarks] = useState(false);
-  const [activeTab, setActiveTab] = useState<'comments' | 'rankings'>('comments');
-  const [newComment, setNewComment] = useState('');
-  const [isVisible, setIsVisible] = useState(false)
+  const [activeTab, setActiveTab] = useState<"comments" | "rankings">(
+    "comments"
+  );
+  const [newComment, setNewComment] = useState("");
+  const [isVisible, setIsVisible] = useState(false);
 
+  const { toast } = useToast();
+  const { user } = authStore();
+  const navigate = useNavigate();
 
-  const endDate = challenge.endTime
-  console.log(challenge.endTime)
+  const endDate = challenge.endTime;
+  console.log(challenge.endTime);
 
   const getAttachmentIcon = (type: string) => {
     switch (type) {
-      case 'image':
+      case "image":
         return <Image className="w-4 h-4" />;
-      case 'video':
+      case "video":
         return <Video className="w-4 h-4" />;
-      case 'document':
+      case "document":
         return <FileText className="w-4 h-4" />;
       default:
         return null;
@@ -45,21 +61,37 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
     e.preventDefault();
     if (!newComment.trim()) return;
     // Handle comment submission
-    setNewComment('');
+    setNewComment("");
   };
 
   return (
     <CardContent className="p-4 space-y-4">
-        <BoostRewardModal isOpen={isVisible} onOpenChange={setIsVisible} onSubmit={()=>setIsVisible(false)}/>
+      <BoostRewardModal
+        isOpen={isVisible}
+        onOpenChange={setIsVisible}
+        onSubmit={(amount) => {
+          if (parseInt(user.balance) <= amount) {
+            toast({
+              variant: "destructive",
+              title: "Insufficient Balance, Please Top up your account",
+              description: "please try again",
+            });
+            navigate("/profile");
+          }
+          setIsVisible(false);
+        }}
+      />
       <div>
         <h4 className="font-medium font-bold text-left">{challenge.title}</h4>
         <p className="text-sm text-gray-600 mt-1 text-left">
-          {isExpanded ? challenge.description : `${challenge.description.slice(0, 100)}...`}
+          {isExpanded
+            ? challenge.description
+            : `${challenge.description.slice(0, 100)}...`}
           <span
             onClick={() => setIsExpanded(!isExpanded)}
             className="text-blue-500 ml-1 text-sm cursor-pointer"
           >
-            {isExpanded ? 'Show less' : 'Read more'}
+            {isExpanded ? "Show less" : "Read more"}
           </span>
         </p>
       </div>
@@ -68,18 +100,27 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
         <div className="flex items-center space-x-4">
           <div className="flex items-center">
             <Calendar className="w-4 h-4 mr-1" />
-            <span>Ends in {challenge.end_time}</span>
+            {challenge.end_time && (
+              <span>Ends on {new Date(challenge.end_time).toDateString()}</span>
+            )}
           </div>
           <div className="flex items-center">
             <Timer className="w-4 h-4 mr-1" />
-            <span className='flex flex-row gap-2'>{challenge.duration_value}{challenge.duration_unit} duration</span>
+            <span className="flex flex-row gap-2">
+              duration {challenge.duration_value} {challenge.duration_unit}{" "}
+            </span>
           </div>
         </div>
         <div className="flex items-center space-x-2">
           <span className="text-green-500">${challenge.reward_pool}</span>
-            <Button variant="ghost" size="sm" className="p-0" onClick={()=>setIsVisible(true)}>
-              <Plus className="w-4 h-4 text-green-500" />
-            </Button>
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-0"
+            onClick={() => setIsVisible(true)}
+          >
+            <Plus className="w-4 h-4 text-green-500" />
+          </Button>
         </div>
       </div>
 
@@ -119,15 +160,15 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
           </Button>
         </div>
         <Link to={"/submission"}>
-        <Button 
-          variant="outline" 
-          size="sm" 
-          className="text-green-500"
-          onClick={onJoin}
+          <Button
+            variant="outline"
+            size="sm"
+            className="text-green-500"
+            onClick={onJoin}
           >
-          Join
-        </Button>
-            </Link>
+            Join
+          </Button>
+        </Link>
       </div>
 
       {showRemarks && (

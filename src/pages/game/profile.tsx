@@ -16,8 +16,8 @@ import {
 import Layout from "@/components/ui/shared/layout";
 import { Link } from "react-router";
 import { authStore } from "@/store/authstore";
-import { BoostRewardModal } from "@/components/modals/amount_modal";
 import { useNavigate } from "react-router";
+import { TopUpModal } from "@/components/modals/topup_modal";
 
 const ProfilePage = () => {
   const recentActivities = [
@@ -46,7 +46,7 @@ const ProfilePage = () => {
 
   return (
     <Layout>
-      <BoostRewardModal isOpen={isVisible} onOpenChange={setIsVisible} onSubmit={(amount)=>{
+      <TopUpModal isOpen={isVisible} onOpenChange={setIsVisible} onSubmit={(amount)=>{
         navigate("/checkout")
         updateRefillAmount(amount)
         }}/>

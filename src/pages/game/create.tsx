@@ -328,7 +328,7 @@ const ChallengeCreator = () => {
             Reward
           </Label>
           <Input
-            type="text"
+            type="number"
             placeholder="Enter prize"
             className="h-9"
             {...register("reward")}
