@@ -41,8 +41,6 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
   const { user } = authStore();
   const navigate = useNavigate();
 
-  const endDate = challenge.endTime;
-  console.log(challenge.endTime);
 
   const getAttachmentIcon = (type: string) => {
     switch (type) {
@@ -82,7 +80,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
         }}
       />
       <div>
-        <h4 className="font-medium font-bold text-left">{challenge.title}</h4>
+        <h4 className="font-bold text-left">{challenge.title}</h4>
         <p className="text-sm text-gray-600 mt-1 text-left">
           {isExpanded
             ? challenge.description

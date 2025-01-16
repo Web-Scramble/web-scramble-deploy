@@ -1,4 +1,4 @@
-import { useMutation, useQueryClient } from '@tanstack/react-query';
+import { useMutation } from '@tanstack/react-query';
 import { createChallenge } from '@/services/challenge';
 import { ChallengeFormData } from '@/types/challenge';
 import { useNavigate } from 'react-router';
@@ -6,11 +6,9 @@ import { useToast } from "@/hooks/use-toast";
 
 
 export const useCreateChallenge = () => {
-  const navigate = useNavigate();
+  // const navigate = useNavigate();
     const { toast } = useToast();
 //   const queryClient = useQueryClient();
-  
-
   return useMutation({
     mutationFn: (data: ChallengeFormData) => createChallenge(data),
     onSuccess: () => {

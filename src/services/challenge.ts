@@ -58,7 +58,7 @@ export const mutateChallenge = async (id: string) => {
   return response.data;
 };
 export const deleteChallenge = async (id: string) => {
-  const response = await axios.delete(`${baseURL}taskType/${id}`, {
+  const response = await axios.delete(`${baseURL}challenge/taskType/${id}`, {
     headers: {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,

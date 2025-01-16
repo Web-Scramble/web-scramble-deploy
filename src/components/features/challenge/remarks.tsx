@@ -57,7 +57,7 @@ interface RemarksSectionProps {
   
         {activeTab === 'comments' && (
           <CommentsTab
-            remarks={remarks}
+            comment={remarks}
             newComment={newComment}
             setNewComment={setNewComment}
             handleSubmitComment={handleSubmitComment}

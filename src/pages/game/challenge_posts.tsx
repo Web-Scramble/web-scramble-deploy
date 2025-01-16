@@ -4,18 +4,31 @@ import Layout from "@/components/ui/shared/layout";
 import { useChallenges } from "@/hooks/useChallenges";
 import { LoadingSpinner } from "@/components/ui/shared/loader";
 import { useNavigate } from "react-router";
+import { useDeleteChallenges } from "@/hooks/useDeleteChallenge";
+import { authStore } from "@/store/authstore";
+
 
 import { useEffect } from "react";
 
 const ChallengeFeed = () => {
+  const { user } = authStore();
   const navigate = useNavigate()
+    const {
+      mutate: deleteMutation,
+      isLoading:isdeleteLoading,
+      isError,
+      isSuccess,
+      data
+    } = useDeleteChallenges();
   
   const handleJoin = (challengeId: string) => {
-    console.log(`Joining challenge: ${challengeId}`);
+    console.log("attemp to join", challengeId)
   };
 
   const handleDelete = (challengeId: string) => {
     console.log(`Deleting challenge: ${challengeId}`);
+    deleteMutation(challengeId)
+    refetch()
   };
 
   const handleEdit = (challengeId: string) => {
@@ -23,12 +36,11 @@ const ChallengeFeed = () => {
   };
   const { challenges, isLoading,isFetching, error, refetch } = useChallenges();
 useEffect(()=>{
-  console.log(challenges)
-},[challenges])
+},[])
 
-  // if(!isLoading){
-    // return <LoadingSpinner/>
-  // }
+  if(isLoading||isdeleteLoading){
+    return <LoadingSpinner/>
+  }
 
   return (
     <Layout>
@@ -38,6 +50,7 @@ useEffect(()=>{
         <div className="flex flex-col gap-6">
           {challenges &&challenges.tasks.map((challenge) => (
             <ChallengeCard
+              userId={user.id}
               key={challenge.id}
               challenge={challenge}
               onJoin={() => handleJoin(challenge.id)}

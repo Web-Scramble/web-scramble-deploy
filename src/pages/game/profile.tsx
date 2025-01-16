@@ -44,7 +44,6 @@ const ProfilePage = () => {
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
 
-  console.log(user.balance);
 
   return (
     <Layout>

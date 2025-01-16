@@ -1,22 +1,33 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Switch } from '@/components/ui/switch';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { Copy, Link } from 'lucide-react';
-import {
-  Dialog,
-  DialogContent,
-} from "@/components/ui/dialog";
-import { useNavigate } from 'react-router';
+import React, { useState } from "react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Copy, Link } from "lucide-react";
+import { Dialog, DialogContent } from "@/components/ui/dialog";
+import { useNavigate } from "react-router";
 
-const InvitationPopup = ({ isOpen, onClose, defaultType = 'judge' }) => {
+type InvitationPopupProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  defaultType?: string;
+  judgeLink: string;
+  participantLink: string;
+};
+
+const InvitationPopup = ({
+  isOpen,
+  onClose,
+  defaultType = "judge",
+  judgeLink,
+  participantLink,
+}: InvitationPopupProps) => {
   const [inviteType, setInviteType] = useState(defaultType);
-  const [link, setLink] = useState('https://example.com/invite/abc123');
+  const [link, setLink] = useState("https://example.com/invite/abc123");
   const [copied, setCopied] = useState(false);
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleCopy = () => {
     navigator.clipboard.writeText(link);
@@ -24,17 +35,18 @@ const InvitationPopup = ({ isOpen, onClose, defaultType = 'judge' }) => {
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleToggle = (checked) => {
-    setInviteType(checked ? 'participant' : 'judge');
+  const handleToggle = (checked:boolean) => {
+    setInviteType(checked ? "participant" : "judge");
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={()=>navigate("/challenge")}>
+    <Dialog open={isOpen} onOpenChange={() => navigate("/challenge")}>
       <DialogContent className="sm:max-w-md">
         <Card className="w-full border-0 shadow-none">
           <CardHeader>
             <CardTitle className="text-2xl font-bold">
-              Invite External {inviteType === 'judge' ? 'Judges' : 'Participants'}
+              Invite External{" "}
+              {inviteType === "judge" ? "Judges" : "Participants"}
             </CardTitle>
           </CardHeader>
           <CardContent className="space-y-6">
@@ -46,7 +58,7 @@ const InvitationPopup = ({ isOpen, onClose, defaultType = 'judge' }) => {
                 <span className="text-sm">Judge</span>
                 <Switch
                   id="invite-toggle"
-                  checked={inviteType === 'participant'}
+                  checked={inviteType === "participant"}
                   onCheckedChange={handleToggle}
                 />
                 <span className="text-sm">Participant</span>
@@ -76,9 +88,13 @@ const InvitationPopup = ({ isOpen, onClose, defaultType = 'judge' }) => {
             <Alert className="bg-blue-50">
               <Link className="h-4 w-4" />
               <AlertDescription>
-                Share this link with {inviteType === 'judge' ? 'judges' : 'participants'} to invite them to the event.
-                {inviteType === 'judge' && ' They will have access to judging tools and scoring interface.'}
-                {inviteType === 'participant' && ' They will be able to submit their entries and view event details.'}
+                Share this link with{" "}
+                {inviteType === "judge" ? "judges" : "participants"} to invite
+                them to the event.
+                {inviteType === "judge" &&
+                  " They will have access to judging tools and scoring interface."}
+                {inviteType === "participant" &&
+                  " They will be able to submit their entries and view event details."}
               </AlertDescription>
             </Alert>
 

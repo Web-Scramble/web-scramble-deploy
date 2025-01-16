@@ -103,8 +103,8 @@ const ChallengeCreator = () => {
       // doc:[sasd],
       judges:[{name:"pla"},{name:"pla"},{name:"pla"}],
       participants:[{name:"pla"},{name:"pla"},{name:"pla"}],
-      start_time:startDate,
-      end_time:isScheduled?endDate:""
+      start_time:"2025-01-07T19:13:56.028Z",
+      end_time:"2025-01-07T19:13:56.028Z"
       
     }
     console.log(challengeData)
@@ -401,7 +401,7 @@ const ChallengeCreator = () => {
         {/* Create Button */}
         <Button
           className="w-full h-12 text-base font-medium bg-gray-900 hover:bg-gray-800"
-          // onClick={() => setShowInvitationModal(true)}
+          onClick={() => setShowInvitationModal(true)}
           type="submit"
         >
           {isScheduled ? "Schedule Challenge" : "Create Challenge Now"}

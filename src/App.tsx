@@ -24,8 +24,15 @@ import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
-import { CheckoutForm, CompletePage, TransactionHistory, WithdrawalForm } from "./pages/payment";
+import {
+  CheckoutForm,
+  CompletePage,
+  TransactionHistory,
+  WithdrawalForm,
+} from "./pages/payment";
 import { getToken } from "./services/getToken";
+import { getItemFromLocalStorage } from "./services/localStorage";
+import { TOKEN, USER_DATA } from "./constants/keys";
 
 function App() {
   // Make sure to call loadStripe outside of a component’s render to avoid
@@ -37,6 +44,7 @@ function App() {
     "pk_test_51Qc31ZCYjeTr7iKH3najWXrQeUqf2AEU2YJ4q8T6iudU9fTdbyixcTVK3TGVPWwIiKPtgJP7K1KoOHx3TP4ea6Mv00uFbXc7u4"
   );
   const authToken = getToken();
+  const { token, user, updateToken, updateUser } = authStore();
 
   const [clientSecret, setClientSecret] = useState("");
   const baseURL = import.meta.env.VITE_API_URL;
@@ -52,15 +60,27 @@ function App() {
     })
       .then((res) => res.json())
       // .then((data) => console.log(data));
-    .then((data) => setClientSecret(data.clientSecret));
+      .then((data) => setClientSecret(data.clientSecret));
   }, []);
+
+  useEffect(() => {
+    if (!token) {
+      const newToken = getItemFromLocalStorage(TOKEN);
+      updateToken(newToken);
+      console.log("reload", newToken);
+    }
+    if (!user) {
+      const newUser = getItemFromLocalStorage("USER_DATA");
+      updateUser(newUser);
+      console.log("reload", newUser);
+    }
+  });
 
   const appearance = {
     theme: "stripe",
   };
   // Enable the skeleton loader UI for optimal loading.
   const loader = "auto";
-  const { token } = authStore();
   function RequireAuth({
     children,
     redirectTo,
@@ -92,14 +112,14 @@ function App() {
         <Route path="/public-profile" element={<PublicProfile />} />
         <Route path="/notifications" element={<NotificationsScreen />} />
         <Route path="/transactions" element={<TransactionHistory />} />
-        {/* <Route
-          path="/challenge"
+        <Route
+          path="/boost-reward"
           element={
             <RequireAuth redirectTo="/">
-              <ChallengeFeed />
+              <BoostRewardPage />
             </RequireAuth>
           }
-        /> */}
+        />
 
         {/* <Route
           path="/Genealogy"
@@ -125,19 +145,19 @@ function App() {
             </RequireAuth>
           }
         /> */}
-      </Routes> {clientSecret && (
-            <Elements
-              options={{ clientSecret, appearance, loader }}
-              stripe={stripePromise}
-            >
-              <Routes>
-                <Route path="/checkout" element={<CheckoutForm />} />
-                <Route path="/complete" element={<CompletePage />} />
-                <Route path="/withdrawal" element={<WithdrawalForm />} />
-              </Routes>
-            </Elements>
-          )}
-
+      </Routes>{" "}
+      {clientSecret && (
+        <Elements
+          options={{ clientSecret, appearance, loader }}
+          stripe={stripePromise}
+        >
+          <Routes>
+            <Route path="/checkout" element={<CheckoutForm />} />
+            <Route path="/complete" element={<CompletePage />} />
+            <Route path="/withdrawal" element={<WithdrawalForm />} />
+          </Routes>
+        </Elements>
+      )}
       <Toaster />
     </>
   );

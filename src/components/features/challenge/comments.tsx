@@ -7,20 +7,20 @@ import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 // import { Link } from 'react-router';
 
 interface CommentsTabProps {
-    remarks: Challenge['remarks'];
+    comment: Challenge['comment'];
     newComment: string;
     setNewComment: (comment: string) => void;
     handleSubmitComment: (e: React.FormEvent) => void;
   }
   
    const CommentsTab = ({
-    remarks,
+    comment,
     newComment,
     setNewComment,
     handleSubmitComment,
   }:CommentsTabProps) => (
     <div className="space-y-4">
-      {remarks.map((remark) => (
+      {comment &&comment.map((remark) => (
         <div key={remark.id} className="p-3 bg-gray-50 rounded-lg">
           <div className="flex items-start space-x-3">
             <Avatar className="w-8 h-8">

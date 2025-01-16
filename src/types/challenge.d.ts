@@ -5,7 +5,7 @@ export interface Attachment {
     name: string;
   }
   
-  export interface Remark {
+  export interface Comment {
     id: number;
     user: string;
     avatar: string;
@@ -42,7 +42,7 @@ export interface Attachment {
     reward: number;
     attachments: Attachment[];
     participantCount: number;
-    remarks: Remark[];
+    comment: Comment[];
     rankings: Ranking[];
   }
   export interface ChallengeFormData {

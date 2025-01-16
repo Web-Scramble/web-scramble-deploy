@@ -5,6 +5,7 @@ import { ChallengeFooter } from './challenge_footer';
 import { Card } from '@/components/ui/card';
 
 interface ChallengeCardProps {
+  userId:string;
   challenge: Challenge;
   onJoin?: (challengeId: string) => void;
   onDelete?: (challengeId: string) => void;
@@ -12,6 +13,7 @@ interface ChallengeCardProps {
 }
 
 const ChallengeCard = ({
+  userId,
   challenge,
   onJoin,
   onDelete,
@@ -23,6 +25,7 @@ const ChallengeCard = ({
         name={challenge.creator_username}
         avatar={challenge.creator_profile_pic}
         id={challenge.creator_id}
+        userId={userId}
         onEdit={() => onEdit?.(challenge.id)}
         onDelete={() => onDelete?.(challenge.id)}
       />
