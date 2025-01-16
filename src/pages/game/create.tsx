@@ -62,7 +62,6 @@ const ChallengeCreator = () => {
   });
 
   useEffect(() => {
-    console.log(editorContent, challengeType, isPrivate, duration);
     setValue("challengeType", challengeType);
     setValue("description", editorContent);
   }, [editorContent]);
@@ -71,9 +70,14 @@ const ChallengeCreator = () => {
     isLoading,
     isError,
     isSuccess,
-    data
+    data,
   } = useCreateChallenge();
-
+  useEffect(()=>{
+    if(data){
+      console.log(data)
+      setShowInvitationModal(true)
+    }
+  },[data])
   const handleCreateChallenge = (data: ChallengeFormData) => {
     // const formData = new FormData();
     // formData.append("challengeType", challengeType);
@@ -91,26 +95,28 @@ const ChallengeCreator = () => {
     // attachments.forEach((item) => {
     //   formData.append("documents", item);
     // });
-    
-    const challengeData = {
-      challengeType:challengeType,
-      is_public:!isPrivate,
-      reward_pool:data.reward,
-      duration_value:data.duration_value,
-      duration_unit:data.duration_unit,
-      title:data.title,
-      description:editorContent,
-      // doc:[sasd],
-      judges:[{name:"pla"},{name:"pla"},{name:"pla"}],
-      participants:[{name:"pla"},{name:"pla"},{name:"pla"}],
-      start_time:startDate,
-      end_time:isScheduled?endDate:""
-      
-    }
-    console.log(challengeData)
-    createMutate(challengeData);
-  };
 
+    const challengeData = {
+      challengeType: challengeType,
+      is_public: !isPrivate,
+      reward_pool: data.reward,
+      duration_value: data.duration_value,
+      duration_unit: data.duration_unit,
+      title: data.title,
+      description: editorContent,
+      // doc:[sasd],
+      judges: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
+      participants: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
+      start_time: startDate,
+      end_time: isScheduled ? endDate : "",
+    };
+    console.log(challengeData);
+    createMutate(challengeData);
+
+    if (data) {
+      setShowInvitationModal(true)
+    }
+  };
 
   const onSubmit = async (data: ChallengeFormData) =>
     handleCreateChallenge(data);
@@ -120,12 +126,25 @@ const ChallengeCreator = () => {
     setValue("attachments", files);
   };
 
+  // if (isSuccess) {
+  //   return (
+  //     <InvitationPopup
+  //       isOpen={showInvitationModal}
+  //       onClose={() => setShowInvitationModal(false)}
+  //       judgeLink={data.inviteLinks.judges.link}
+  //       participantLink={data.inviteLinks.participants.link}
+  //     />
+  //   );
+  // }
+
   return (
     <Layout>
       {showInvitationModal && (
         <InvitationPopup
           isOpen={showInvitationModal}
           onClose={() => setShowInvitationModal(false)}
+          judgeLink={data?.inviteLinks.judges.link}
+        participantLink={data?.inviteLinks.participants.link}
         />
       )}
 
@@ -173,7 +192,7 @@ const ChallengeCreator = () => {
             htmlFor="file-upload"
             className="cursor-pointer relative bottom-12 right-2 float-end h-0 "
           >
-              <Paperclip className="h-6 w-6 text-gray-500" />
+            <Paperclip className="h-6 w-6 text-gray-500" />
           </label>
         </div>
 
@@ -334,13 +353,12 @@ const ChallengeCreator = () => {
             className="h-9"
             {...register("reward")}
           />
-           {errors.reward && (
-          <span className="text-red-500 text-xs">
-            {errors.reward?.message}
-          </span>
-        )}
+          {errors.reward && (
+            <span className="text-red-500 text-xs">
+              {errors.reward?.message}
+            </span>
+          )}
         </div>
-
 
         {/* Privacy Toggle */}
         <div className="flex items-center justify-between mb-4">
@@ -386,7 +404,9 @@ const ChallengeCreator = () => {
             <DatePicker date={startDate} setDate={setStartdate} />
           </div>
           <div className="flex flex-row items-center justify-end gap-4 mt-4  w-full ">
-            <Label className=" text-xs md:text-sm font-medium">Schedule for Later</Label>
+            <Label className=" text-xs md:text-sm font-medium">
+              Schedule for Later
+            </Label>
             <Switch checked={isScheduled} onCheckedChange={setIsScheduled} />
           </div>
         </div>
@@ -401,7 +421,6 @@ const ChallengeCreator = () => {
         {/* Create Button */}
         <Button
           className="w-full h-12 text-base font-medium bg-gray-900 hover:bg-gray-800"
-          // onClick={() => setShowInvitationModal(true)}
           type="submit"
         >
           {isScheduled ? "Schedule Challenge" : "Create Challenge Now"}

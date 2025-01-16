@@ -5,7 +5,7 @@ import CommentsTab from "./comments";
 import { Button } from "@/components/ui/button";
 import { Link } from 'react-router';
 interface RemarksSectionProps {
-    remarks: Challenge['remarks'];
+    remarks: Challenge['comment'];
     rankings: Challenge['rankings'];
     activeTab: 'comments' | 'rankings';
     setActiveTab: (tab: 'comments' | 'rankings') => void;

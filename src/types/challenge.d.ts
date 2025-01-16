@@ -7,11 +7,11 @@ export interface Attachment {
   
   export interface Comment {
     id: number;
-    user: string;
-    avatar: string;
-    content: string;
-    timestamp: string;
-    likes: number;
+    username: string;
+    profile_picture: string;
+    message: string;
+    created_at: string;
+    like_count: number;
   }
   
   export interface PlayerRemark {
@@ -29,8 +29,11 @@ export interface Attachment {
   
   export interface Challenge {
     id: string;
+    creator_username: string;
+    creator_profile_pic: string;
+    creator_id: string;
     creator: {
-      name: string;
+      creator_username: string;
       avatar: string;
       initials: string;
     };

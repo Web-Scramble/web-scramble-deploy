@@ -36,6 +36,7 @@ const ChallengeFeed = () => {
   };
   const { challenges, isLoading,isFetching, error, refetch } = useChallenges();
 useEffect(()=>{
+  console.log(challenges)
 },[])
 
   if(isLoading||isdeleteLoading){

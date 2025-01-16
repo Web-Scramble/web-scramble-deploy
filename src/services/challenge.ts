@@ -40,7 +40,7 @@ export const getChallenges = async () => {
 export const getChallenge = async (id: string) => {
   const response = await axios.get(`${baseURL}challenge/${id}`, {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });
@@ -50,7 +50,18 @@ export const getChallenge = async (id: string) => {
 export const mutateChallenge = async (id: string) => {
   const response = await axios.patch(`${baseURL}challenge/${id}`, {
     headers: {
-      "Content-Type": "multipart/form-data",
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+export const createComment = async (data:any) => {
+  console.log(data)
+  const response = await axios.post(`${baseURL}challenge/operation/comment/${data.id}`,{message:data.body}, {
+    headers: {
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });

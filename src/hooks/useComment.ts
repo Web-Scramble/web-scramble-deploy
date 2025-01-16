@@ -1,24 +1,27 @@
 import { useMutation } from '@tanstack/react-query';
-import { createChallenge } from '@/services/challenge';
+import { createComment } from '@/services/challenge';
 import { ChallengeFormData } from '@/types/challenge';
 import { useNavigate } from 'react-router';
 import { useToast } from "@/hooks/use-toast";
 
 
-export const useCreateChallenge = () => {
+
+export const useComment = () => {
+  // const navigate = useNavigate();
     const { toast } = useToast();
+//   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data: ChallengeFormData) => createChallenge(data),
+    mutationFn: (data) => createComment(data),
     onSuccess: () => {
       toast({
-        description: "challenge created successfully.",
+        description: "Comment created successfully.",
       });
     },
     onError: (error) => {
       toast({
         variant: "destructive",
         title: error.response.data.message,
-        description: "please try again",
+        description: " comment Failed,please try again",
       });
     },
   });

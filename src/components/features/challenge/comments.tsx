@@ -3,7 +3,7 @@ import React from 'react';
 import {  Send, ThumbsUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback } from '@/components/ui/avatar';
+import { Avatar, AvatarFallback,AvatarImage } from '@/components/ui/avatar';
 // import { Link } from 'react-router';
 
 interface CommentsTabProps {
@@ -24,19 +24,20 @@ interface CommentsTabProps {
         <div key={remark.id} className="p-3 bg-gray-50 rounded-lg">
           <div className="flex items-start space-x-3">
             <Avatar className="w-8 h-8">
-              <AvatarFallback>{remark.avatar}</AvatarFallback>
+            <AvatarImage src={remark.profile_picture} alt={"user pic"} />
+              <AvatarFallback>{remark.profile_picture}</AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <div className="flex justify-between items-center">
-                <span className="font-medium">{remark.user}</span>
-                <span className="text-sm text-gray-500">{remark.timestamp}</span>
+                <span className="font-medium">{remark.username}</span>
+                <span className="text-sm text-gray-500">{new Date(remark.created_at).toLocaleTimeString()}</span>
               </div>
-              <p className="text-sm text-gray-600 mt-1">{remark.content}</p>
+              <p className="text-sm text-gray-600 mt-1">{remark.message}</p>
               <div className="flex items-center mt-2 text-sm text-gray-500">
-                <button className="flex items-center space-x-1 hover:text-gray-900">
+                <Button variant={"ghost"} className="flex items-center space-x-1 hover:text-gray-900">
                   <ThumbsUp className="w-4 h-4" />
-                  <span>{remark.likes}</span>
-                </button>
+                  <span>{remark.like_count}</span>
+                </Button>
               </div>
             </div>
           </div>

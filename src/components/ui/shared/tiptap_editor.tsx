@@ -35,6 +35,7 @@ import {
 export type EditorProps = {
   editorContent?: string;
   setEditorContent: (data: string) => void;
+  disabled:boolean
 };
 const MenuBar = ({ editor }) => {
   if (!editor) return null;
@@ -218,13 +219,14 @@ const MenuBar = ({ editor }) => {
   );
 };
 
-const TiptapEditor = ({ editorContent, setEditorContent }: EditorProps) => {
+const TiptapEditor = ({ editorContent, setEditorContent,disabled }: EditorProps) => {
   const editor = useEditor({
     editorProps: {
       attributes: {
         class:
           "prose prose-sm sm:prose  mx-auto focus:outline-none border rounded-md p-4",
       },
+      // editable:,
     },
     extensions: [
       StarterKit,

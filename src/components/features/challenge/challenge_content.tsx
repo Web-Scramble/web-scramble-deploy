@@ -19,6 +19,7 @@ import { BoostRewardModal } from "@/components/modals/amount_modal";
 import { authStore } from "@/store/authstore";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router";
+import { useComment } from "@/hooks/useComment";
 
 interface ChallengeContentProps {
   challenge: Challenge;
@@ -40,7 +41,13 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
   const { toast } = useToast();
   const { user } = authStore();
   const navigate = useNavigate();
-
+  const {
+    mutate: commentMutate,
+    isLoading,
+    isError,
+    isSuccess,
+    data,
+  } = useComment();
 
   const getAttachmentIcon = (type: string) => {
     switch (type) {
@@ -54,11 +61,10 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
         return null;
     }
   };
-
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim()) return;
-    // Handle comment submission
+    commentMutate({ body: newComment, id: challenge.id });
     setNewComment("");
   };
 
