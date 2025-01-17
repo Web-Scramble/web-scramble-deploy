@@ -20,6 +20,8 @@ import { authStore } from "@/store/authstore";
 import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router";
 import { useComment } from "@/hooks/useComment";
+import TiptapEditor from "@/components/ui/shared/tiptap_editor";
+
 
 interface ChallengeContentProps {
   challenge: Challenge;
@@ -85,7 +87,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
           setIsVisible(false);
         }}
       />
-      <div>
+      {/* <div>
         <h4 className="font-bold text-left">{challenge.title}</h4>
         <p className="text-sm text-gray-600 mt-1 text-left">
           {isExpanded
@@ -98,7 +100,8 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
             {isExpanded ? "Show less" : "Read more"}
           </span>
         </p>
-      </div>
+      </div> */}
+      <TiptapEditor editorContent={challenge.description} disabled={true}/>
 
       <div className="flex items-center justify-between space-x-4 text-sm text-gray-600">
         <div className="flex items-center space-x-4">
