@@ -56,7 +56,7 @@ const ProfilePage = () => {
         "Content-Type": "application/json",
         Authorization: `Bearer ${authToken}`,
       },
-      body: JSON.stringify({ amount: refillAmount, paymentMethodId: "pm_card_visa" }),
+      body: JSON.stringify({ amount: refillAmount }),
     })
       .then((res) => res.json())
       // .then((data) => console.log(data));
@@ -69,10 +69,7 @@ const ProfilePage = () => {
       <TopUpModal
         isOpen={isVisible}
         onOpenChange={setIsVisible}
-        onSubmit={(amount) => {
-          // updateRefillAmount(amount);
-          handleFetchIntent()
-        }}
+        onSubmit={handleFetchIntent}
       />
       <div className="min-h-screen bg-background p-6">
         <div className="max-w-4xl mx-auto space-y-6">

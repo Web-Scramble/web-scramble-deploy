@@ -12,7 +12,7 @@ interface AuthState {
   updateTopupAmount: (amount: number) => void;
 }
 export const authStore = create<AuthState>()((set) => ({
-  refillAmount:0,
+  refillAmount:20,
   topupAmount:0,
   token: "",
   user:{

@@ -24,9 +24,11 @@ import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
+import { useLocation } from 'react-router'
 import {
   CheckoutForm,
   CompletePage,
+  TopUp,
   TransactionHistory,
   WithdrawalForm,
 } from "./pages/payment";
@@ -46,36 +48,41 @@ function App() {
   );
   const authToken = getToken();
   const { token, user, updateToken, updateUser } = authStore();
+  const {clientSecret} = intentStore()
 
-  const [clientSecret, setClientSecret] = useState("");
-  const baseURL = import.meta.env.VITE_API_URL;
-  useEffect(() => {
-    // Create PaymentIntent as soon as the page loads
-    fetch(`${baseURL}payment/refill`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ amount: 50, paymentMethodId: "pm_card_visa" }),
-    })
-      .then((res) => res.json())
-      // .then((data) => console.log(data));
-      .then((data) => setClientSecret(data.clientSecret));
-  }, []);
+  // const [clientSecret, setClientSecret] = useState("");
+  // const baseURL = import.meta.env.VITE_API_URL;
+  // useEffect(() => {
+  //   // Create PaymentIntent as soon as the page loads
+  //   fetch(`${baseURL}payment/refill`, {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //       Authorization: `Bearer ${authToken}`,
+  //     },
+  //     body: JSON.stringify({ amount: 50, paymentMethodId: "pm_card_visa" }),
+  //   })
+  //     .then((res) => res.json())
+  //     // .then((data) => console.log(data));
+  //     .then((data) => setClientSecret(data.clientSecret));
+  // }, []);
 
-  useEffect(() => {
-    if (!token) {
-      const newToken = getItemFromLocalStorage(TOKEN);
-      updateToken(newToken);
-      console.log("reload", newToken);
+  useEffect(() =>{
+    const getSavedToken = async()=>{
+
+      const oldToken = await getItemFromLocalStorage(TOKEN);
+      if(oldToken){
+        updateToken(oldToken);
+      }
+      console.log("reload", oldToken,authToken);
+      const oldUser = await getItemFromLocalStorage(USER_DATA);
+      if (oldUser) {
+        updateUser(oldUser);
+        console.log("reloaduser", oldUser);
+      }
     }
-    if (!user) {
-      const newUser = getItemFromLocalStorage("USER_DATA");
-      updateUser(newUser);
-      console.log("reload", newUser);
-    }
-  });
+    getSavedToken()
+  },[]);
 
   const appearance = {
     theme: "stripe",
@@ -89,8 +96,10 @@ function App() {
     children: React.ReactNode;
     redirectTo: string;
   }) {
+    const {token} = authStore()
+    const location = useLocation();
     console.log(token);
-    return token ? children : <Navigate to={redirectTo} replace={true} />;
+    return token ? children : <Navigate to={redirectTo} replace={true} state={{ path: location.pathname }} />;
   }
 
   return (
@@ -101,64 +110,112 @@ function App() {
         <Route path="/otp/:phone" element={<OTPVerification />} />
         <Route path="/username/:phone" element={<UsernameSetup />} />
         {/* protected routes start here */}
-        <Route path="/challenge" element={<ChallengeFeed />} />
+        {/* <Route path="/challenge" element={<ChallengeFeed />} />
         <Route path="/create" element={<ChallengeCreator />} />
         <Route path="/review-panel" element={<ChallengeSubmissions />} />
         <Route path="/submission" element={<ChallengeSubmission />} />
-        <Route path="/profile" element={<ProfilePage />} />
-        <Route path="/boost-reward" element={<BoostRewardPage />} />
-        <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/profile" element={<ProfilePage />} /> */}
+        {/* <Route path="/boost-reward" element={<BoostRewardPage />} /> */}
+        {/* <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/settings" element={<SettingsScreen />} />
         <Route path="/top-up" element={<TopUpPage />} />
         <Route path="/public-profile" element={<PublicProfile />} />
         <Route path="/notifications" element={<NotificationsScreen />} />
-        <Route path="/transactions" element={<TransactionHistory />} />
+        <Route path="/transactions" element={<TransactionHistory />} /> */}
         <Route
-          path="/boost-reward"
+          path="/challenge"
+          element={
+            <RequireAuth redirectTo= {"/auth"}>
+              <ChallengeFeed />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/create"
           element={
             <RequireAuth redirectTo="/">
-              <BoostRewardPage />
-            </RequireAuth>
-          }
-        />
-
-        {/* <Route
-          path="/Genealogy"
-          element={
-            <RequireAuth redirectTo="/Login">
-              <Genealogy />
+              <ChallengeCreator />
             </RequireAuth>
           }
         />
         <Route
-          path="/AddMember"
+          path="/review-panel"
           element={
-            <RequireAuth redirectTo="/Login">
-              <AddMember />
+            <RequireAuth redirectTo="/">
+              <ChallengeSubmissions />
             </RequireAuth>
           }
-        />  */}
-        {/* <Route
-          path="/AddParents/:id"
+        />
+        <Route
+          path="/submission"
           element={
-            <RequireAuth redirectTo="/Login">
-              <AddParents />
+            <RequireAuth redirectTo="/">
+              <ChallengeSubmission />
             </RequireAuth>
           }
-        /> */}
-      </Routes>{" "}
-      {clientSecret && (
-        <Elements
-          options={{ clientSecret, appearance, loader }}
-          stripe={stripePromise}
-        >
-          <Routes>
-            <Route path="/checkout" element={<CheckoutForm />} />
+        />
+        <Route
+          path="/profile"
+          element={
+            <RequireAuth redirectTo="/">
+              <ProfilePage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/edit-profile"
+          element={
+            <RequireAuth redirectTo="/">
+              <EditProfile />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/settings"
+          element={
+            <RequireAuth redirectTo="/">
+              <SettingsScreen />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/top-up"
+          element={
+            <RequireAuth redirectTo="/">
+              <TopUpPage />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/notifications"
+          element={
+            <RequireAuth redirectTo="/">
+              <NotificationsScreen />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/transactions"
+          element={
+            <RequireAuth redirectTo="/">
+              <TransactionHistory />
+            </RequireAuth>
+          }
+        />
+        <Route
+          path="/public-profile"
+          element={
+            <RequireAuth redirectTo="/">
+              <PublicProfile />
+            </RequireAuth>
+          }
+        />
+            <Route path="/checkout" element={<TopUp />} />
             <Route path="/complete" element={<CompletePage />} />
             <Route path="/withdrawal" element={<WithdrawalForm />} />
-          </Routes>
-        </Elements>
-      )}
+      </Routes>
+        
+     
       <Toaster />
     </>
   );

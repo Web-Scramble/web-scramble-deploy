@@ -12,7 +12,7 @@ import { authStore } from "@/store/authstore";
 
 
 
-export default function CheckoutForm() {
+export default function PaymentutForm() {
   const stripe = useStripe();
   const elements = useElements();
 

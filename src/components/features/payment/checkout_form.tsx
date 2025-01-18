@@ -7,10 +7,6 @@ import {
 import { Button } from '@/components/ui/button';
 import { Label } from "@/components/ui/label";
 import { authStore } from "@/store/authstore";
-import { intentStore } from "@/store/intentStore";
-import { Elements } from "@stripe/react-stripe-js";
-
-
 
 
 
@@ -22,8 +18,6 @@ export default function CheckoutForm() {
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const { user,refillAmount } = authStore();
-    const { clientSecret, updateClient,stripePromise } = intentStore();
-  
   const handleSubmit = async (e:React.ChangeEvent<HTMLFormElement>) => {
     e.preventDefault();
 
@@ -56,21 +50,14 @@ export default function CheckoutForm() {
 
     setIsLoading(false);
   };
-  console.log("refill amount",refillAmount,"user",user)
+  console.log(refillAmount,user)
   const paymentElementOptions = {
     layout: "accordion"
   }
-  const appearance = {
-    theme: "stripe",
-  };
-  // Enable the skeleton loader UI for optimal loading.
-  const loader = "auto";
+
   return (
-      <Elements
-          options={{ clientSecret, appearance, loader }}
-          stripe={stripePromise}
-          > 
     <form id="payment-form" className="sm:max-w-md m-auto" onSubmit={handleSubmit}>
+
       <PaymentElement id="payment-element" options={paymentElementOptions} />
       <Button disabled={isLoading || !stripe || !elements} id="submit" className="roundedn-sm mt-2">
         <span id="button-text">
@@ -80,6 +67,5 @@ export default function CheckoutForm() {
       {/* Show any error or success messages */}
       {message && <Label id="payment-message">{message}</Label>}
     </form>
-    </Elements>
   );
 }

@@ -25,9 +25,11 @@ import { LoadingSpinner } from "@/components/ui/shared/loader";
 import { useNavigate } from "react-router";
 import { setItemToLocalStorage } from "@/services/localStorage";
 import { authStore } from "@/store/authstore";
+import { useLocation } from "react-router";
 
 const AuthPage = () => {
   const navigate = useNavigate();
+    const { state } = useLocation();
   const [phone, setPhone] = useState("");
   const {updateToken,updateUser} = authStore()
   
@@ -40,7 +42,7 @@ const AuthPage = () => {
       toast({
         description: "Your OTP has been sent.",
       });
-      navigate(`/otp/${phone}`);
+      navigate( state?.path || `/otp/${phone}`);
     },
     onError: (error) => {
       toast({
@@ -59,12 +61,13 @@ const AuthPage = () => {
       toast({
         description: "Signup Successfull",
       });
-      console.log(data)
+      console.log(data.token)
         setItemToLocalStorage("USER_DATA", data.user);
         setItemToLocalStorage("TOKEN", data.token);
         updateToken(data.token)
         updateUser(data.user)
-        navigate("/challenge")
+        navigate( state?.path || `/challenge`);
+
       
     },
     onError: (error) => {

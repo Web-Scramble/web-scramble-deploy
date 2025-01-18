@@ -13,6 +13,10 @@ import {
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { setItemToLocalStorage } from "@/services/localStorage";
+import { TOKEN, USER_DATA } from "@/constants/keys";
+import { authStore } from "@/store/authstore";
+import { useNavigate } from "react-router";
 
 const SettingsItem = ({ icon: Icon, label, onClick }) => (
   <Button
@@ -36,6 +40,8 @@ const SettingsSection = ({ title, children }) => (
 );
 
 const SettingsScreen = () => {
+  const { updateToken, updateUser } = authStore();
+  const navigate = useNavigate();
   return (
     <Layout>
       <Card className="max-w-md mx-auto">
@@ -57,6 +63,20 @@ const SettingsScreen = () => {
           </SettingsSection>
 
           <Button
+            onClick={() => {
+              updateToken("");
+              updateUser({
+                id: "",
+                username: "",
+                email: "",
+                phone: "",
+                balance: "",
+                profile_picture: "",
+              });
+              setItemToLocalStorage(TOKEN, "");
+              setItemToLocalStorage(USER_DATA, "");
+              navigate("/");
+            }}
             variant="ghost"
             className="w-full text-red-500 hover:text-red-600 hover:bg-red-50 mt-6 border border-red-200 rounded-lg"
           >

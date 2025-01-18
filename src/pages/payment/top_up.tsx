@@ -6,8 +6,8 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "@/components/features/payment/checkout_form";
 import { getToken } from "@/services/getToken";
-import { Routes, Route, Navigate } from "react-router";
 import { intentStore } from "@/store/intentStore";
+
 
 export default function TopUp() {
   // Make sure to call loadStripe outside of a component’s render to avoid
@@ -25,10 +25,10 @@ export default function TopUp() {
   // Enable the skeleton loader UI for optimal loading.
   const loader = "auto";
   const authToken = getToken();
-  const { user, refillAmount } = authStore();
+  const { user,refillAmount } = authStore();
 
-  // const [clientSecret, setClientSecret] = useState("");
-  const { clientSecret, updateClient } = intentStore();
+  const [clientSecret, setClientSecret] = useState("");
+  const {updateClient} = intentStore()
   const baseURL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
@@ -43,12 +43,22 @@ export default function TopUp() {
     })
       .then((res) => res.json())
       // .then((data) => console.log(data));
-      .then((data) => updateClient(data.clientSecret));
+      .then((data) => {setClientSecret(data.clientSecret)
+        updateClient(data.clientSecret)
+      });
+
   }, []);
 
   return (
     <Layout>
-      <CheckoutForm />
+       {clientSecret && (
+        <Elements
+          options={{ clientSecret, appearance, loader }}
+          stripe={stripePromise}
+        >
+          <CheckoutForm />
+        </Elements>
+    )}
     </Layout>
   );
 }

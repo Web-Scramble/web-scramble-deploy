@@ -29,6 +29,7 @@ export const TopUpModal: React.FC<TopUpModalProps> = ({
   const [amount, setAmount] = useState(initialAmount);
   const presetAmounts = [5, 10, 20, 50, 100];
   const { user,updateRefillAmount } = authStore();
+  
 
 
   const handleSliderChange = (value: number[]) => {

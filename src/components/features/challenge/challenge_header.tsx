@@ -21,24 +21,53 @@ import InvitationPopup from "@/components/modals/invitation_modal";
 import { useState } from "react";
 import { authStore } from "@/store/authstore";
 
+type ChallengeStatus = 'active' | 'completed' | 'upcoming' | 'draft' | 'reviewing';
+
 interface ChallengeHeaderProps {
   name: string;
   avatar: string;
   id: string;
   userId: string;
+  status?: ChallengeStatus;
   onEdit?: () => void;
   onDelete?: () => void;
 }
+
+const getStatusStyles = (status: ChallengeStatus = 'active') => {
+  const styles = {
+    active: "bg-green-100 text-green-800",
+    completed: "bg-gray-100 text-gray-800",
+    upcoming: "bg-blue-100 text-blue-800",
+    draft: "bg-yellow-100 text-yellow-800",
+    reviewing: "bg-purple-100 text-purple-800",
+  };
+
+  return styles[status];
+};
+
+const getStatusLabel = (status: ChallengeStatus = 'active') => {
+  const labels = {
+    active: "Active",
+    completed: "Completed",
+    upcoming: "Upcoming",
+    draft: "Draft",
+    reviewing: "Under Review",
+  };
+
+  return labels[status];
+};
 
 export const ChallengeHeader = ({
   name,
   avatar,
   id,
   userId,
+  status = 'active',
   onEdit,
   onDelete,
 }: ChallengeHeaderProps) => {
   const [showInvitationModal, setShowInvitationModal] = useState(false);
+
   return (
     <CardHeader className="space-y-1 p-4">
       {showInvitationModal && (
@@ -57,11 +86,13 @@ export const ChallengeHeader = ({
               <AvatarFallback>{"PR"}</AvatarFallback>
             </Avatar>
           </Link>
-          <div>
+          <div className="flex flex-row gap-1">
             <h3 className="font-semibold">{name}</h3>
+            <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyles(status)}`}>
+              {getStatusLabel(status)}
+            </div>
           </div>
         </div>
-
         {id === userId && (
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -76,16 +107,20 @@ export const ChallengeHeader = ({
               <DropdownMenuItem onClick={() => setShowInvitationModal(true)}>
                 <UserPlus className="w-4 h-4 mr-2" /> External invites
               </DropdownMenuItem>
-              {/* <DropdownMenuItem>
-              <Trophy className="w-4 h-4 mr-2" /> Add Judges
-            </DropdownMenuItem> */}
+              <DropdownMenuItem onClick={() => setShowInvitationModal(true)}>
+                <UserPlus className="w-4 h-4 mr-2" /> Report Challenge
+              </DropdownMenuItem>
               <Link to="/review-panel">
                 <DropdownMenuItem className="text-gray-500">
                   <Square className="w-4 h-4 mr-2" /> Vote
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={onDelete} className="text-red-600">
+              <DropdownMenuItem 
+                onClick={onDelete} 
+                className="text-red-600"
+                disabled={status === 'completed'}
+              >
                 <Trash2 className="w-4 h-4 mr-2" /> Delete Challenge
               </DropdownMenuItem>
             </DropdownMenuContent>
