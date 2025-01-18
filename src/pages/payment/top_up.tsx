@@ -8,6 +8,9 @@ import CheckoutForm from "@/components/features/payment/checkout_form";
 import { getToken } from "@/services/getToken";
 import { intentStore } from "@/store/intentStore";
 
+export const stripePromise = loadStripe(
+  "pk_test_51Qc31ZCYjeTr7iKH3najWXrQeUqf2AEU2YJ4q8T6iudU9fTdbyixcTVK3TGVPWwIiKPtgJP7K1KoOHx3TP4ea6Mv00uFbXc7u4"
+);
 
 export default function TopUp() {
   // Make sure to call loadStripe outside of a component’s render to avoid
@@ -15,9 +18,9 @@ export default function TopUp() {
   // This is a public sample test API key.
   // Don’t submit any personally identifiable information in requests made with this key.
   // Sign in to see your own test API key embedded in code samples.
-  const stripePromise = loadStripe(
-    "pk_test_51Qc31ZCYjeTr7iKH3najWXrQeUqf2AEU2YJ4q8T6iudU9fTdbyixcTVK3TGVPWwIiKPtgJP7K1KoOHx3TP4ea6Mv00uFbXc7u4"
-  );
+  const {updateClient,updatePromise} = intentStore()
+
+
 
   const appearance = {
     theme: "stripe",
@@ -28,7 +31,6 @@ export default function TopUp() {
   const { user,refillAmount } = authStore();
 
   const [clientSecret, setClientSecret] = useState("");
-  const {updateClient} = intentStore()
   const baseURL = import.meta.env.VITE_API_URL;
   useEffect(() => {
     // Create PaymentIntent as soon as the page loads
@@ -45,6 +47,7 @@ export default function TopUp() {
       // .then((data) => console.log(data));
       .then((data) => {setClientSecret(data.clientSecret)
         updateClient(data.clientSecret)
+        // updatePromise(stripePromise)
       });
 
   }, []);

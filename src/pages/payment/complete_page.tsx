@@ -4,6 +4,7 @@ import CompletePage from "@/components/features/payment/complete_page";
 import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { intentStore } from "@/store/intentStore";
+import { stripePromise } from "./top_up";
 
 // import { Button } from "@/components/ui/button";
 // import { Label } from "@/components/ui/label";
@@ -94,9 +95,9 @@ const STATUS_CONTENT_MAP = {
 };
 
 export default function CompleteTransactionPage() {
-    const stripePromise = loadStripe(
-      "pk_test_51Qc31ZCYjeTr7iKH3najWXrQeUqf2AEU2YJ4q8T6iudU9fTdbyixcTVK3TGVPWwIiKPtgJP7K1KoOHx3TP4ea6Mv00uFbXc7u4"
-    );
+    // const stripePromise = loadStripe(
+    //   "pk_test_51Qc31ZCYjeTr7iKH3najWXrQeUqf2AEU2YJ4q8T6iudU9fTdbyixcTVK3TGVPWwIiKPtgJP7K1KoOHx3TP4ea6Mv00uFbXc7u4"
+    // );
   
     const appearance = {
       theme: "stripe",
