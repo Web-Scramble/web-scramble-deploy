@@ -46,30 +46,17 @@ const ProfilePage = () => {
   const {updateClient} = intentStore()
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
-  const baseURL = import.meta.env.VITE_API_URL;
-  const authToken = getToken();
-
-  const handleFetchIntent = async()=>{
-   const response =  fetch(`${baseURL}payment/refill`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${authToken}`,
-      },
-      body: JSON.stringify({ amount: refillAmount }),
-    })
-      .then((res) => res.json())
-      // .then((data) => console.log(data));
-      .then((data) => updateClient(data.clientSecret)).then(()=>navigate("/checkout"));
-  }
-
 
   return (
     <Layout>
       <TopUpModal
         isOpen={isVisible}
-        onOpenChange={setIsVisible}
-        onSubmit={handleFetchIntent}
+        onOpenChange={()=>setIsVisible(false)
+        }
+        onSubmit={(amount)=>{
+          updateRefillAmount(amount)
+          navigate("/checkout")
+        }}
       />
       <div className="min-h-screen bg-background p-6">
         <div className="max-w-4xl mx-auto space-y-6">
