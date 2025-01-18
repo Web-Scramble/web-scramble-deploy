@@ -7,15 +7,16 @@ import { useToast } from "@/hooks/use-toast";
 
 
 export const useJoinChallenge = () => {
-  // const navigate = useNavigate();
+  const navigate = useNavigate();
     const { toast } = useToast();
 //   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (data) => joinChallenge(data),
-    onSuccess: () => {
+    mutationFn: (id:string) => joinChallenge(id),
+    onSuccess: (data) => {
       toast({
         description: "challenge joined successfully.",
       });
+      navigate("/submission")
     },
     onError: (error) => {
       toast({

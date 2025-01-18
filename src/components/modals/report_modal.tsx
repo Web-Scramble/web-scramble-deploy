@@ -105,14 +105,14 @@ const DemoReportModal = ({isOpen,onClose}:tationPopupProps) => {
             )}
 
             <DialogFooter>
-              <Button
+              {/* <Button
                 type="button"
                 variant="outline"
                 // onClick={() => setIsOpen(false)}
               >
                 Cancel
-              </Button>
-              <Button type="submit">
+              </Button> */}
+              <Button type="submit" onClick={onClose}>
                 Submit Report
               </Button>
             </DialogFooter>

@@ -1,6 +1,7 @@
 import axios from "axios";
 import { ChallengeFormData } from "@/types/challenge";
 import { getToken } from "./getToken";
+import { SubmissionFormData } from "@/schema/submission_validation_schema";
 
 const baseURL = import.meta.env.VITE_API_URL;
 const token = getToken();
@@ -19,6 +20,18 @@ export const addServer = async (data: FormData) => {
 export const createChallenge = async (data: ChallengeFormData) => {
     console.log({Authorization: `Bearer ${token}`})
   const response = await axios.post(`${baseURL}challenge/taskType`, data, {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+
+export const submitChallengeSolution = async (data: SubmissionFormData) => {
+    console.log({Authorization: `Bearer ${token}`})
+  const response = await axios.post(`${baseURL}challenge/operation/${data.id}/submit`, data, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -88,9 +101,10 @@ export const increaseChallengeReward = async (id: string, data: string) => {
   return response.data;
 };
 export const joinChallenge = async (id: string) => {
-  const response = await axios.post(`${baseURL}challenge/${id}/join`,{
+  console.log(`Bearer ${token}`)
+  const response = await axios.post(`${baseURL}challenge/operation/join/${id}`,{
     headers: {
-      "Content-Type": "Application/json",
+      "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
     },
   });

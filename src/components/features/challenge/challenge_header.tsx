@@ -20,6 +20,7 @@ import { Link } from "react-router";
 import InvitationPopup from "@/components/modals/invitation_modal";
 import { useState } from "react";
 import { authStore } from "@/store/authstore";
+import DemoReportModal from "@/components/modals/report_modal";
 
 type ChallengeStatus = 'active' | 'completed' | 'upcoming' | 'draft' | 'reviewing';
 
@@ -67,9 +68,16 @@ export const ChallengeHeader = ({
   onDelete,
 }: ChallengeHeaderProps) => {
   const [showInvitationModal, setShowInvitationModal] = useState(false);
+  const [showReportModal, setShowReportModal] = useState(false);
 
   return (
     <CardHeader className="space-y-1 p-4">
+      {showReportModal && (
+        <DemoReportModal
+          isOpen={showReportModal}
+          onClose={() => setShowReportModal(false)}
+        />
+      )}
       {showInvitationModal && (
         <InvitationPopup
           isOpen={showInvitationModal}
@@ -107,7 +115,7 @@ export const ChallengeHeader = ({
               <DropdownMenuItem onClick={() => setShowInvitationModal(true)}>
                 <UserPlus className="w-4 h-4 mr-2" /> External invites
               </DropdownMenuItem>
-              <DropdownMenuItem onClick={() => setShowInvitationModal(true)}>
+              <DropdownMenuItem onClick={() => setShowReportModal(true)}>
                 <UserPlus className="w-4 h-4 mr-2" /> Report Challenge
               </DropdownMenuItem>
               <Link to="/review-panel">

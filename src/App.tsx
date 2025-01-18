@@ -110,18 +110,18 @@ function App() {
         <Route path="/otp/:phone" element={<OTPVerification />} />
         <Route path="/username/:phone" element={<UsernameSetup />} />
         {/* protected routes start here */}
-        {/* <Route path="/challenge" element={<ChallengeFeed />} />
+        <Route path="/challenge" element={<ChallengeFeed />} />
         <Route path="/create" element={<ChallengeCreator />} />
         <Route path="/review-panel" element={<ChallengeSubmissions />} />
         <Route path="/submission" element={<ChallengeSubmission />} />
-        <Route path="/profile" element={<ProfilePage />} /> */}
+        <Route path="/profile" element={<ProfilePage />} />
         {/* <Route path="/boost-reward" element={<BoostRewardPage />} /> */}
-        {/* <Route path="/edit-profile" element={<EditProfile />} />
+        <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/settings" element={<SettingsScreen />} />
         <Route path="/top-up" element={<TopUpPage />} />
         <Route path="/public-profile" element={<PublicProfile />} />
         <Route path="/notifications" element={<NotificationsScreen />} />
-        <Route path="/transactions" element={<TransactionHistory />} /> */}
+        <Route path="/transactions" element={<TransactionHistory />} />
         <Route
           path="/challenge"
           element={
@@ -130,7 +130,7 @@ function App() {
             </RequireAuth>
           }
         />
-        <Route
+        {/* <Route
           path="/create"
           element={
             <RequireAuth redirectTo="/">
@@ -147,7 +147,7 @@ function App() {
           }
         />
         <Route
-          path="/submission"
+          path="/submission/:challengeId"
           element={
             <RequireAuth redirectTo="/">
               <ChallengeSubmission />
@@ -209,7 +209,7 @@ function App() {
               <PublicProfile />
             </RequireAuth>
           }
-        />
+        /> */}
             <Route path="/checkout" element={<TopUp />} />
             <Route path="/complete" element={<CompletePage />} />
             <Route path="/withdrawal" element={<WithdrawalForm />} />

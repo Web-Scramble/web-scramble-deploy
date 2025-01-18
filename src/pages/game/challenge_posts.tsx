@@ -6,6 +6,7 @@ import { LoadingSpinner } from "@/components/ui/shared/loader";
 import { useNavigate } from "react-router";
 import { useDeleteChallenges } from "@/hooks/useDeleteChallenge";
 import { authStore } from "@/store/authstore";
+import { useJoinChallenge } from "@/hooks/useJoinChallenge";
 
 
 import { useEffect } from "react";
@@ -20,9 +21,14 @@ const ChallengeFeed = () => {
       isSuccess,
       data
     } = useDeleteChallenges();
+    const {
+      mutate: JoinChallengeMutation,
+      isLoading:isJoinLoading,
+    } = useJoinChallenge();
   
   const handleJoin = (challengeId: string) => {
     console.log("attemp to join", challengeId)
+    JoinChallengeMutation(challengeId)
   };
 
   const handleDelete = (challengeId: string) => {
@@ -39,7 +45,7 @@ useEffect(()=>{
   console.log(challenges)
 },[])
 
-  if(isLoading||isdeleteLoading){
+  if(isLoading||isdeleteLoading||isJoinLoading){
     return <LoadingSpinner/>
   }
 

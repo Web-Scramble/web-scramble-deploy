@@ -20,6 +20,7 @@ import { authStore } from "@/store/authstore";
 import { useNavigate } from "react-router";
 import { TopUpModal } from "@/components/modals/topup_modal";
 import { intentStore } from "@/store/intentStore";
+import { WithdrawModal } from "@/components/modals/withdraw_modal";
 
 const ProfilePage = () => {
   const recentActivities = [
@@ -46,12 +47,22 @@ const ProfilePage = () => {
   const {updateClient} = intentStore()
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
+  const [isWithdrawalOpen , setIsWithdrawalOpen  ] = useState(false);
 
   return (
     <Layout>
       <TopUpModal
         isOpen={isVisible}
         onOpenChange={()=>setIsVisible(false)
+        }
+        onSubmit={(amount)=>{
+          updateRefillAmount(amount)
+          navigate("/checkout")
+        }}
+      />
+      <TopUpModal
+        isOpen={isWithdrawalOpen}
+        onOpenChange={()=>setIsWithdrawalOpen(false)
         }
         onSubmit={(amount)=>{
           updateRefillAmount(amount)
@@ -127,14 +138,15 @@ const ProfilePage = () => {
                     >
                       Topup
                     </Button>
-                    <Link to={"/withdrawal"}>
+                    {/* <Link to={"/che"}> */}
                       <Button
                         variant={"ghost"}
                         className="flex items-center border w-24"
+                        onClick={()=>setIsWithdrawalOpen(true)}
                       >
                         withdraw
                       </Button>
-                    </Link>
+                    {/* </Link> */}
                   </div>
                 </div>
               </CardContent>

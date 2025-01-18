@@ -1,15 +1,11 @@
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
 import { useState } from "react";
 import {
   File,
   Upload,
   X,
-  Link,
   PenLine,
-  AlignLeft,
-  AlignCenter,
-  AlignRight,
-  List,
-  Code,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -17,38 +13,85 @@ import { Label } from "@/components/ui/label";
 import { Progress } from "@/components/ui/progress";
 import { Separator } from "@/components/ui/separator";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { useToast } from "@/hooks/use-toast";
 import Layout from "@/components/ui/shared/layout";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
+import { submissionSchema, type SubmissionFormData } from "@/schema/submission_validation_schema";
+import { useParams } from "react-router"
+import { useSubmitChallenge } from "@/hooks/useSubmitChallenge";
+
 
 const ChallengeSubmission = () => {
-  const [files, setFiles] = useState([]);
-  const [title, setTitle] = useState("");
   const [submitting, setSubmitting] = useState(false);
+  const { toast } = useToast();
+  const {challengeId} = useParams()
 
+  const {
+    mutate: submitChallengeMutation,
+    isLoading,
+    isError,
+    isSuccess,
+    data,
+  } = useSubmitChallenge();
+  const {
+    register,
+    handleSubmit,
+    formState: { errors },
+    setValue,
+    watch,
+    control,
+  } = useForm<SubmissionFormData>({
+    resolver: yupResolver(submissionSchema),
+    defaultValues: {
+      title: "",
+      description: "",
+      files: [],
+    },
+  });
 
-  const handleDrop = (e) => {
+  const files = watch("files") || [];
+
+  const handleDrop = (e: React.DragEvent) => {
     e.preventDefault();
     const droppedFiles = Array.from(e.dataTransfer.files);
-    setFiles((prev) => [...prev, ...droppedFiles]);
+    setValue("files", [...files, ...droppedFiles]);
   };
 
-  const handleFileInput = (e) => {
-    const selectedFiles = Array.from(e.target.files);
-    setFiles((prev) => [...prev, ...selectedFiles]);
+  const handleFileInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFiles = Array.from(e.target.files || []);
+    setValue("files", [...files, ...selectedFiles]);
   };
 
-  const removeFile = (indexToRemove) => {
-    setFiles((prev) => prev.filter((_, index) => index !== indexToRemove));
+  const removeFile = (indexToRemove: number) => {
+    setValue(
+      "files",
+      files.filter((_, index) => index !== indexToRemove)
+    );
   };
 
-
-
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    setSubmitting(true);
-    // Simulate submission
-    await new Promise((resolve) => setTimeout(resolve, 2000));
-    setSubmitting(false);
+  const onSubmit = async (data: SubmissionFormData) => {
+    const submissionData = {...data,id:challengeId}
+    submitChallengeMutation(submissionData)
+    
+    // try {
+    //   setSubmitting(true);
+    //   // API call would go here
+    //   await new Promise((resolve) => setTimeout(resolve, 2000));
+      
+    //   toast({
+    //     title: "Success",
+    //     description: "Your submission has been received successfully!",
+    //     variant: "default",
+    //   });
+    // } catch (error) {
+    //   toast({
+    //     title: "Error",
+    //     description: "Failed to submit. Please try again.",
+    //     variant: "destructive",
+    //   });
+    // } finally {
+    //   setSubmitting(false);
+    // }
   };
 
   // Remaining time simulation
@@ -73,32 +116,57 @@ const ChallengeSubmission = () => {
           </Alert>
         </div>
 
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit(onSubmit)}>
           {/* Title Input */}
           <div className="mb-6">
             <div className="relative">
               <Input
-                value={title}
-                onChange={(e) => setTitle(e.target.value)}
-                className="text-lg font-normal pl-8"
+                {...register("title")}
+                className={`text-lg font-normal pl-8 ${
+                  errors.title ? "border-red-500" : ""
+                }`}
                 placeholder="Enter submission title..."
               />
               <PenLine className="absolute left-2 top-1/2 transform -translate-y-1/2 h-4 w-4 text-gray-400" />
             </div>
+            {errors.title && (
+              <span className="text-red-500 text-xs mt-1">
+                {errors.title.message}
+              </span>
+            )}
           </div>
 
           {/* Description Editor */}
+          <div className="mb-6">
             <Label className="text-sm font-medium mb-2 block">
               Description
             </Label>
-            <TiptapEditor/>
+            <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TiptapEditor
+                  editorContent={field.value}
+                  setEditorContent={(content) => field.onChange(content)}
+                />
+              )}
+            />
+            {errors.description && (
+              <span className="text-red-500 text-xs mt-1">
+                {errors.description.message}
+              </span>
+            )}
+          </div>
+
           {/* File Upload */}
           <div className="mb-6">
             <Label className="text-sm font-medium mb-2 block">
               Attachments
             </Label>
             <div
-              className="border-2 border-dashed rounded-lg p-6 text-center"
+              className={`border-2 border-dashed rounded-lg p-6 text-center ${
+                errors.files ? "border-red-500" : ""
+              }`}
               onDragOver={(e) => e.preventDefault()}
               onDrop={handleDrop}
             >
@@ -120,16 +188,21 @@ const ChallengeSubmission = () => {
                     </span>
                   </div>
                   <span className="text-sm text-gray-500">
-                    Support for images, documents, and code files
+                    Support for images, documents, and code files (max 50MB)
                   </span>
                 </div>
               </label>
             </div>
+            {errors.files && (
+              <span className="text-red-500 text-xs mt-1">
+                {errors.files.message}
+              </span>
+            )}
 
             {/* File List */}
             {files.length > 0 && (
               <div className="mt-4 space-y-2">
-                {files.map((file, index) => (
+                {files.map((file: File, index) => (
                   <div
                     key={index}
                     className="flex items-center justify-between p-2 bg-gray-50 rounded-lg"
