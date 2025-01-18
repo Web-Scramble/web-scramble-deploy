@@ -114,7 +114,7 @@ function App() {
         <Route path="/create" element={<ChallengeCreator />} />
         <Route path="/review-panel" element={<ChallengeSubmissions />} />
         <Route path="/submission" element={<ChallengeSubmission />} />
-        <Route path="/profile" element={<ProfilePage />} />
+        {/* <Route path="/profile" element={<ProfilePage />} /> */}
         {/* <Route path="/boost-reward" element={<BoostRewardPage />} /> */}
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/settings" element={<SettingsScreen />} />
@@ -127,6 +127,14 @@ function App() {
           element={
             <RequireAuth redirectTo= {"/auth"}>
               <ChallengeFeed />
+            </RequireAuth>
+          }
+        />
+          <Route
+          path="/profile"
+          element={
+            <RequireAuth redirectTo="/">
+              <ProfilePage />
             </RequireAuth>
           }
         />
@@ -154,14 +162,7 @@ function App() {
             </RequireAuth>
           }
         />
-        <Route
-          path="/profile"
-          element={
-            <RequireAuth redirectTo="/">
-              <ProfilePage />
-            </RequireAuth>
-          }
-        />
+      
         <Route
           path="/edit-profile"
           element={
