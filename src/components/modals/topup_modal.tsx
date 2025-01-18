@@ -28,11 +28,12 @@ export const TopUpModal: React.FC<TopUpModalProps> = ({
 }) => {
   const [amount, setAmount] = useState(initialAmount);
   const presetAmounts = [5, 10, 20, 50, 100];
-  const { user } = authStore();
+  const { user,updateRefillAmount } = authStore();
 
 
   const handleSliderChange = (value: number[]) => {
     setAmount(value[0]);
+    updateRefillAmount(value[0])
   };
 
   const handleSubmit = () => {
@@ -69,7 +70,10 @@ export const TopUpModal: React.FC<TopUpModalProps> = ({
                 key={preset}
                 variant={amount === preset ? "default" : "outline"}
                 className="h-12"
-                onClick={() => setAmount(preset)}
+                onClick={() => {setAmount(preset)
+                   updateRefillAmount(preset)
+
+                }}
               >
                 ${preset}
               </Button>
@@ -100,7 +104,9 @@ export const TopUpModal: React.FC<TopUpModalProps> = ({
             <Input
               type="number"
               value={amount}
-              onChange={(e) => setAmount(Number(e.target.value))}
+              onChange={(e) => {setAmount(Number(e.target.value))
+                updateRefillAmount(Number(e.target.value))
+              }}
               className="text-center text-lg"
               min={1}
               max={1000}

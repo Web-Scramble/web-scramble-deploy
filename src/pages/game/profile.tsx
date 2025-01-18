@@ -15,9 +15,11 @@ import {
 } from "lucide-react";
 import Layout from "@/components/ui/shared/layout";
 import { Link } from "react-router";
+import { getToken } from "@/services/getToken";
 import { authStore } from "@/store/authstore";
 import { useNavigate } from "react-router";
 import { TopUpModal } from "@/components/modals/topup_modal";
+import { intentStore } from "@/store/intentStore";
 
 const ProfilePage = () => {
   const recentActivities = [
@@ -40,9 +42,26 @@ const ProfilePage = () => {
       prize: "$750",
     },
   ];
-  const { user, updateRefillAmount } = authStore();
+  const { user, updateRefillAmount,refillAmount} = authStore();
+  const {updateClient} = intentStore()
   const navigate = useNavigate();
   const [isVisible, setIsVisible] = useState(false);
+  const baseURL = import.meta.env.VITE_API_URL;
+  const authToken = getToken();
+
+  const handleFetchIntent = async()=>{
+   const response =  fetch(`${baseURL}payment/refill`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${authToken}`,
+      },
+      body: JSON.stringify({ amount: refillAmount, paymentMethodId: "pm_card_visa" }),
+    })
+      .then((res) => res.json())
+      // .then((data) => console.log(data));
+      .then((data) => updateClient(data.clientSecret)).then(()=>navigate("/checkout"));
+  }
 
 
   return (
@@ -51,8 +70,8 @@ const ProfilePage = () => {
         isOpen={isVisible}
         onOpenChange={setIsVisible}
         onSubmit={(amount) => {
-          navigate("/checkout");
-          updateRefillAmount(amount);
+          // updateRefillAmount(amount);
+          handleFetchIntent()
         }}
       />
       <div className="min-h-screen bg-background p-6">

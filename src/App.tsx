@@ -33,6 +33,7 @@ import {
 import { getToken } from "./services/getToken";
 import { getItemFromLocalStorage } from "./services/localStorage";
 import { TOKEN, USER_DATA } from "./constants/keys";
+import { intentStore } from "./store/intentStore";
 
 function App() {
   // Make sure to call loadStripe outside of a component’s render to avoid
