@@ -1,15 +1,13 @@
-import { useMutation } from '@tanstack/react-query';
-import { createComment } from '@/services/challenge';
-import { ChallengeFormData } from '@/types/challenge';
-import { useNavigate } from 'react-router';
+import { useMutation } from "@tanstack/react-query";
+import { createComment } from "@/services/challenge_api";
+import { ChallengeFormData } from "@/types/challenge";
+import { useNavigate } from "react-router";
 import { useToast } from "@/hooks/use-toast";
-
-
 
 export const useComment = () => {
   // const navigate = useNavigate();
-    const { toast } = useToast();
-//   const queryClient = useQueryClient();
+  const { toast } = useToast();
+  //   const queryClient = useQueryClient();
   return useMutation({
     mutationFn: (data) => createComment(data),
     onSuccess: () => {

@@ -19,12 +19,15 @@ import TiptapEditor from "@/components/ui/shared/tiptap_editor";
 import { submissionSchema, type SubmissionFormData } from "@/schema/submission_validation_schema";
 import { useParams } from "react-router"
 import { useSubmitChallenge } from "@/hooks/useSubmitChallenge";
+import { useChallenges } from "@/hooks/useChallenges";
 
 
 const ChallengeSubmission = () => {
   const [submitting, setSubmitting] = useState(false);
   const { toast } = useToast();
   const {challengeId} = useParams()
+  const {data:challenges} = useChallenges()
+  
 
   const {
     mutate: submitChallengeMutation,
@@ -72,26 +75,6 @@ const ChallengeSubmission = () => {
   const onSubmit = async (data: SubmissionFormData) => {
     const submissionData = {...data,id:challengeId}
     submitChallengeMutation(submissionData)
-    
-    // try {
-    //   setSubmitting(true);
-    //   // API call would go here
-    //   await new Promise((resolve) => setTimeout(resolve, 2000));
-      
-    //   toast({
-    //     title: "Success",
-    //     description: "Your submission has been received successfully!",
-    //     variant: "default",
-    //   });
-    // } catch (error) {
-    //   toast({
-    //     title: "Error",
-    //     description: "Failed to submit. Please try again.",
-    //     variant: "destructive",
-    //   });
-    // } finally {
-    //   setSubmitting(false);
-    // }
   };
 
   // Remaining time simulation

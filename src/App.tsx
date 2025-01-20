@@ -15,9 +15,9 @@ import {
   ProfilePage,
   EditProfile,
   SettingsScreen,
-  TopUpPage,
   PublicProfile,
   NotificationsScreen,
+  EditChallenge,
 } from "@/pages/game";
 import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
@@ -53,11 +53,11 @@ function App() {
       if(oldToken){
         updateToken(oldToken);
       }
-      console.log("reload", oldToken,authToken);
+      // console.log("reload", oldToken,authToken);
       const oldUser = await getItemFromLocalStorage(USER_DATA);
       if (oldUser) {
         updateUser(oldUser);
-        console.log("reloaduser", oldUser);
+        // console.log("reloaduser", oldUser);
       }
     }
     getSavedToken()
@@ -85,14 +85,16 @@ function App() {
         <Route path="/username/:phone" element={<UsernameSetup />} />
         {/* protected routes start here */}
         <Route path="/challenge" element={<ChallengeFeed />} />
+        <Route path="/challenge/:challengeId" element={<ChallengeFeed />} />
         <Route path="/create" element={<ChallengeCreator />} />
+        <Route path="/edit-challenge/:ChallengeId" element={<EditChallenge />} />
         <Route path="/review-panel" element={<ChallengeSubmissions />} />
         <Route path="/submission/:challengeId" element={<ChallengeSubmission />} />
         {/* <Route path="/profile" element={<ProfilePage />} /> */}
         {/* <Route path="/boost-reward" element={<BoostRewardPage />} /> */}
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/settings" element={<SettingsScreen />} />
-        <Route path="/top-up" element={<TopUpPage />} />
+        {/* <Route path="/top-up" element={<TopUp />} /> */}
         <Route path="/public-profile" element={<PublicProfile />} />
         <Route path="/notifications" element={<NotificationsScreen />} />
         <Route path="/transactions" element={<TransactionHistory />} />

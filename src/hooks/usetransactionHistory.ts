@@ -1,25 +1,26 @@
 import { useQuery, useQueryClient } from "@tanstack/react-query";
-import { getChallenges } from "@/services/challenge_api";
+import { getTransactionHistory } from "@/services/payment_api";
 
-export const CHALLENGES_QUERY_KEY = ["CHALLENGES"] as const;
+export const QUERY_KEY = ["TRANSACTION_HISTORY"] as const;
 
-export const useChallenges = () => {
+export const useTransactionHistory = () => {
+// export const useTransactionHistory = (id:string) => {
   // const queryClient = useQueryClient();
   // queryClient.invalidateQueries({ queryKey:CHALLENGES_QUERY_KEY})
 
   const {
-    data: challenges,
+    data: transactions,
     isLoading,
     error,
     refetch,
     isFetching,
   } = useQuery({
-    queryKey: CHALLENGES_QUERY_KEY,
-    queryFn: getChallenges,
+    queryKey: QUERY_KEY,
+    queryFn:getTransactionHistory,
   });
 
   return {
-    challenges,
+    transactions,
     isLoading,
     isFetching,
     error,

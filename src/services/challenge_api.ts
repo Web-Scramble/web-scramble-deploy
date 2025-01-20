@@ -18,7 +18,6 @@ export const addServer = async (data: FormData) => {
 };
 
 export const createChallenge = async (data: ChallengeFormData) => {
-    console.log({Authorization: `Bearer ${token}`})
   const response = await axios.post(`${baseURL}challenge/taskType`, data, {
     headers: {
       "Content-Type": "application/json",
@@ -30,7 +29,6 @@ export const createChallenge = async (data: ChallengeFormData) => {
 };
 
 export const submitChallengeSolution = async (data: SubmissionFormData) => {
-    console.log({Authorization: `Bearer ${token}`})
   const response = await axios.post(`${baseURL}challenge/operation/${data.id}/submit`, data, {
     headers: {
       "Content-Type": "application/json",

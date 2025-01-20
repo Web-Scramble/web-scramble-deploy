@@ -17,6 +17,7 @@ import { setItemToLocalStorage } from "@/services/localStorage";
 import { TOKEN, USER_DATA } from "@/constants/keys";
 import { authStore } from "@/store/authstore";
 import { useNavigate } from "react-router";
+import { Link } from "react-router";
 
 const SettingsItem = ({ icon: Icon, label, onClick }) => (
   <Button
@@ -51,6 +52,9 @@ const SettingsScreen = () => {
             {/* <SettingsItem icon={MapPin} label="Location" /> */}
             <SettingsItem icon={Flag} label="Created Challenges" />
             <SettingsItem icon={CheckSquare} label="Completed" />
+            <Link to="/transactions">
+            <SettingsItem icon={Shield} label="Transactions" />
+            </Link>
             <SettingsItem icon={Bell} label="Notifications" />
             <SettingsItem icon={User} label="Delete Account" />
           </SettingsSection>
@@ -59,7 +63,6 @@ const SettingsScreen = () => {
             <SettingsItem icon={HelpCircle} label="Need help? Let's connect" />
             <SettingsItem icon={Mail} label="Email Us" />
             <SettingsItem icon={Shield} label="Privacy Policy" />
-            <SettingsItem icon={Shield} label="Transactions" />
           </SettingsSection>
 
           <Button

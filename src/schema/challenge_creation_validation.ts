@@ -25,7 +25,10 @@ export const challengeSchema = yup.object({
        .required("Duration unit is required")
    })
  }).optional(),
- reward: yup.number().when("challengeType", {
+ reward: yup.number()
+ .typeError('you must specify a number')
+ .min(1, 'Min amount is  1.')
+ .when("challengeType", {
    is: (value: string) => value !== "",
    then: (schema) => schema.required("Reward is required for challenges")
  }),

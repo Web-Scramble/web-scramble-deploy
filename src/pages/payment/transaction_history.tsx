@@ -24,6 +24,9 @@ import {
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ArrowUpRight, ArrowDownRight, Wallet } from "lucide-react";
+import { useTransactionHistory } from "@/hooks/usetransactionHistory";
+import { LoadingSpinner } from "@/components/ui/shared/loader";
+import Layout from "@/components/ui/shared/layout";
 
 // Mock data - Replace with your API call
 const mockTransactions = [
@@ -59,12 +62,13 @@ const mockTransactions = [
 const TransactionHistory = () => {
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
+   const { transactions, isLoading,isFetching, error, refetch } = useTransactionHistory();
 
   const getTransactionIcon = (type) => {
     switch (type) {
       case "withdrawal":
         return <ArrowDownRight className="h-4 w-4 text-red-500" />;
-      case "topup":
+      case "refill":
         return <ArrowUpRight className="h-4 w-4 text-green-500" />;
       case "contribution":
         return <Wallet className="h-4 w-4 text-blue-500" />;
@@ -77,8 +81,8 @@ const TransactionHistory = () => {
     switch (type) {
       case "withdrawal":
         return <Badge variant="destructive">Withdrawal</Badge>;
-      case "topup":
-        return <Badge variant="success" className="bg-green-500">Top-up</Badge>;
+      case "refill":
+        return <Badge variant="success" className="bg-green-500">refill</Badge>;
       case "contribution":
         return <Badge variant="secondary" className="bg-blue-500 text-white">Contribution</Badge>;
       default:
@@ -86,7 +90,7 @@ const TransactionHistory = () => {
     }
   };
 
-  const filteredTransactions = mockTransactions
+  const filteredTransactions = transactions.payments
     .filter((transaction) => {
       if (filter === "all") return true;
       return transaction.type === filter;
@@ -98,8 +102,12 @@ const TransactionHistory = () => {
           value.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
-
+   if(isLoading){
+    return <LoadingSpinner/>
+   }
   return (
+    <Layout>
+
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle>Transaction History</CardTitle>
@@ -122,7 +130,7 @@ const TransactionHistory = () => {
             <SelectContent>
               <SelectItem value="all">All Transactions</SelectItem>
               <SelectItem value="withdrawal">Withdrawals</SelectItem>
-              <SelectItem value="topup">Top-ups</SelectItem>
+              <SelectItem value="topup">refill</SelectItem>
               <SelectItem value="contribution">Contributions</SelectItem>
             </SelectContent>
           </Select>
@@ -132,27 +140,27 @@ const TransactionHistory = () => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Date</TableHead>
-                <TableHead>Type</TableHead>
-                <TableHead>Description</TableHead>
-                <TableHead>Reference</TableHead>
+                <TableHead className="text-center">Date</TableHead>
+                <TableHead className="text-center">Type</TableHead>
+                <TableHead className="text-center">Description</TableHead>
+                <TableHead className="text-center">Reference</TableHead>
                 <TableHead className="text-right">Amount</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
-              {filteredTransactions.map((transaction) => (
+              {transactions.payments.map((transaction) => (
                 <TableRow key={transaction.id}>
-                  <TableCell>{new Date(transaction.date).toLocaleDateString()}</TableCell>
+                  <TableCell>{new Date(transaction.created_at).toLocaleDateString()}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
                       {getTransactionIcon(transaction.type)}
                       {getTransactionBadge(transaction.type)}
                     </div>
                   </TableCell>
-                  <TableCell>{transaction.description}</TableCell>
+                  <TableCell>{transaction.type} account</TableCell>
                   <TableCell>
-                    <code className="text-sm text-muted-foreground">
-                      {transaction.reference}
+                    <code className="text-xs text-muted-foreground">
+                      {transaction.payment_intent_id}
                     </code>
                   </TableCell>
                   <TableCell className={`text-right font-medium ${
@@ -177,6 +185,7 @@ const TransactionHistory = () => {
         </div>
       </CardContent>
     </Card>
+    </Layout>
   );
 };
 

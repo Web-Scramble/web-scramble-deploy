@@ -40,7 +40,10 @@ const InvitationPopup = ({
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={() => navigate("/challenge")}>
+    <Dialog open={isOpen} onOpenChange={() =>{
+      onClose()
+      navigate("/challenge")}
+      }>
       <DialogContent className="sm:max-w-md">
         <Card className="w-full border-0 shadow-none">
           <CardHeader>

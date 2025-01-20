@@ -26,6 +26,7 @@ const ChallengeCard = ({
         avatar={challenge.creator_profile_pic}
         id={challenge.creator_id}
         userId={userId}
+        challengeId={challenge.id}
         onEdit={() => onEdit?.(challenge.id)}
         onDelete={() => onDelete?.(challenge.id)}
       />

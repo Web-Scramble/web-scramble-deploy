@@ -1,5 +1,5 @@
 import { useMutation } from "@tanstack/react-query";
-import { submitChallengeSolution } from "@/services/challenge";
+import { submitChallengeSolution } from "@/services/challenge_api";
 import { ChallengeFormData } from "@/types/challenge";
 import { useNavigate } from "react-router";
 import { useToast } from "@/hooks/use-toast";

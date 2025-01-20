@@ -22,19 +22,25 @@ import { useState } from "react";
 import { authStore } from "@/store/authstore";
 import DemoReportModal from "@/components/modals/report_modal";
 
-type ChallengeStatus = 'active' | 'completed' | 'upcoming' | 'draft' | 'reviewing';
+type ChallengeStatus =
+  | "active"
+  | "completed"
+  | "upcoming"
+  | "draft"
+  | "reviewing";
 
 interface ChallengeHeaderProps {
   name: string;
   avatar: string;
   id: string;
+  challengeId:string;
   userId: string;
   status?: ChallengeStatus;
   onEdit?: () => void;
   onDelete?: () => void;
 }
 
-const getStatusStyles = (status: ChallengeStatus = 'active') => {
+const getStatusStyles = (status: ChallengeStatus = "active") => {
   const styles = {
     active: "bg-green-100 text-green-800",
     completed: "bg-gray-100 text-gray-800",
@@ -46,7 +52,7 @@ const getStatusStyles = (status: ChallengeStatus = 'active') => {
   return styles[status];
 };
 
-const getStatusLabel = (status: ChallengeStatus = 'active') => {
+const getStatusLabel = (status: ChallengeStatus = "active") => {
   const labels = {
     active: "Active",
     completed: "Completed",
@@ -63,7 +69,8 @@ export const ChallengeHeader = ({
   avatar,
   id,
   userId,
-  status = 'active',
+  status = "active",
+  challengeId,
   onEdit,
   onDelete,
 }: ChallengeHeaderProps) => {
@@ -96,7 +103,11 @@ export const ChallengeHeader = ({
           </Link>
           <div className="flex flex-row gap-1">
             <h3 className="font-semibold">{name}</h3>
-            <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyles(status)}`}>
+            <div
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyles(
+                status
+              )}`}
+            >
               {getStatusLabel(status)}
             </div>
           </div>
@@ -109,9 +120,12 @@ export const ChallengeHeader = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-48">
-              <DropdownMenuItem onClick={onEdit} className="text-gray-500">
-                <Edit2 className="w-4 h-4 mr-2" /> Edit Challenge
-              </DropdownMenuItem>
+              <Link to={`/edit-challenge/${challengeId}`}>
+                <DropdownMenuItem onClick={onEdit} className="text-gray-500">
+                  <Edit2 className="w-4 h-4 mr-2" /> Edit Challenge
+                </DropdownMenuItem>
+              </Link>
+
               <DropdownMenuItem onClick={() => setShowInvitationModal(true)}>
                 <UserPlus className="w-4 h-4 mr-2" /> External invites
               </DropdownMenuItem>
@@ -124,10 +138,10 @@ export const ChallengeHeader = ({
                 </DropdownMenuItem>
               </Link>
               <DropdownMenuSeparator />
-              <DropdownMenuItem 
-                onClick={onDelete} 
+              <DropdownMenuItem
+                onClick={onDelete}
                 className="text-red-600"
-                disabled={status === 'completed'}
+                disabled={status === "completed"}
               >
                 <Trash2 className="w-4 h-4 mr-2" /> Delete Challenge
               </DropdownMenuItem>

@@ -13,121 +13,132 @@ import {
 } from "@/components/ui/select";
 import Layout from "@/components/ui/shared/layout";
 import { useNavigate } from "react-router";
+import { Paperclip, Image, Video, FileText, X } from "lucide-react";
+import { useForm, Controller } from "react-hook-form";
+import { yupResolver } from "@hookform/resolvers/yup";
+// import { challengeSchema, type ChallengeFormData } from "@/schema/challenge_creation_validation";
+import { useCreateChallenge } from "@/hooks/useCreateChallenge";
+import { useToast } from "@/hooks/use-toast";
 import InvitationPopup from "@/components/modals/invitation_modal";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
-import { Paperclip, Image, Video, FileText, X } from "lucide-react";
-import { useForm } from "react-hook-form";
-import { yupResolver } from "@hookform/resolvers/yup";
-import { challengeSchema } from "@/schema/challenge_creation_validation";
-import { ChallengeFormData } from "@/types/challenge";
-import { useCreateChallenge } from "@/hooks/useCreateChallenge";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
-import { searchUser } from "@/services/user";
-import { useToast } from "@/hooks/use-toast";
 import ParticipantDropdown from "@/components/features/challenge/add_participants";
 import { DatePicker } from "@/components/ui/shared/calendar";
+import { editChallengeSchema,EditChallengeFormData } from "@/schema/edit_challenge_schema";
+import { useParams } from "react-router"
+import { useChallenges } from "@/hooks/useChallenges";
+
 
 const ChallengeCreator = () => {
-  const [attachments, setAttachments] = useState([]);
-  const [challengeType, setChallengeType] =
-    useState<ChallengeFormData["challengeType"]>("task");
-  const [isTimeLimited, setIsTimeLimited] = useState(false);
-  const [isPrivate, setIsPrivate] = useState(true);
-  const [isScheduled, setIsScheduled] = useState(false);
-  const [editorContent, setEditorContent] = useState(``);
-  const [startDate, setStartdate] = useState<Date | undefined>(new Date());
-  const [endDate, setEnddate] = useState<Date | undefined>(new Date());
-  const [selectedParticipants, setSelectedParticipants] = useState([]);
-  const [selectedJudges, setSelectedJudges] = useState([]);
-  const { toast } = useToast();
-
-  const [showInvitationModal, setShowInvitationModal] = useState(false);
-  const [duration, setDuration] = useState("hours");
-
   const navigate = useNavigate();
+  const { toast } = useToast();
+  const {challengeId} = useParams()
+  const [showInvitationModal, setShowInvitationModal] = useState(false);
+  const [editorContent, setEditorContent] = useState("");
+  const {data,isLoading} = useChallenges()
+  console.log(data)
+  // const [challenge, setChallenge] = useState(data.find())
+
   const {
+    control,
     handleSubmit,
     watch,
-    formState: { errors },
-    register,
     setValue,
-  } = useForm<ChallengeFormData>({
-    resolver: yupResolver(challengeSchema),
+    register,
+    formState: { errors, isSubmitting },
+  } = useForm<EditChallengeFormData>({
+    resolver: yupResolver(editChallengeSchema),
     defaultValues: {
+      title: "",
+      description: "",
+      challengeType: "task",
+      isTimeLimited: false,
       isPrivate: true,
-      // isScheduled: false,
+      isScheduled: false,
       duration_value: 1,
       duration_unit: "hours",
+      reward: 0,
+      startDate: new Date(),
+      endDate: new Date(),
+      attachments: [],
+      participants: [],
+      judges: [],
     },
   });
 
+  // Watch form values
+  const isTimeLimited = watch("isTimeLimited");
+  const isPrivate = watch("isPrivate");
+  const isScheduled = watch("isScheduled");
+  const attachments = watch("attachments") || [];
+
+  // const { mutate: createMutate, isLoading,data } = useCreateChallenge();
+
+  console.log(data)
+
   useEffect(() => {
-    console.log(editorContent, challengeType, isPrivate, duration);
-    setValue("challengeType", challengeType);
+    // Update form when editor content changes
     setValue("description", editorContent);
-  }, [editorContent]);
-  const {
-    mutate: createMutate,
-    isLoading,
-    isError,
-    isSuccess,
-    data
-  } = useCreateChallenge();
-
-  const handleCreateChallenge = (data: ChallengeFormData) => {
-    // const formData = new FormData();
-    // formData.append("challengeType", challengeType);
-    // formData.append("title", data.title);
-    // formData.append("isPublic", JSON.stringify(!isPrivate));
-    // formData.append("rewardPool", data.reward);
-    // formData.append("duration_value", JSON.stringify(data.duration_value));
-    // formData.append("duration_unit", data.duration_unit);
-    // formData.append("judges", JSON.stringify(setSelectedJudges));
-    // formData.append("participants", JSON.stringify(setSelectedParticipants));
-    // formData.append("startTime", JSON.stringify(startDate));
-    // formData.append("endTime", JSON.stringify(endDate));
-    // formData.append("taskTypeDetails[title]", data.title);
-    // formData.append("taskTypeDetails[description]", editorContent);
-    // attachments.forEach((item) => {
-    //   formData.append("documents", item);
-    // });
-    
-    const challengeData = {
-      challengeType:challengeType,
-      is_public:!isPrivate,
-      reward_pool:data.reward,
-      duration_value:data.duration_value,
-      duration_unit:data.duration_unit,
-      title:data.title,
-      description:editorContent,
-      // doc:[sasd],
-      judges:[{name:"pla"},{name:"pla"},{name:"pla"}],
-      participants:[{name:"pla"},{name:"pla"},{name:"pla"}],
-      start_time:"2025-01-07T19:13:56.028Z",
-      end_time:"2025-01-07T19:13:56.028Z"
-      
-    }
-    console.log(challengeData)
-    createMutate(challengeData);
-  };
-
-
-  const onSubmit = async (data: ChallengeFormData) =>
-    handleCreateChallenge(data);
+  }, [editorContent, setValue]);
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
-    setValue("attachments", files);
+    const newAttachments = files.map((file, index) => ({
+      id: `${index}-${Date.now()}`,
+      file,
+      type: file.type.split("/")[0],
+      name: file.name,
+      size: file.size,
+    }));
+
+    setValue("attachments", [...attachments, ...newAttachments]);
   };
 
+  const removeAttachment = (idToRemove: string) => {
+    setValue(
+      "attachments",
+      attachments.filter((item) => item.id !== idToRemove)
+    );
+  };
+
+  const onSubmit = async (data: EditChallengeFormData) => {
+    try {
+      const challengeData = {
+        challengeType: data.challengeType,
+        is_public: !data.isPrivate,
+        reward_pool: data.reward,
+        duration_value: data.isTimeLimited ? data.duration_value : null,
+        duration_unit: data.isTimeLimited ? data.duration_unit : null,
+        title: data.title,
+        description: data.description,
+        judges: data.judges,
+        participants: data.participants,
+        start_time: data.startDate.toISOString(),
+        end_time: data.isScheduled ? data.endDate.toISOString() as string : null,
+      };
+     console.log(challengeData)
+    //  createMutate(challengeData);
+      // toast({
+      //   title: "Success",
+      //   description: "Challenge created successfully!",
+      // });
+      // setShowInvitationModal(true);
+    } catch (error) {
+      // toast({
+      //   title: "Error",
+      //   description: "Failed to create challenge",
+      //   variant: "destructive",
+      // });
+    }
+  };
+  console.log(errors)
   return (
     <Layout>
-      {showInvitationModal && (
+      {/* {showInvitationModal && (
         <InvitationPopup
           isOpen={showInvitationModal}
           onClose={() => setShowInvitationModal(false)}
         />
-      )}
+      )} */}
 
       <form
         onSubmit={handleSubmit(onSubmit)}
@@ -146,62 +157,64 @@ const ChallengeCreator = () => {
         </div>
 
         {/* Title Input Field */}
-        {errors.title && (
-          <span className="text-red-500 text-xs">{errors.title?.message}</span>
-        )}
         <div className="mb-4">
-          <div className="relative flex flex-row justify-start gap-2 items-center">
-            <PenLine className=" h-4 w-4 text-gray-400" />
-            <Input
-              className="text-lg font-normal border-none shadow-none focus-visible:ring-0 pl-8 px-2 py-1"
-              placeholder="Enter challenge title..."
-              {...register("title")}
-            />
+          <div className="relative flex flex-col gap-1">
+            <div className="relative flex flex-row justify-start gap-2 items-center">
+              <PenLine className="h-4 w-4 text-gray-400" />
+              <Input
+                className={`text-lg font-normal ${
+                  errors.title ? "border-red-500" : "border-none"
+                } shadow-none focus-visible:ring-0 pl-8 px-2 py-1`}
+                placeholder="Enter challenge title..."
+                {...register("title")}
+              />
+            </div>
+            {errors.title && (
+              <span className="text-red-500 text-xs pl-6">
+                {errors.title.message}
+              </span>
+            )}
           </div>
         </div>
-        {errors.description && (
-          <span className="text-red-500 text-xs">
-            {errors.description?.message}
-          </span>
-        )}
-        <div className="">
-          <TiptapEditor
-            editorContent={editorContent}
-            setEditorContent={setEditorContent}
-          />
+
+        {/* Description Editor */}
+        <div className="mb-4">
+        <Controller
+              name="description"
+              control={control}
+              render={({ field }) => (
+                <TiptapEditor
+                  editorContent={field.value}
+                  setEditorContent={(content) => field.onChange(content)}
+                />
+              )}
+            />
+          {errors.description && (
+            <span className="text-red-500 text-xs">
+              {errors.description.message}
+            </span>
+          )}
           <label
             htmlFor="file-upload"
-            className="cursor-pointer relative bottom-12 right-2 float-end h-0 "
+            className="cursor-pointer relative bottom-12 right-2 float-end h-0"
           >
-              <Paperclip className="h-6 w-6 text-gray-500" />
+            <Paperclip className="h-6 w-6 text-gray-500" />
           </label>
         </div>
 
+        {/* File Upload */}
         <Input
           type="file"
           multiple
           id="file-upload"
           className="hidden"
-          onChange={(e) => {
-            const files = Array.from(e.target.files || []);
-            console.log(attachments[0]);
-            setAttachments((prev) => [
-              ...prev,
-              ...files.map((file, index) => ({
-                id: index + Date.now(),
-                file,
-                type: file.type.split("/")[0],
-                name: file.name,
-                size: file.size,
-              })),
-            ]);
-          }}
+          onChange={handleFileChange}
           accept=".pdf,.doc,.docx,.png,.jpg,.jpeg,.mp4,.mov"
         />
 
         {/* Attachment List */}
         {attachments.length > 0 && (
-          <div className=" flex flex-row gap-2 flex-wrap items-center">
+          <div className="flex flex-row gap-2 flex-wrap items-center">
             {attachments.map((attachment) => (
               <div
                 key={attachment.id}
@@ -230,11 +243,7 @@ const ChallengeCreator = () => {
                   variant="ghost"
                   size="sm"
                   className="h-8 w-8 p-0 text-gray-500 hover:text-red-500"
-                  onClick={() =>
-                    setAttachments((prev) =>
-                      prev.filter((item) => item.id !== attachment.id)
-                    )
-                  }
+                  onClick={() => removeAttachment(attachment.id)}
                 >
                   <X className="h-4 w-4" />
                 </Button>
@@ -242,41 +251,55 @@ const ChallengeCreator = () => {
             ))}
           </div>
         )}
+
         {/* Challenge Type Selection */}
         <div className="mb-4">
           <Label className="text-sm font-medium mb-2 block text-left">
             Select Challenge Type
           </Label>
-          <div className="flex flex-wrap gap-2">
-            <Button
-              variant={challengeType === "task" ? "default" : "outline"}
-              size="sm"
-              className="flex items-center gap-2"
-              onClick={() => setChallengeType("task")}
-            >
-              <Clock className="h-4 w-4" />
-              Task
-            </Button>
-            <Button
-              variant={challengeType === "prize" ? "default" : "outline"}
-              size="sm"
-              className="flex items-center gap-2"
-              onClick={() => setChallengeType("prize")}
-            >
-              <Trophy className="h-4 w-4" />
-              Prize Challenge
-            </Button>
-
-            <Button
-              variant={challengeType === "blog" ? "default" : "outline"}
-              size="sm"
-              className="flex items-center gap-2"
-              onClick={() => setChallengeType("blog")}
-            >
-              <AlignLeft className="h-4 w-4" />
-              Blog
-            </Button>
-          </div>
+          <Controller
+            name="challengeType"
+            control={control}
+            render={({ field }) => (
+              <div className="flex flex-wrap gap-2">
+                <Button
+                  type="button"
+                  variant={field.value === "task" ? "default" : "outline"}
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => field.onChange("task")}
+                >
+                  <Clock className="h-4 w-4" />
+                  Task
+                </Button>
+                <Button
+                  type="button"
+                  variant={field.value === "prize" ? "default" : "outline"}
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => field.onChange("prize")}
+                >
+                  <Trophy className="h-4 w-4" />
+                  Prize Challenge
+                </Button>
+                <Button
+                  type="button"
+                  variant={field.value === "blog" ? "default" : "outline"}
+                  size="sm"
+                  className="flex items-center gap-2"
+                  onClick={() => field.onChange("blog")}
+                >
+                  <AlignLeft className="h-4 w-4" />
+                  Blog
+                </Button>
+              </div>
+            )}
+          />
+          {errors.challengeType && (
+            <span className="text-red-500 text-xs">
+              {errors.challengeType.message}
+            </span>
+          )}
         </div>
 
         {/* Duration Settings */}
@@ -284,8 +307,18 @@ const ChallengeCreator = () => {
           <Label className="text-sm font-medium mb-2 block text-left">
             Time Limit
           </Label>
-          <Switch checked={isTimeLimited} onCheckedChange={setIsTimeLimited} />
+          <Controller
+            name="isTimeLimited"
+            control={control}
+            render={({ field }) => (
+              <Switch
+                checked={field.value}
+                onCheckedChange={field.onChange}
+              />
+            )}
+          />
         </div>
+
         {isTimeLimited && (
           <div className="mb-4">
             <div className="flex gap-2 items-end">
@@ -296,28 +329,45 @@ const ChallengeCreator = () => {
                 <Input
                   type="number"
                   min="1"
-                  className="h-9"
+                  className={`h-9 ${errors.duration_value ? "border-red-500" : ""}`}
                   {...register("duration_value")}
                 />
+                {errors.duration_value && (
+                  <span className="text-red-500 text-xs">
+                    {errors.duration_value.message}
+                  </span>
+                )}
               </div>
               <div className="flex-1">
                 <Label className="text-xs text-gray-500 mb-1 pl-1 text-left flex">
                   Unit
                 </Label>
-                <Select
-                  value={duration}
-                  onValueChange={(value) => setDuration(value)}
-                >
-                  <SelectTrigger className="h-9">
-                    <SelectValue placeholder="Select unit" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="minutes">Minutes</SelectItem>
-                    <SelectItem value="hours">Hours</SelectItem>
-                    <SelectItem value="days">Days</SelectItem>
-                    <SelectItem value="weeks">Weeks</SelectItem>
-                  </SelectContent>
-                </Select>
+                <Controller
+                  name="duration_unit"
+                  control={control}
+                  render={({ field }) => (
+                    <Select
+                      value={field.value}
+                      onValueChange={field.onChange}
+                    >
+                      {/* <SelectTrigger className={`h-9 ${ */}
+                        <SelectTrigger className={`h-9 ${errors.duration_unit ? "border-red-500" : ""}`}>
+                        <SelectValue placeholder="Select unit" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="minutes">Minutes</SelectItem>
+                        <SelectItem value="hours">Hours</SelectItem>
+                        <SelectItem value="days">Days</SelectItem>
+                        <SelectItem value="weeks">Weeks</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  )}
+                />
+                {errors.duration_unit && (
+                  <span className="text-red-500 text-xs">
+                    {errors.duration_unit.message}
+                  </span>
+                )}
               </div>
             </div>
           </div>
@@ -331,16 +381,15 @@ const ChallengeCreator = () => {
           <Input
             type="number"
             placeholder="Enter prize"
-            className="h-9"
+            className={`h-9 ${errors.reward ? "border-red-500" : ""}`}
             {...register("reward")}
           />
-           {errors.reward && (
-          <span className="text-red-500 text-xs">
-            {errors.reward?.message}
-          </span>
-        )}
+          {errors.reward && (
+            <span className="text-red-500 text-xs">
+              {errors.reward.message}
+            </span>
+          )}
         </div>
-
 
         {/* Privacy Toggle */}
         <div className="flex items-center justify-between mb-4">
@@ -357,54 +406,118 @@ const ChallengeCreator = () => {
               </>
             )}
           </div>
-          <Switch
-            checked={!isPrivate}
-            onCheckedChange={(checked) => setIsPrivate(!checked)}
+          <Controller
+            name="isPrivate"
+            control={control}
+            render={({ field }) => (
+              <Switch
+                checked={!field.value}
+                onCheckedChange={(checked) => field.onChange(!checked)}
+              />
+            )}
           />
         </div>
-        <ParticipantDropdown
-          // availableUsers={availableUsers}
-          selectedUsers={selectedParticipants}
-          setSelectedUsers={setSelectedParticipants}
-          label="Invite participants"
-          placeholder="Search participants..."
-        />
-        <ParticipantDropdown
-          // availableUsers={availableUsers}
-          selectedUsers={selectedJudges}
-          setSelectedUsers={setSelectedJudges}
-          label="judges"
-          placeholder="Search judges..."
+
+        {/* Participants and Judges */}
+        <Controller
+          name="participants"
+          control={control}
+          render={({ field }) => (
+            <ParticipantDropdown
+              selectedUsers={field.value}
+              setSelectedUsers={(users) => field.onChange(users)}
+              label="Invite participants"
+              placeholder="Search participants..."
+            />
+          )}
         />
 
-        {/* Schedule Toggle */}
-        <div className=" flex flex-row items-start justify-center mb-4">
+        <Controller
+          name="judges"
+          control={control}
+          render={({ field }) => (
+            <ParticipantDropdown
+              selectedUsers={field.value}
+              setSelectedUsers={(users) => field.onChange(users)}
+              label="judges"
+              placeholder="Search judges..."
+            />
+          )}
+        />
+
+        {/* Schedule Settings */}
+        <div className="flex flex-row items-start justify-center mb-4">
           <div className="flex flex-col">
             <Label className="text-xs text-gray-500 mb-1 text-left">
               Start Time
             </Label>
-            <DatePicker date={startDate} setDate={setStartdate} />
+            <Controller
+              name="startDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  date={field.value}
+                  setDate={(date) => field.onChange(date)}
+                />
+              )}
+            />
+            {errors.startDate && (
+              <span className="text-red-500 text-xs">
+                {errors.startDate.message}
+              </span>
+            )}
           </div>
-          <div className="flex flex-row items-center justify-end gap-4 mt-4  w-full ">
-            <Label className=" text-xs md:text-sm font-medium">Schedule for Later</Label>
-            <Switch checked={isScheduled} onCheckedChange={setIsScheduled} />
+          <div className="flex flex-row items-center justify-end gap-4 mt-4 w-full">
+            <Label className="text-xs md:text-sm font-medium">
+              Schedule for Later
+            </Label>
+            <Controller
+              name="isScheduled"
+              control={control}
+              render={({ field }) => (
+                <Switch
+                  checked={field.value}
+                  onCheckedChange={field.onChange}
+                />
+              )}
+            />
           </div>
         </div>
 
         {isScheduled && (
           <div className="flex flex-col items-start gap-3 my-2">
             <Label className="text-xs text-gray-500 mb-1">End Time</Label>
-            <DatePicker date={endDate} setDate={setEnddate} />
+            <Controller
+              name="endDate"
+              control={control}
+              render={({ field }) => (
+                <DatePicker
+                  date={field.value}
+                  setDate={(date) => field.onChange(date)}
+                />
+              )}
+            />
+            {errors.endDate && (
+              <span className="text-red-500 text-xs">
+                {errors.endDate.message}
+              </span>
+            )}
           </div>
         )}
 
-        {/* Create Button */}
+        {/* Submit Button */}
         <Button
           className="w-full h-12 text-base font-medium bg-gray-900 hover:bg-gray-800"
-          onClick={() => setShowInvitationModal(true)}
           type="submit"
+          disabled={isSubmitting || isLoading}
         >
-          {isScheduled ? "Schedule Challenge" : "Create Challenge Now"}
+          {isSubmitting || isLoading ? (
+            "Creating..."
+          ) : isScheduled ? (
+            "Schedule Challenge"
+          ) : (
+            "Create Challenge Now"
+          )}
         </Button>
       </form>
     </Layout>

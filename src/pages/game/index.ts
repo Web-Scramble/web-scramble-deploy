@@ -7,9 +7,9 @@ import ChallengeSubmissions from "./review_panel";
 import LeaderboardCard from "./leaderboard";
 import EditProfile from "./edit_profile";
 import SettingsScreen from "./settings";
-import TopUpPage from "./top_up";
 import PublicProfile from "./public_profile";
 import NotificationsScreen from "./notification";
+import EditChallenge from "./edit_challenge";
 
 export {
   LeaderboardCard,
@@ -22,6 +22,6 @@ export {
   EditProfile,
   PublicProfile,
   SettingsScreen,
-  TopUpPage,
   NotificationsScreen,
+  EditChallenge
 };
