@@ -99,8 +99,8 @@ export const increaseChallengeReward = async (id: string, data: string) => {
   return response.data;
 };
 export const joinChallenge = async (id: string) => {
-  console.log(`Bearer ${token}`)
-  const response = await axios.post(`${baseURL}challenge/operation/join/${id}`,{
+  console.log(`Bearer ${token}`,id)
+  const response = await axios.post(`${baseURL}challenge/operation/join/${id}`,{},{
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

@@ -23,21 +23,36 @@ import InvitationPopup from "@/components/modals/invitation_modal";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
 import ParticipantDropdown from "@/components/features/challenge/add_participants";
 import { DatePicker } from "@/components/ui/shared/calendar";
-import { editChallengeSchema,EditChallengeFormData } from "@/schema/edit_challenge_schema";
-import { useParams } from "react-router"
+import {
+  editChallengeSchema,
+  EditChallengeFormData,
+} from "@/schema/edit_challenge_schema";
+import { useParams } from "react-router";
 import { useChallenges } from "@/hooks/useChallenges";
-
+import { useSubmitChallenge } from "@/hooks/useSubmitChallenge";
 
 const ChallengeCreator = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
-  const {challengeId} = useParams()
-  const [showInvitationModal, setShowInvitationModal] = useState(false);
-  const [editorContent, setEditorContent] = useState("");
-  const {data,isLoading} = useChallenges()
-  console.log(data)
-  // const [challenge, setChallenge] = useState(data.find())
+  const { challengeId } = useParams();
+  const { challenges, isLoading } = useChallenges();
 
+  const [showInvitationModal, setShowInvitationModal] = useState(false);
+  const [challenge, setChallenge] = useState(
+    challenges.tasks.find(
+      (task: Partial<EditChallengeFormData>) => task.id === challengeId
+    )
+  );
+  const [editorContent, setEditorContent] = useState(challenge.description);
+
+  console.log(challenge,challengeId)
+  const {
+    mutate: submitMutate,
+    isLoading:issubmitLoading,
+    isError,
+    isSuccess,
+    data,
+  } = useSubmitChallenge();
   const {
     control,
     handleSubmit,
@@ -48,20 +63,23 @@ const ChallengeCreator = () => {
   } = useForm<EditChallengeFormData>({
     resolver: yupResolver(editChallengeSchema),
     defaultValues: {
-      title: "",
-      description: "",
+      title: challenge.title,
+      description: challenge.description,
       challengeType: "task",
-      isTimeLimited: false,
-      isPrivate: true,
-      isScheduled: false,
-      duration_value: 1,
-      duration_unit: "hours",
-      reward: 0,
-      startDate: new Date(),
-      endDate: new Date(),
+      isTimeLimited: challenge.duration_value?true:false,
+      isPrivate: !challenge.is_public,
+      isScheduled: challenge.isScheduled,
+      duration_value: challenge.duration_value,
+      duration_unit: challenge.duration_unit,
+      reward: challenge.reward_pool,
+      startDate: new Date(challenge.start_time),
+      endDate: new Date(challenge.end_time),
       attachments: [],
+      // attachments:challenge.documents,
       participants: [],
+      // participants: challenge.participants,
       judges: [],
+      // judges: challenge.judges,
     },
   });
 
@@ -72,8 +90,6 @@ const ChallengeCreator = () => {
   const attachments = watch("attachments") || [];
 
   // const { mutate: createMutate, isLoading,data } = useCreateChallenge();
-
-  console.log(data)
 
   useEffect(() => {
     // Update form when editor content changes
@@ -101,8 +117,8 @@ const ChallengeCreator = () => {
   };
 
   const onSubmit = async (data: EditChallengeFormData) => {
-    try {
       const challengeData = {
+        id:challengeId,
         challengeType: data.challengeType,
         is_public: !data.isPrivate,
         reward_pool: data.reward,
@@ -113,24 +129,15 @@ const ChallengeCreator = () => {
         judges: data.judges,
         participants: data.participants,
         start_time: data.startDate.toISOString(),
-        end_time: data.isScheduled ? data.endDate.toISOString() as string : null,
+        end_time: data.isScheduled
+          ? (data.endDate.toISOString() as string)
+          : null,
       };
-     console.log(challengeData)
-    //  createMutate(challengeData);
-      // toast({
-      //   title: "Success",
-      //   description: "Challenge created successfully!",
-      // });
-      // setShowInvitationModal(true);
-    } catch (error) {
-      // toast({
-      //   title: "Error",
-      //   description: "Failed to create challenge",
-      //   variant: "destructive",
-      // });
-    }
+      submitMutate(challengeData)
+      console.log(challengeData);
+     
   };
-  console.log(errors)
+  console.log(errors);
   return (
     <Layout>
       {/* {showInvitationModal && (
@@ -179,16 +186,16 @@ const ChallengeCreator = () => {
 
         {/* Description Editor */}
         <div className="mb-4">
-        <Controller
-              name="description"
-              control={control}
-              render={({ field }) => (
-                <TiptapEditor
-                  editorContent={field.value}
-                  setEditorContent={(content) => field.onChange(content)}
-                />
-              )}
-            />
+          <Controller
+            name="description"
+            control={control}
+            render={({ field }) => (
+              <TiptapEditor
+                editorContent={field.value}
+                setEditorContent={(content) => field.onChange(content)}
+              />
+            )}
+          />
           {errors.description && (
             <span className="text-red-500 text-xs">
               {errors.description.message}
@@ -311,10 +318,7 @@ const ChallengeCreator = () => {
             name="isTimeLimited"
             control={control}
             render={({ field }) => (
-              <Switch
-                checked={field.value}
-                onCheckedChange={field.onChange}
-              />
+              <Switch checked={field.value} onCheckedChange={field.onChange} />
             )}
           />
         </div>
@@ -329,7 +333,9 @@ const ChallengeCreator = () => {
                 <Input
                   type="number"
                   min="1"
-                  className={`h-9 ${errors.duration_value ? "border-red-500" : ""}`}
+                  className={`h-9 ${
+                    errors.duration_value ? "border-red-500" : ""
+                  }`}
                   {...register("duration_value")}
                 />
                 {errors.duration_value && (
@@ -346,12 +352,13 @@ const ChallengeCreator = () => {
                   name="duration_unit"
                   control={control}
                   render={({ field }) => (
-                    <Select
-                      value={field.value}
-                      onValueChange={field.onChange}
-                    >
+                    <Select value={field.value} onValueChange={field.onChange}>
                       {/* <SelectTrigger className={`h-9 ${ */}
-                        <SelectTrigger className={`h-9 ${errors.duration_unit ? "border-red-500" : ""}`}>
+                      <SelectTrigger
+                        className={`h-9 ${
+                          errors.duration_unit ? "border-red-500" : ""
+                        }`}
+                      >
                         <SelectValue placeholder="Select unit" />
                       </SelectTrigger>
                       <SelectContent>
@@ -511,13 +518,11 @@ const ChallengeCreator = () => {
           type="submit"
           disabled={isSubmitting || isLoading}
         >
-          {isSubmitting || isLoading ? (
-            "Creating..."
-          ) : isScheduled ? (
-            "Schedule Challenge"
-          ) : (
-            "Create Challenge Now"
-          )}
+          {isSubmitting || isLoading
+            ? "Creating..."
+            : isScheduled
+            ? "Schedule Challenge"
+            : "Create Challenge Now"}
         </Button>
       </form>
     </Layout>

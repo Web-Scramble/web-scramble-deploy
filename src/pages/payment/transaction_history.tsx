@@ -102,12 +102,11 @@ const TransactionHistory = () => {
           value.toLowerCase().includes(searchQuery.toLowerCase())
       )
     );
-   if(isLoading){
+if(isLoading || !transactions){
     return <LoadingSpinner/>
    }
   return (
     <Layout>
-
     <Card className="w-full max-w-4xl mx-auto">
       <CardHeader>
         <CardTitle>Transaction History</CardTitle>

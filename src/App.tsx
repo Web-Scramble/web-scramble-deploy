@@ -87,7 +87,7 @@ function App() {
         <Route path="/challenge" element={<ChallengeFeed />} />
         <Route path="/challenge/:challengeId" element={<ChallengeFeed />} />
         <Route path="/create" element={<ChallengeCreator />} />
-        <Route path="/edit-challenge/:ChallengeId" element={<EditChallenge />} />
+        <Route path="/edit-challenge/:challengeId" element={<EditChallenge />} />
         <Route path="/review-panel" element={<ChallengeSubmissions />} />
         <Route path="/submission/:challengeId" element={<ChallengeSubmission />} />
         {/* <Route path="/profile" element={<ProfilePage />} /> */}
@@ -187,7 +187,7 @@ function App() {
             </RequireAuth>
           }
         /> */}
-            <Route path="/checkout" element={<TopUp />} />
+            <Route path="/checkout" element={<TopUp/>} />
             <Route path="/complete" element={<CompletePage />} />
             <Route path="/withdrawal" element={<WithdrawalForm />} />
       </Routes>

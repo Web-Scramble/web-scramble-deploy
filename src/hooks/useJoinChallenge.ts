@@ -4,17 +4,17 @@ import { ChallengeFormData } from "@/types/challenge";
 import { useNavigate } from "react-router";
 import { useToast } from "@/hooks/use-toast";
 
-export const useJoinChallenge = () => {
+export const useJoinChallenge = (id:string) => {
   const navigate = useNavigate();
   const { toast } = useToast();
   //   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id: string) => joinChallenge(id),
+    mutationFn: () => joinChallenge(id),
     onSuccess: (data) => {
       toast({
         description: "challenge joined successfully.",
       });
-      navigate("/submission");
+      navigate(`/submission/${id}`);
     },
     onError: (error) => {
       toast({
