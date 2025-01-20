@@ -13,7 +13,6 @@ import {
   ChallengeSubmissions,
   ChallengeSubmission,
   ProfilePage,
-  BoostRewardPage,
   EditProfile,
   SettingsScreen,
   TopUpPage,
@@ -22,8 +21,8 @@ import {
 } from "@/pages/game";
 import { Toaster } from "@/components/ui/toaster";
 import { authStore } from "./store/authstore";
-import { loadStripe } from "@stripe/stripe-js";
-import { Elements } from "@stripe/react-stripe-js";
+// import { loadStripe } from "@stripe/stripe-js";
+// import { Elements } from "@stripe/react-stripe-js";
 import { useLocation } from 'react-router'
 import {
   CheckoutForm,
@@ -35,7 +34,7 @@ import {
 import { getToken } from "./services/getToken";
 import { getItemFromLocalStorage } from "./services/localStorage";
 import { TOKEN, USER_DATA } from "./constants/keys";
-import { intentStore } from "./store/intentStore";
+// import { intentStore } from "./store/intentStore";
 
 function App() {
   // Make sure to call loadStripe outside of a component’s render to avoid
@@ -43,29 +42,9 @@ function App() {
   // This is a public sample test API key.
   // Don’t submit any personally identifiable information in requests made with this key.
   // Sign in to see your own test API key embedded in code samples.
-  const stripePromise = loadStripe(
-    "pk_test_51Qc31ZCYjeTr7iKH3najWXrQeUqf2AEU2YJ4q8T6iudU9fTdbyixcTVK3TGVPWwIiKPtgJP7K1KoOHx3TP4ea6Mv00uFbXc7u4"
-  );
   const authToken = getToken();
-  const { token, user, updateToken, updateUser } = authStore();
-  const {clientSecret} = intentStore()
-
-  // const [clientSecret, setClientSecret] = useState("");
-  // const baseURL = import.meta.env.VITE_API_URL;
-  // useEffect(() => {
-  //   // Create PaymentIntent as soon as the page loads
-  //   fetch(`${baseURL}payment/refill`, {
-  //     method: "POST",
-  //     headers: {
-  //       "Content-Type": "application/json",
-  //       Authorization: `Bearer ${authToken}`,
-  //     },
-  //     body: JSON.stringify({ amount: 50, paymentMethodId: "pm_card_visa" }),
-  //   })
-  //     .then((res) => res.json())
-  //     // .then((data) => console.log(data));
-  //     .then((data) => setClientSecret(data.clientSecret));
-  // }, []);
+  const {  updateToken, updateUser } = authStore();
+  // const {clientSecret} = intentStore()
 
   useEffect(() =>{
     const getSavedToken = async()=>{
@@ -84,11 +63,6 @@ function App() {
     getSavedToken()
   },[]);
 
-  const appearance = {
-    theme: "stripe",
-  };
-  // Enable the skeleton loader UI for optimal loading.
-  const loader = "auto";
   function RequireAuth({
     children,
     redirectTo,
@@ -113,7 +87,7 @@ function App() {
         <Route path="/challenge" element={<ChallengeFeed />} />
         <Route path="/create" element={<ChallengeCreator />} />
         <Route path="/review-panel" element={<ChallengeSubmissions />} />
-        <Route path="/submission" element={<ChallengeSubmission />} />
+        <Route path="/submission/:challengeId" element={<ChallengeSubmission />} />
         {/* <Route path="/profile" element={<ProfilePage />} /> */}
         {/* <Route path="/boost-reward" element={<BoostRewardPage />} /> */}
         <Route path="/edit-profile" element={<EditProfile />} />

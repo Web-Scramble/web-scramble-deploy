@@ -21,7 +21,7 @@ import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router";
 import { useComment } from "@/hooks/useComment";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
-
+import { ShareDialog } from "@/components/dailogs/sharelink";
 
 interface ChallengeContentProps {
   challenge: Challenge;
@@ -39,6 +39,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
   );
   const [newComment, setNewComment] = useState("");
   const [isVisible, setIsVisible] = useState(false);
+  const [showShareDialog, setShowShareDialog] = useState(false);
 
   const { toast } = useToast();
   const { user } = authStore();
@@ -101,7 +102,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
           </span>
         </p>
       </div> */}
-      <TiptapEditor editorContent={challenge.description} disabled={true}/>
+      <TiptapEditor editorContent={challenge.description} disabled={true} />
 
       <div className="flex items-center justify-between space-x-4 text-sm text-gray-600">
         <div className="flex items-center space-x-4">
@@ -162,7 +163,15 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
             <MessageCircle className="w-5 h-5" />
             <span>Remarks</span>
           </button>
-          <Button variant="ghost" size="sm" className="p-0">
+          {/* <Button variant="ghost" size="sm" className="p-0">
+            <Rocket className="w-5 h-5 text-gray-600" />
+          </Button> */}
+          <Button
+            variant="ghost"
+            size="sm"
+            className="p-0"
+            onClick={() => setShowShareDialog(true)}
+          >
             <Rocket className="w-5 h-5 text-gray-600" />
           </Button>
         </div>
@@ -189,6 +198,12 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
           handleSubmitComment={handleSubmitComment}
         />
       )}
+      <ShareDialog
+  isOpen={showShareDialog}
+  onClose={() => setShowShareDialog(false)}
+  challengeId={challenge.id}
+  // link = {challenge.}
+/>
     </CardContent>
   );
 };
