@@ -46,6 +46,7 @@ export default function TopUp() {
       // .then((data) => console.log(data));
       .then((data) => {setClientSecret(data.clientSecret)
         updateClient(data.clientSecret)
+        console.log(data.clientSecret)
         // updatePromise(stripePromise)
       });
 
