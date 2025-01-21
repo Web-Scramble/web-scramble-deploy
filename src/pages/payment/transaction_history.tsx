@@ -60,9 +60,9 @@ const mockTransactions = [
 ];
 
 const TransactionHistory = () => {
+  const { transactions, isLoading,isFetching, error, refetch } = useTransactionHistory();
   const [filter, setFilter] = useState("all");
   const [searchQuery, setSearchQuery] = useState("");
-   const { transactions, isLoading,isFetching, error, refetch } = useTransactionHistory();
 
   const getTransactionIcon = (type) => {
     switch (type) {
@@ -90,7 +90,7 @@ const TransactionHistory = () => {
     }
   };
 
-  const filteredTransactions = transactions.payments
+  const filteredTransactions = mockTransactions
     .filter((transaction) => {
       if (filter === "all") return true;
       return transaction.type === filter;

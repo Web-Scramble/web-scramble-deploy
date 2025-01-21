@@ -48,7 +48,7 @@ const ChallengeSubmission = () => {
     defaultValues: {
       title: "",
       description: "",
-      files: [],
+      decuments: [],
     },
   });
 

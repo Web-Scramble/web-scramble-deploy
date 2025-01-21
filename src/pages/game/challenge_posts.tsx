@@ -12,7 +12,7 @@ import { useJoinChallenge } from "@/hooks/useJoinChallenge";
 import { useEffect } from "react";
 
 const ChallengeFeed = () => {
-  const { user } = authStore();
+  const { user,updateSelectedId } = authStore();
   const navigate = useNavigate()
     const {
       mutate: deleteMutation,
@@ -28,7 +28,11 @@ const ChallengeFeed = () => {
   
   const handleJoin = (challengeId: string) => {
     console.log("attemp to join", challengeId)
+    updateSelectedId(challengeId)
     JoinChallengeMutation(challengeId)
+    // if(isSuccess){
+    //   navigate(`/submission/${challengeId}`)
+    // }
   };
 
   const handleDelete = (challengeId: string) => {

@@ -41,7 +41,6 @@ export default function TopUp() {
         Authorization: `Bearer ${authToken}`,
       },
       body: JSON.stringify({ amount: refillAmount }),
-      // body: JSON.stringify({ amount: refillAmount, paymentMethodId: "pm_card_visa" }),
     })
       .then((res) => res.json())
       // .then((data) => console.log(data));

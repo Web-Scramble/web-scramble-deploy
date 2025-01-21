@@ -1,24 +1,23 @@
 import { useMutation } from "@tanstack/react-query";
-import { joinChallenge } from "@/services/challenge_api";
+import { likeComment } from "@/services/challenge_api";
 import { ChallengeFormData } from "@/types/challenge";
 import { useNavigate } from "react-router";
 import { useToast } from "@/hooks/use-toast";
 import { authStore } from "@/store/authstore";
 
 
-export const useJoinChallenge = () => {
+export const useLikeComment = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { selectedId} = authStore();
 
   //   const queryClient = useQueryClient();
-  // let urlId:string|void
   return useMutation({
-    mutationFn: (id) => joinChallenge(id),
+    mutationFn: (id) => likeComment(id),
     onSuccess: (data) => {
       console.log(data)
       toast({
-        description: "challenge joined successfully.",
+        description: "comment liked.",
       });
       navigate(`/submission/${selectedId}`);
     },
@@ -26,7 +25,7 @@ export const useJoinChallenge = () => {
       toast({
         variant: "destructive",
         title: error.response.data.message,
-        description: " failed to join challenges",
+        description: "failed to like comment",
       });
     },
   });

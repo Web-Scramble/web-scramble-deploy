@@ -84,7 +84,7 @@ function App() {
         <Route path="/otp/:phone" element={<OTPVerification />} />
         <Route path="/username/:phone" element={<UsernameSetup />} />
         {/* protected routes start here */}
-        <Route path="/challenge" element={<ChallengeFeed />} />
+        {/* <Route path="/challenge" element={<ChallengeFeed />} /> */}
         <Route path="/challenge/:challengeId" element={<ChallengeFeed />} />
         <Route path="/create" element={<ChallengeCreator />} />
         <Route path="/edit-challenge/:challengeId" element={<EditChallenge />} />

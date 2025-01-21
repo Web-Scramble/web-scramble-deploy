@@ -100,7 +100,19 @@ export const increaseChallengeReward = async (id: string, data: string) => {
 };
 export const joinChallenge = async (id: string) => {
   console.log(`Bearer ${token}`,id)
-  const response = await axios.post(`${baseURL}challenge/operation/join/${id}`,{},{
+  const response = await axios.post(`${baseURL}challenge/operation/join/${id}`,{"asd":"asd"},{
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return response.data;
+};
+export const likeComment = async (id: string) => {
+  console.log(`Bearer ${token}`,id)
+  // /challenge/operation/comment/like/{commentId}
+  const response = await axios.post(`${baseURL}challenge/operation/comment/like/${id}`,{"asd":"asd"},{
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

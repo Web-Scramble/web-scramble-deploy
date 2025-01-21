@@ -5,6 +5,7 @@ import { Elements } from "@stripe/react-stripe-js";
 import { loadStripe } from "@stripe/stripe-js";
 import { intentStore } from "@/store/intentStore";
 import { stripePromise } from "./top_up";
+import { authStore } from "@/store/authstore";
 
 // import { Button } from "@/components/ui/button";
 // import { Label } from "@/components/ui/label";
@@ -105,7 +106,8 @@ export default function CompleteTransactionPage() {
     // Enable the skeleton loader UI for optimal loading.
     const loader = "auto";
     //  const { clientSecret} = intentStore()
-   
+   const {user,token} = authStore()
+   console.log(user,token)
   // const stripe = useStripe();
 
   // const [status, setStatus] = useState("default");

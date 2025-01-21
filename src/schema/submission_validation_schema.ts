@@ -24,15 +24,15 @@ export const submissionSchema = yup.object({
     .string()
     .required('Description is required')
     .min(10, 'Description must be at least 10 characters'),
-  files: yup
+  documents: yup
     .array()
     .of(
       yup.mixed()
-        .test('fileSize', 'File is too large (max 50MB)', (value) => {
+        .test('fileSize', 'document is too large (max 50MB)', (value) => {
           if (!value) return true;
           return value.size <= MAX_FILE_SIZE;
         })
-        .test('fileType', 'Unsupported file format', (value) => {
+        .test('fileType', 'Unsupported document format', (value) => {
           if (!value) return true;
           return SUPPORTED_FORMATS.includes(value.type);
         })
