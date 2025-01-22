@@ -23,6 +23,7 @@ import { useComment } from "@/hooks/useComment";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
 import { ShareDialog } from "@/components/dailogs/sharelink";
 
+
 interface ChallengeContentProps {
   challenge: Challenge;
   onJoin?: () => void;
@@ -132,13 +133,13 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
         </div>
       </div>
 
-      {/* {challenge.attachments.length > 0 && (
+      {challenge.documents.length > 0 && (
         <div className="border rounded-lg p-2 space-y-4">
           <h5 className="text-sm font-medium">
-            Attachments ({challenge.attachments.length})
+            Attachments ({challenge.documents.length})
           </h5>
           <div className="flex gap-2">
-            {challenge.attachments.map((attachment, index) => (
+            {challenge.documents.map((attachment, index) => (
               <div
                 key={index}
                 className="flex items-center p-2 bg-gray-50 rounded-md"
@@ -148,7 +149,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
             ))}
           </div>
         </div>
-      )} */}
+      )}
 
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">

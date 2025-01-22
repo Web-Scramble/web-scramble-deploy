@@ -21,11 +21,17 @@ import { yupResolver } from "@hookform/resolvers/yup";
 import { challengeSchema } from "@/schema/challenge_creation_validation";
 import { ChallengeFormData } from "@/types/challenge";
 import { useCreateChallenge } from "@/hooks/useCreateChallenge";
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { searchUser } from "@/services/user";
 import { useToast } from "@/hooks/use-toast";
 import ParticipantDropdown from "@/components/features/challenge/add_participants";
 import { DatePicker } from "@/components/ui/shared/calendar";
+import {
+  attachmentsUpload,
+  attachmentsUploadWithProgress,
+  attachmentUpload,
+  uploadSingleFile,
+} from "@/utils/imageUpload";
+import { ScreenLoader } from "@/components/ui/shared/screen_loader";
 
 const ChallengeCreator = () => {
   const [attachments, setAttachments] = useState([]);
@@ -39,6 +45,8 @@ const ChallengeCreator = () => {
   const [endDate, setEnddate] = useState<Date | undefined>(new Date());
   const [selectedParticipants, setSelectedParticipants] = useState([]);
   const [selectedJudges, setSelectedJudges] = useState([]);
+  const [dataLoading, setDataLoading] = useState(false)
+  
   const { toast } = useToast();
 
   const [showInvitationModal, setShowInvitationModal] = useState(false);
@@ -72,49 +80,68 @@ const ChallengeCreator = () => {
     isSuccess,
     data,
   } = useCreateChallenge();
-  useEffect(()=>{
-    if(data){
-      console.log(data)
-      setShowInvitationModal(true)
-    }
-  },[data])
-  const handleCreateChallenge = (data: ChallengeFormData) => {
-    // const formData = new FormData();
-    // formData.append("challengeType", challengeType);
-    // formData.append("title", data.title);
-    // formData.append("isPublic", JSON.stringify(!isPrivate));
-    // formData.append("rewardPool", data.reward);
-    // formData.append("duration_value", JSON.stringify(data.duration_value));
-    // formData.append("duration_unit", data.duration_unit);
-    // formData.append("judges", JSON.stringify(setSelectedJudges));
-    // formData.append("participants", JSON.stringify(setSelectedParticipants));
-    // formData.append("startTime", JSON.stringify(startDate));
-    // formData.append("endTime", JSON.stringify(endDate));
-    // formData.append("taskTypeDetails[title]", data.title);
-    // formData.append("taskTypeDetails[description]", editorContent);
-    // attachments.forEach((item) => {
-    //   formData.append("documents", item);
-    // });
-
-    const challengeData = {
-      challengeType: challengeType,
-      is_public: !isPrivate,
-      reward_pool: data.reward,
-      duration_value: data.duration_value,
-      duration_unit: data.duration_unit,
-      title: data.title,
-      description: editorContent,
-      // doc:[sasd],
-      judges: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
-      participants: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
-      start_time: startDate,
-      end_time: isScheduled ? endDate : "",
-    };
-    console.log(challengeData);
-    createMutate(challengeData);
-
+  useEffect(() => {
     if (data) {
-      setShowInvitationModal(true)
+      console.log(data);
+      setShowInvitationModal(true);
+    }
+  }, [data]);
+  const handleCreateChallenge = async (data: ChallengeFormData) => {
+    try {
+      console.log(attachments);
+      setDataLoading(true)
+      if (attachments.length > 0) {
+        attachmentsUploadWithProgress(attachments).then(
+          ({ urls, uploadedFiles }) => {
+            console.log(uploadedFiles);
+            const challengeData = {
+              challengeType: challengeType,
+              is_public: !isPrivate,
+              reward_pool: data.reward,
+              duration_value: data.duration_value,
+              duration_unit: data.duration_unit,
+              title: data.title,
+              description: editorContent,
+              documents: uploadedFiles,
+              judges: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
+              participants: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
+              start_time: startDate,
+              end_time: endDate,
+            };
+            console.log(challengeData);
+            createMutate(challengeData,{onSettled(data, error, variables, context) {
+              setDataLoading(false)
+            },
+          onSuccess(){
+               setShowInvitationModal(true)
+
+          }});
+       
+          }
+        );
+
+      }
+      //  const challengeData = {
+      //    challengeType: challengeType,
+      //    is_public: !isPrivate,
+      //    reward_pool: data.reward,
+      //    duration_value: data.duration_value,
+      //    duration_unit: data.duration_unit,
+      //    title: data.title,
+      //    description: editorContent,
+      //    // doc:[sasd],
+      //    judges: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
+      //    participants: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
+      //    start_time: startDate,
+      //    end_time: endDate
+      //  };
+      //  console.log(challengeData);
+      //  createMutate(challengeData);
+      // if (data) {
+      //   setShowInvitationModal(true);
+      // }
+    } catch (error) {
+      console.log(error);
     }
   };
 
@@ -126,16 +153,9 @@ const ChallengeCreator = () => {
     setValue("attachments", files);
   };
 
-  // if (isSuccess) {
-  //   return (
-  //     <InvitationPopup
-  //       isOpen={showInvitationModal}
-  //       onClose={() => setShowInvitationModal(false)}
-  //       judgeLink={data.inviteLinks.judges.link}
-  //       participantLink={data.inviteLinks.participants.link}
-  //     />
-  //   );
-  // }
+  if(dataLoading){
+    return <ScreenLoader/>
+  }
 
   return (
     <Layout>
@@ -144,7 +164,7 @@ const ChallengeCreator = () => {
           isOpen={showInvitationModal}
           onClose={() => setShowInvitationModal(false)}
           judgeLink={data?.inviteLinks.judges.link}
-        participantLink={data?.inviteLinks.participants.link}
+          participantLink={data?.inviteLinks.participants.link}
         />
       )}
 
