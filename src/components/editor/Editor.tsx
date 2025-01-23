@@ -231,15 +231,15 @@ function Editor() {
           }}
           className="buttonWrap"
         >
-          <button onClick={() => locale.setLang('vi')}>Vietnamese</button>
+          {/* <button onClick={() => locale.setLang('vi')}>Vietnamese</button>
           <button onClick={() => locale.setLang('en')}>English</button>
           <button onClick={() => locale.setLang('zh_CN')}>Chinese</button>
           <button type="button" onClick={() => locale.setLang('pt_BR')}>Português</button>
           <button type="button" onClick={() => locale.setLang('hu_HU')}>Hungarian</button>
           <button onClick={() => setTheme(theme === 'dark' ? 'light' : 'dark')}>
             {theme === 'dark' ? 'Light' : 'Dark'}
-          </button>
-          <button onClick={() => setDisable(!disable)}>{disable ? 'Editable' : 'Readonly'}</button>
+          </button> */}
+          {/* <button onClick={() => setDisable(!disable)}>{disable ? 'Editable' : 'Readonly'}</button> */}
           {/* <button
             onClick={() => {
               window.open('https://github.com/hunghg255/reactjs-tiptap-editor-demo', '_blank');

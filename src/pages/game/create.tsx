@@ -41,13 +41,15 @@ const ChallengeCreator = () => {
   const [isTimeLimited, setIsTimeLimited] = useState(false);
   const [isPrivate, setIsPrivate] = useState(true);
   const [isScheduled, setIsScheduled] = useState(false);
-  const [editorContent, setEditorContent] = useState(``);
+  const [editorContent, setEditorContent] = useState(
+    `this is a blank placeholder for editor content`
+  );
   const [startDate, setStartdate] = useState<Date | undefined>(new Date());
   const [endDate, setEnddate] = useState<Date | undefined>(new Date());
   const [selectedParticipants, setSelectedParticipants] = useState([]);
   const [selectedJudges, setSelectedJudges] = useState([]);
-  const [dataLoading, setDataLoading] = useState(false)
-  
+  const [dataLoading, setDataLoading] = useState(false);
+
   const { toast } = useToast();
 
   const [showInvitationModal, setShowInvitationModal] = useState(false);
@@ -90,7 +92,7 @@ const ChallengeCreator = () => {
   const handleCreateChallenge = async (data: ChallengeFormData) => {
     try {
       console.log(attachments);
-      setDataLoading(true)
+      setDataLoading(true);
       if (attachments.length > 0) {
         attachmentsUploadWithProgress(attachments).then(
           ({ urls, uploadedFiles }) => {
@@ -110,17 +112,16 @@ const ChallengeCreator = () => {
               end_time: endDate,
             };
             console.log(challengeData);
-            createMutate(challengeData,{onSettled(data, error, variables, context) {
-              setDataLoading(false)
-            },
-          onSuccess(){
-               setShowInvitationModal(true)
-
-          }});
-       
+            createMutate(challengeData, {
+              onSettled(data, error, variables, context) {
+                setDataLoading(false);
+              },
+              onSuccess() {
+                setShowInvitationModal(true);
+              },
+            });
           }
         );
-
       }
       //  const challengeData = {
       //    challengeType: challengeType,
@@ -154,8 +155,8 @@ const ChallengeCreator = () => {
     setValue("attachments", files);
   };
 
-  if(dataLoading){
-    return <ScreenLoader/>
+  if (dataLoading) {
+    return <ScreenLoader />;
   }
 
   return (
@@ -171,7 +172,7 @@ const ChallengeCreator = () => {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white w-full  min-w-88 mx-auto p-3 rounded-lg shadow-md"
+        className="bg-white w-full px-24 min-w-88 mx-auto p-3 rounded-lg shadow-md"
       >
         {/* Header with Close Button */}
         <div className="flex justify-end">
@@ -209,7 +210,7 @@ const ChallengeCreator = () => {
             editorContent={editorContent}
             setEditorContent={setEditorContent}
           /> */}
-          <Editor/>
+          <Editor />
           <label
             htmlFor="file-upload"
             className="cursor-pointer relative bottom-12 right-2 float-end h-0 "
