@@ -108,7 +108,8 @@ export const ChallengeHeader = ({
                 status
               )}`}
             >
-              {getStatusLabel(status)}
+              {/* {getStatusLabel(status)} */}
+              {cha}
             </div>
           </div>
         </div>

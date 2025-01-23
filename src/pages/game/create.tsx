@@ -172,7 +172,7 @@ const ChallengeCreator = () => {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white w-full px-24 min-w-88 mx-auto p-3 rounded-lg shadow-md"
+        className="bg-white max-w-xl w-full min-w-88 mx-auto p-3 rounded-lg shadow-md"
       >
         {/* Header with Close Button */}
         <div className="flex justify-end">
@@ -206,11 +206,11 @@ const ChallengeCreator = () => {
           </span>
         )}
         <div className="">
-          {/* <TiptapEditor
+          <TiptapEditor
             editorContent={editorContent}
             setEditorContent={setEditorContent}
-          /> */}
-          <Editor />
+          />
+          {/* <Editor /> */}
           <label
             htmlFor="file-upload"
             className="cursor-pointer relative bottom-12 right-2 float-end h-0 "

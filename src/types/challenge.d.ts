@@ -43,6 +43,7 @@ export interface Attachment {
     start_time: Date;
     duration: string;
     reward: number;
+    status:string;
     attachments: Attachment[];
     participantCount: number;
     comment: Comment[];
