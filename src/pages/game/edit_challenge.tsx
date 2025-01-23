@@ -29,7 +29,7 @@ import {
 } from "@/schema/edit_challenge_schema";
 import { useParams } from "react-router";
 import { useChallenges } from "@/hooks/useChallenges";
-import { useSubmitChallenge } from "@/hooks/useSubmitChallenge";
+import { useEditChallenge } from "@/hooks/useEditChallenge";
 
 const ChallengeCreator = () => {
   const navigate = useNavigate();
@@ -47,12 +47,9 @@ const ChallengeCreator = () => {
 
   console.log(challenge,challengeId)
   const {
-    mutate: submitMutate,
-    isLoading:issubmitLoading,
-    isError,
-    isSuccess,
-    data,
-  } = useSubmitChallenge();
+    mutate:editChallengeMutate,
+    isLoading:isMutateLoading,
+  } = useEditChallenge();
   const {
     control,
     handleSubmit,
@@ -74,8 +71,11 @@ const ChallengeCreator = () => {
       reward: challenge.reward_pool,
       startDate: new Date(challenge.start_time),
       endDate: new Date(challenge.end_time),
-      attachments: [],
-      // attachments:challenge.documents,
+      // attachments: [],
+      attachments:challenge.documents.map((attachments)=>({
+          type:attachments.type,
+          name:attachments.name.split("-")[2].split("?")[0]
+      })),
       participants: [],
       // participants: challenge.participants,
       judges: [],
@@ -102,8 +102,8 @@ const ChallengeCreator = () => {
       id: `${index}-${Date.now()}`,
       file,
       type: file.type.split("/")[0],
-      name: file.name,
-      size: file.size,
+      name: file.name.split("/"),
+      size: "50KB",
     }));
 
     setValue("attachments", [...attachments, ...newAttachments]);
@@ -117,6 +117,7 @@ const ChallengeCreator = () => {
   };
 
   const onSubmit = async (data: EditChallengeFormData) => {
+    try {
       const challengeData = {
         id:challengeId,
         challengeType: data.challengeType,
@@ -133,9 +134,18 @@ const ChallengeCreator = () => {
           ? (data.endDate.toISOString() as string)
           : null,
       };
-      submitMutate(challengeData)
-      console.log(challengeData);
+      editChallengeMutate(challengeData,{
+        onSuccess(){
+          
+        }
+      })
+      // console.log(challengeData);
      
+      
+    } catch (error) {
+      console.log(error)
+    }
+      
   };
   console.log(errors);
   return (
@@ -516,13 +526,8 @@ const ChallengeCreator = () => {
         <Button
           className="w-full h-12 text-base font-medium bg-gray-900 hover:bg-gray-800"
           type="submit"
-          disabled={isSubmitting || isLoading}
         >
-          {isSubmitting || isLoading
-            ? "Creating..."
-            : isScheduled
-            ? "Schedule Challenge"
-            : "Create Challenge Now"}
+            Edit Challenge
         </Button>
       </form>
     </Layout>

@@ -32,6 +32,7 @@ import {
   uploadSingleFile,
 } from "@/utils/imageUpload";
 import { ScreenLoader } from "@/components/ui/shared/screen_loader";
+import Editor from "@/components/editor/Editor";
 
 const ChallengeCreator = () => {
   const [attachments, setAttachments] = useState([]);
@@ -170,7 +171,7 @@ const ChallengeCreator = () => {
 
       <form
         onSubmit={handleSubmit(onSubmit)}
-        className="bg-white w-full max-w-xl min-w-88 mx-auto p-3 rounded-lg shadow-md"
+        className="bg-white w-full  min-w-88 mx-auto p-3 rounded-lg shadow-md"
       >
         {/* Header with Close Button */}
         <div className="flex justify-end">
@@ -204,10 +205,11 @@ const ChallengeCreator = () => {
           </span>
         )}
         <div className="">
-          <TiptapEditor
+          {/* <TiptapEditor
             editorContent={editorContent}
             setEditorContent={setEditorContent}
-          />
+          /> */}
+          <Editor/>
           <label
             htmlFor="file-upload"
             className="cursor-pointer relative bottom-12 right-2 float-end h-0 "

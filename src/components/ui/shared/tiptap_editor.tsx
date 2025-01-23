@@ -298,12 +298,16 @@ const TiptapEditor = ({ editorContent, setEditorContent,disabled }: EditorProps)
       setEditorContent(editor.getHTML());
     },
   });
+    // editor?.setEditable(false)
+    editor?.setEditable(!disabled)
+
 
   return (
     <div className="mb-4 rounded-lg border ">
       <div className="relative">
         <EditorContent
           editor={editor}
+
           className="w-full min-h-[120px] p-3 text-base resize-none border-none focus:outline-none rounded-t-lg prose prose-sm max-w-none"
         />
       </div>

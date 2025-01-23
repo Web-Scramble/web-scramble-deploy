@@ -58,8 +58,9 @@ export const getChallenge = async (id: string) => {
 
   return response.data;
 };
-export const mutateChallenge = async (id: string) => {
-  const response = await axios.patch(`${baseURL}challenge/${id}`, {
+export const mutateChallenge = async (data:ChallengeFormData) => {
+  console.log(data,"services")
+  const response = await axios.patch(`${baseURL}challenge/taskType/${data.id}`, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

@@ -22,6 +22,7 @@ import { useNavigate } from "react-router";
 import { useComment } from "@/hooks/useComment";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
 import { ShareDialog } from "@/components/dailogs/sharelink";
+import { useChallenges } from "@/hooks/useChallenges";
 
 
 interface ChallengeContentProps {
@@ -45,6 +46,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
   const { toast } = useToast();
   const { user } = authStore();
   const navigate = useNavigate();
+  const {refetch} = useChallenges()
   const {
     mutate: commentMutate,
     isLoading,
@@ -68,7 +70,11 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
   const handleSubmitComment = (e: React.FormEvent) => {
     e.preventDefault();
     if (!newComment.trim()) return;
-    commentMutate({ body: newComment, id: challenge.id });
+    commentMutate({ body: newComment, id: challenge.id },{
+      onSuccess(){
+        refetch()
+      }
+    });
     setNewComment("");
   };
 
@@ -103,7 +109,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
           </span>
         </p>
       </div> */}
-      <TiptapEditor editorContent={challenge.description} disabled={true} />
+      <TiptapEditor editorContent={challenge.description} disabled={true} setEditorContent={(data)=>console.log(data)}/>
 
       <div className="flex items-center justify-between space-x-4 text-sm text-gray-600">
         <div className="flex items-center space-x-4">

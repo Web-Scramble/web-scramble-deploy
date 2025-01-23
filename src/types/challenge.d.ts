@@ -49,6 +49,7 @@ export interface Attachment {
     rankings: Ranking[];
   }
   export interface ChallengeFormData {
+    id?:string;
     title: string;
     description: string;
     challengeType: 'task' | 'prize' | 'blog';
