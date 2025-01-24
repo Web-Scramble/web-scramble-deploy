@@ -18,7 +18,7 @@ export const addServer = async (data: FormData) => {
 };
 
 export const createChallenge = async (data: ChallengeFormData) => {
-  const response = await axios.post(`${baseURL}challenge/taskType`, data, {
+  const response = await axios.post(`${baseURL}challengeType`, data, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -81,7 +81,8 @@ export const createComment = async (data:any) => {
   return response.data;
 };
 export const deleteChallenge = async (id: string) => {
-  const response = await axios.delete(`${baseURL}challenge/taskType/${id}`, {
+
+  const response = await axios.delete(`${baseURL}challengeType/${id}`, {
     headers: {
       "Content-Type": "multipart/form-data",
       Authorization: `Bearer ${token}`,
@@ -100,8 +101,8 @@ export const increaseChallengeReward = async (id: string, data: string) => {
   return response.data;
 };
 export const joinChallenge = async (id: string) => {
-  console.log(`Bearer ${token}`,id)
-  const response = await axios.post(`${baseURL}challenge/operations/${id}/join`,{"asd":"asd"},{
+  console.log(`Bearer ${token} tokennnnnnasdasdasdasd`,id)
+  const response = await axios.post(`${baseURL}challenge/operations/${id}/join`,{id},{
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,
@@ -110,10 +111,10 @@ export const joinChallenge = async (id: string) => {
 
   return response.data;
 };
-export const likeComment = async (id: string) => {
-  console.log(`Bearer ${token}`,id)
-  // /challenge/operation/comment/like/{commentId}
-  const response = await axios.post(`${baseURL}challenge/operation/comment/like/${id}`,{"asd":"asd"},{
+export const likeComment = async (data:{id:string,challengeId:string}) => {
+  console.log(`Bearer ${token}`,data)
+  // /challenge/operations/{challengeId}/comments/{commentId}/like
+  const response = await axios.post(`${baseURL}challenge/operations/${data.challengeId}/comments/${data.id}/like`,{"asd":"asd"},{
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

@@ -1,5 +1,5 @@
 import { Challenge } from "@/types/challenge";
-import React from "react";
+import React, { useEffect } from "react";
 import { Send, ThumbsUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,6 +12,7 @@ interface CommentsTabProps {
   newComment: string;
   setNewComment: (comment: string) => void;
   handleSubmitComment: (e: React.FormEvent) => void;
+  challengeId:string;
 }
 
 const CommentsTab = ({
@@ -19,9 +20,11 @@ const CommentsTab = ({
   newComment,
   setNewComment,
   handleSubmitComment,
+  challengeId
 }: CommentsTabProps) => {
   const { mutate: likeMutate } = useLikeComment();
-  const { refetch } = useChallenges();
+  const {challenges, refetch } = useChallenges();
+
   
   return (
     <div className="space-y-4">
@@ -40,13 +43,14 @@ const CommentsTab = ({
                 </span>
               </div>
               <div className="flex-1">
-                <p className="text-sm text-gray-600">{remark.message}</p>
+                <p className="text-sm text-gray-600 text-left pr-16">{remark.message}</p>
                 <div className="flex items-center mt-2">
                   <Button
                     variant={"ghost"}
                     className="flex items-center gap-1 hover:text-gray-900"
                     onClick={() => {
-                      likeMutate(remark.id, {
+                      const data = remark.id
+                      likeMutate({id:remark.id,challengeId:challengeId}, {
                         onSuccess() {
                           refetch();
                         },

@@ -91,8 +91,8 @@ const ChallengeCreator = () => {
   }, [data]);
   const handleCreateChallenge = async (data: ChallengeFormData) => {
     try {
+      setDataLoading(true)
       console.log(attachments);
-      setDataLoading(true);
       if (attachments.length > 0) {
         attachmentsUploadWithProgress(attachments).then(
           ({ urls, uploadedFiles }) => {
@@ -113,35 +113,44 @@ const ChallengeCreator = () => {
             };
             console.log(challengeData);
             createMutate(challengeData, {
-              onSettled(data, error, variables, context) {
+              onSettled(data, error) {
                 setDataLoading(false);
+                console.log(data)
               },
               onSuccess() {
                 setShowInvitationModal(true);
               },
+              
             });
           }
         );
+        return
+      }else{
+        const challengeData = {
+          challengeType: challengeType,
+          is_public: !isPrivate,
+          reward_pool: data.reward,
+          duration_value: data.duration_value,
+          duration_unit: data.duration_unit,
+          title: data.title,
+          description: editorContent,
+          documents: [],
+          judges: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
+          participants: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
+          start_time: startDate,
+          end_time: endDate,
+        };
+        createMutate(challengeData, {
+          onSettled(data, error) {
+            setDataLoading(false);
+            console.log(data)
+          },
+          onSuccess() {
+            setShowInvitationModal(true);
+          },
+          
+        });
       }
-      //  const challengeData = {
-      //    challengeType: challengeType,
-      //    is_public: !isPrivate,
-      //    reward_pool: data.reward,
-      //    duration_value: data.duration_value,
-      //    duration_unit: data.duration_unit,
-      //    title: data.title,
-      //    description: editorContent,
-      //    // doc:[sasd],
-      //    judges: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
-      //    participants: [{ name: "pla" }, { name: "pla" }, { name: "pla" }],
-      //    start_time: startDate,
-      //    end_time: endDate
-      //  };
-      //  console.log(challengeData);
-      //  createMutate(challengeData);
-      // if (data) {
-      //   setShowInvitationModal(true);
-      // }
     } catch (error) {
       console.log(error);
     }

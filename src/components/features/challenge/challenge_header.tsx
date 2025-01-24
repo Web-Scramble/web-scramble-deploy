@@ -104,7 +104,7 @@ export const ChallengeHeader = ({
           <div className="flex flex-row gap-1">
             <h3 className="font-semibold">{name}</h3>
             <div
-              className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusStyles(
+              className={`inline-flex items-center px-2.5 py-0.5 rounded-full capitalize text-xs font-medium ${getStatusStyles(
                 status
               )}`}
             >

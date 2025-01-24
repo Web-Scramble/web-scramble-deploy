@@ -76,7 +76,7 @@ const ParticipantDropdown = ({
       // });
     },
     onError: (error) => {
-      console.log(error.response.data.message);
+      // console.log(error.response.data.message);
       toast({
         variant: "destructive",
         title: " failed to resend OTP",

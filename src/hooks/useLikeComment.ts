@@ -13,7 +13,7 @@ export const useLikeComment = () => {
 
   //   const queryClient = useQueryClient();
   return useMutation({
-    mutationFn: (id:string) => likeComment(id),
+    mutationFn: (data) => likeComment(data),
     onSuccess: (data) => {
       console.log(data)
       toast({

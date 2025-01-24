@@ -21,10 +21,12 @@ import { useToast } from "@/hooks/use-toast";
 import { useNavigate } from "react-router";
 import { useComment } from "@/hooks/useComment";
 import TiptapEditor from "@/components/ui/shared/tiptap_editor";
-import { ShareDialog } from "@/components/dailogs/sharelink";
+import { ShareDialog } from "@/components/dailogs/sharelink"
+import { cn } from "@/lib/utils"
 import { useChallenges } from "@/hooks/useChallenges";
 
 
+// import { FileText } from "lucide-react";
 interface ChallengeContentProps {
   challenge: Challenge;
   onJoin?: () => void;
@@ -54,7 +56,46 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
     isSuccess,
     data,
   } = useComment();
-
+  interface AttachmentPreviewProps {
+    type: string;
+    url?: string;
+  }
+  
+  const AttachmentPreview = ({ type, url = "https://lh3.googleusercontent.com/a/ACg8ocKXDTXM8_NnxUlD2Vhny-ASCdCweJ7v_r21QtgsIvjVESPvLg=s96-c" }) => {
+    const previewClasses = "w-16 h-16 rounded-md object-cover";
+    
+    if (type === "image") {
+      return (
+        <div className="relative group">
+          <img 
+            src={url} 
+            alt="attachment" 
+            className={cn(previewClasses, "hover:opacity-90 transition-opacity")}
+          />
+        </div>
+      );
+    }
+    
+    if (type === "video") {
+      return (
+        <div className="relative group">
+          <video 
+            src={url}
+            className={previewClasses}
+            controls={false}
+          >
+            <source src={url} type="video/mp4" />
+          </video>
+        </div>
+      );
+    }
+    
+    return (
+      <div className={cn(previewClasses, "bg-gray-100 flex items-center justify-center")}>
+        <FileText className="w-8 h-8 text-gray-500" />
+      </div>
+    );
+  };
   const getAttachmentIcon = (type: string) => {
     switch (type) {
       case "image":
@@ -95,21 +136,8 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
           setIsVisible(false);
         }}
       />
-      {/* <div>
-        <h4 className="font-bold text-left">{challenge.title}</h4>
-        <p className="text-sm text-gray-600 mt-1 text-left">
-          {isExpanded
-            ? challenge.description
-            : `${challenge.description.slice(0, 100)}...`}
-          <span
-            onClick={() => setIsExpanded(!isExpanded)}
-            className="text-blue-500 ml-1 text-sm cursor-pointer"
-          >
-            {isExpanded ? "Show less" : "Read more"}
-          </span>
-        </p>
-      </div> */}
-      <TiptapEditor editorContent={challenge.description} disabled={true} setEditorContent={(data)=>console.log(data)}/>
+    
+      <TiptapEditor editorContent={challenge.description} disabled={true} setEditorContent={()=>console.log()}/>
 
       <div className="flex items-center justify-between space-x-4 text-sm text-gray-600">
         <div className="flex items-center space-x-4">
@@ -121,7 +149,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
           </div>
           <div className="flex items-center">
             <Timer className="w-4 h-4 mr-1" />
-            <span className="flex flex-row gap-2">
+            <span className="flex flex-row gap-2 capitalize">
               duration {challenge.duration_value} {challenge.duration_unit}{" "}
             </span>
           </div>
@@ -138,25 +166,22 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
           </Button>
         </div>
       </div>
-
       {challenge.documents.length > 0 && (
-        <div className="border rounded-lg p-2 space-y-4">
-          <h5 className="text-sm font-medium">
-            Attachments ({challenge.documents.length})
-          </h5>
-          <div className="flex gap-2">
-            {challenge.documents.map((attachment, index) => (
-              <div
-                key={index}
-                className="flex items-center p-2 bg-gray-50 rounded-md"
-              >
-                {getAttachmentIcon(attachment.type)}
-              </div>
-            ))}
-          </div>
-        </div>
-      )}
-
+  <div className=" rounded-lg p-2 space-y-4">
+    <h5 className="text-sm font-medium">
+      Attachments ({challenge.documents.length})
+    </h5>
+    <div className="flex gap-2">
+      {challenge.documents.map((attachment, index) => (
+        <AttachmentPreview 
+          key={index}
+          type={attachment.type}
+          url={attachment.url}
+        />
+      ))}
+    </div>
+  </div>
+)}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
           <span className="flex items-center space-x-2 text-gray-600">
@@ -203,6 +228,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
           newComment={newComment}
           setNewComment={setNewComment}
           handleSubmitComment={handleSubmitComment}
+          challengeId={challenge.id}
         />
       )}
       <ShareDialog

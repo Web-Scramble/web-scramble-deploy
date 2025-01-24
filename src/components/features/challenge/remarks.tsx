@@ -12,6 +12,7 @@ interface RemarksSectionProps {
     newComment: string;
     setNewComment: (comment: string) => void;
     handleSubmitComment: (e: React.FormEvent) => void;
+    challengeId:string
   }
   
   const RemarksSection= ({
@@ -22,6 +23,7 @@ interface RemarksSectionProps {
     newComment,
     setNewComment,
     handleSubmitComment,
+    challengeId
   }:RemarksSectionProps) => {
     return (
       <div className="mt-4 border rounded-lg p-4">
@@ -61,6 +63,7 @@ interface RemarksSectionProps {
             newComment={newComment}
             setNewComment={setNewComment}
             handleSubmitComment={handleSubmitComment}
+            challengeId={challengeId}
           />
         )}
   
