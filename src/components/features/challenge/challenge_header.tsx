@@ -42,7 +42,7 @@ interface ChallengeHeaderProps {
 
 const getStatusStyles = (status: ChallengeStatus = "active") => {
   const styles = {
-    active: "bg-green-100 text-green-800",
+    ongoing: "bg-green-100 text-green-800",
     completed: "bg-gray-100 text-gray-800",
     upcoming: "bg-blue-100 text-blue-800",
     draft: "bg-yellow-100 text-yellow-800",
@@ -54,7 +54,7 @@ const getStatusStyles = (status: ChallengeStatus = "active") => {
 
 const getStatusLabel = (status: ChallengeStatus = "active") => {
   const labels = {
-    active: "Active",
+    ongoing: "ongoing",
     completed: "Completed",
     upcoming: "Upcoming",
     draft: "Draft",
@@ -76,7 +76,7 @@ export const ChallengeHeader = ({
 }: ChallengeHeaderProps) => {
   const [showInvitationModal, setShowInvitationModal] = useState(false);
   const [showReportModal, setShowReportModal] = useState(false);
-
+ console.log(status)
   return (
     <CardHeader className="space-y-1 p-4">
       {showReportModal && (
@@ -108,8 +108,7 @@ export const ChallengeHeader = ({
                 status
               )}`}
             >
-              {/* {getStatusLabel(status)} */}
-              {cha}
+              {status}
             </div>
           </div>
         </div>

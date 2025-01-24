@@ -29,7 +29,7 @@ const ChallengeCard = ({
         challengeId={challenge.id}
         onEdit={() => onEdit?.(challenge.id)}
         onDelete={() => onDelete?.(challenge.id)}
-        // status={challenge.status}
+        status={challenge.status}
       />
       <ChallengeContent 
         challenge={challenge}

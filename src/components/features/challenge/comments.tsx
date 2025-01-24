@@ -6,7 +6,6 @@ import { Input } from "@/components/ui/input";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { useChallenges } from "@/hooks/useChallenges";
 import { useLikeComment } from "@/hooks/useLikeComment";
-// import { Link } from 'react-router';
 
 interface CommentsTabProps {
   comment: Challenge["comment"];
@@ -23,34 +22,35 @@ const CommentsTab = ({
 }: CommentsTabProps) => {
   const { mutate: likeMutate } = useLikeComment();
   const { refetch } = useChallenges();
+  
   return (
     <div className="space-y-4">
       {comment &&
         comment.map((remark) => (
           <div key={remark.id} className="p-3 bg-gray-50 rounded-lg">
-            <div className="flex flex-col items-start space-x-3">
-              <div className="flex justify-between items-center">
-              <Avatar className="w-8 h-8">
-                <AvatarImage src={remark.profile_picture} alt={"user pic"} />
-                <AvatarFallback>{remark.profile_picture}</AvatarFallback>
-              </Avatar>
-                  <span className="font-medium">{remark.username}</span>
-                  <span className="text-sm text-gray-500">
-                    {new Date(remark.created_at).toLocaleTimeString()}
-                  </span>
-                </div>
+            <div className="flex flex-col space-y-2">
+              <div className="flex items-center gap-3">
+                <Avatar className="w-8 h-8">
+                  <AvatarImage src={remark.profile_picture} alt={"user pic"} />
+                  <AvatarFallback>{remark.profile_picture}</AvatarFallback>
+                </Avatar>
+                <span className="font-medium">{remark.username}</span>
+                <span className="text-sm text-gray-500 ml-auto">
+                  {new Date(remark.created_at).toLocaleTimeString()}
+                </span>
+              </div>
               <div className="flex-1">
-                <p className="text-sm text-gray-600 mt-1">{remark.message}</p>
-                <div className="flex items-center mt-2 text-sm text-gray-500">
+                <p className="text-sm text-gray-600">{remark.message}</p>
+                <div className="flex items-center mt-2">
                   <Button
                     variant={"ghost"}
-                    className="flex items-center space-x-1 hover:text-gray-900"
+                    className="flex items-center gap-1 hover:text-gray-900"
                     onClick={() => {
-                      likeMutate(remark.id,{
-                        onSuccess(){
-                          refetch()
-                        }
-                      })
+                      likeMutate(remark.id, {
+                        onSuccess() {
+                          refetch();
+                        },
+                      });
                     }}
                   >
                     <ThumbsUp className="w-4 h-4" />
@@ -61,7 +61,6 @@ const CommentsTab = ({
             </div>
           </div>
         ))}
-
       <form
         onSubmit={handleSubmitComment}
         className="flex items-center space-x-2 mt-4"
@@ -79,4 +78,5 @@ const CommentsTab = ({
     </div>
   );
 };
+
 export default CommentsTab;

@@ -71,7 +71,7 @@ export const mutateChallenge = async (data:ChallengeFormData) => {
 };
 export const createComment = async (data:any) => {
   console.log(data)
-  const response = await axios.post(`${baseURL}challenge/operation/comment/${data.id}`,{message:data.body}, {
+  const response = await axios.post(`${baseURL}challenge/operations/${data.id}/comments`,{message:data.body}, {
     headers: {
       "Content-Type": "application/json",
       Authorization: `Bearer ${token}`,

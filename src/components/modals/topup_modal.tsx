@@ -38,6 +38,7 @@ export const TopUpModal: React.FC<TopUpModalProps> = ({
   const handleSubmit = () => {
     onSubmit(amount);
     onOpenChange(false);
+    
   };
 
   return (
