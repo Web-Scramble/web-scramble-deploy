@@ -6,9 +6,6 @@ import { loadStripe } from "@stripe/stripe-js";
 import { intentStore } from "@/store/intentStore";
 import { stripePromise } from "./top_up";
 import { authStore } from "@/store/authstore";
-
-// import { Button } from "@/components/ui/button";
-// import { Label } from "@/components/ui/label";
 import Layout from "@/components/ui/shared/layout";
 
 const SuccessIcon = (

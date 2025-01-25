@@ -27,11 +27,11 @@ export const challengeSchema = yup.object({
  }).optional(),
  reward: yup.number()
  .typeError('you must specify a number')
- .min(1, 'Min amount is  1.')
- .when("challengeType", {
-   is: (value: string) => value !== "",
-   then: (schema) => schema.required("Reward is required for challenges")
- }),
+ .min(1, 'Min amount is  1.'),
+//  .when("challengeType", {
+//    is: (value: string) => value !== "",
+//    then: (schema) => schema.required("Reward is required for challenges")
+//  }),
  isPrivate: yup.boolean(),
 //  participants: yup.string().when("isPrivate", {
 //    is: (value: boolean) => value === true,

@@ -95,7 +95,7 @@ export const ChallengeHeader = ({
       )}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-3">
-          <Link to={"/public-profile"}>
+          <Link to={`/public-profile/${id}`}>
             <Avatar>
               <AvatarImage src={avatar} alt={name} />
               <AvatarFallback>{"PR"}</AvatarFallback>

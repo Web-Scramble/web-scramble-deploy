@@ -7,7 +7,7 @@ const token = getToken();
 
 export const addServer = async (data: FormData) => {
   console.log(data);
-  const response = await axios.post(
+  const response = await axios.post( 
     "http://localhost:8000/product/create",
     data,
     // { headers: { "Content-Type": "application/json" } }

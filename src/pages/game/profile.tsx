@@ -117,7 +117,7 @@ const ProfilePage = () => {
                       Joined on March 2024
                     </div>
                     <div className="flex items-center gap-2 ">
-                      <span className="font-bold">1k</span> followers
+                      <span className="font-bold">{user.followers_count}</span> followers
                     </div>
                     <div className="flex items-center gap-2 ">
                       <span className="font-bold">234</span> following

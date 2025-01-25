@@ -69,7 +69,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
         <div className="relative group">
           <img 
             src={url} 
-            alt="attachment" 
+            alt="image" 
             className={cn(previewClasses, "hover:opacity-90 transition-opacity")}
           />
         </div>
@@ -176,7 +176,7 @@ export const ChallengeContent: React.FC<ChallengeContentProps> = ({
         <AttachmentPreview 
           key={index}
           type={attachment.type}
-          url={attachment.url}
+          url={attachment.name}
         />
       ))}
     </div>

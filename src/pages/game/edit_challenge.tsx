@@ -35,7 +35,7 @@ const ChallengeCreator = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const { challengeId } = useParams();
-  const { challenges, isLoading } = useChallenges();
+  const { challenges, isLoading ,refetch} = useChallenges();
 
   const [showInvitationModal, setShowInvitationModal] = useState(false);
   const [challenge, setChallenge] = useState(
@@ -45,7 +45,7 @@ const ChallengeCreator = () => {
   );
   const [editorContent, setEditorContent] = useState(challenge.description);
 
-  console.log(challenge,challengeId)
+  console.log(challenge,challengeId,challenge.documents)
   const {
     mutate:editChallengeMutate,
     isLoading:isMutateLoading,
@@ -72,7 +72,7 @@ const ChallengeCreator = () => {
       startDate: new Date(challenge.start_time),
       endDate: new Date(challenge.end_time),
       // attachments: [],
-      attachments:challenge.documents.map((attachments)=>({
+      attachments:challenge?.documents.map((attachments)=>({
           type:attachments.type,
           name:attachments.name.split("-")[2].split("?")[0]
       })),
@@ -135,8 +135,10 @@ const ChallengeCreator = () => {
           : null,
       };
       editChallengeMutate(challengeData,{
-        onSuccess(){
-          
+        onSuccess(data){
+          console.log(data)
+          navigate("/challenge")
+          refetch()
         }
       })
       // console.log(challengeData);
@@ -166,6 +168,7 @@ const ChallengeCreator = () => {
           <Button
             variant="ghost"
             size="sm"
+            type="button"
             className="h-8 w-8 p-0"
             onClick={() => navigate(-1)}
           >

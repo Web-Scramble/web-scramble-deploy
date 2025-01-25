@@ -16,6 +16,12 @@ import {
 import Layout from "@/components/ui/shared/layout";
 import { Link } from "react-router";
 import { authStore } from "@/store/authstore";
+import { useParams } from "react-router"
+import { getUserById } from "@/services/user_api";
+import { ScreenLoader } from "@/components/ui/shared/screen_loader";
+import { useGetUserById } from "@/hooks/useGetUserById";
+import { useUnFollow } from "@/hooks/useUnfollow";
+import { useFollow } from "@/hooks/useFollow";
 
 const PublicProfile = () => {
   const recentActivities = [
@@ -38,7 +44,13 @@ const PublicProfile = () => {
       prize: "$750",
     },
   ];
+  const {userId} = useParams()
   const { user } = authStore();
+  const {getUser,isLoading,} = useGetUserById(userId as string)
+
+  if(getUser)(
+    console.log(getUser)
+  )
 
   return (
     <Layout>

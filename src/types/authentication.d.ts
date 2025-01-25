@@ -20,5 +20,6 @@ export type User = {
   created_at?: Date;
   updated_at?: Date;
   profile_picture?: string;
+  followers_count:string;
   firebase_uid?: string;
 };

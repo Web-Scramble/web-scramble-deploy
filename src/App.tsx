@@ -53,11 +53,11 @@ function App() {
       if(oldToken){
         updateToken(oldToken);
       }
-      // console.log("reload", oldToken,authToken);
+      console.log("reload", oldToken,authToken);
       const oldUser = await getItemFromLocalStorage(USER_DATA);
       if (oldUser) {
         updateUser(oldUser);
-        // console.log("reloaduser", oldUser);
+        console.log("reloaduser", oldUser);
       }
     }
     getSavedToken()
@@ -90,12 +90,9 @@ function App() {
         <Route path="/edit-challenge/:challengeId" element={<EditChallenge />} />
         <Route path="/review-panel" element={<ChallengeSubmissions />} />
         <Route path="/submission/:challengeId" element={<ChallengeSubmission />} />
-        {/* <Route path="/profile" element={<ProfilePage />} /> */}
-        {/* <Route path="/boost-reward" element={<BoostRewardPage />} /> */}
         <Route path="/edit-profile" element={<EditProfile />} />
         <Route path="/settings" element={<SettingsScreen />} />
-        {/* <Route path="/top-up" element={<TopUp />} /> */}
-        <Route path="/public-profile" element={<PublicProfile />} />
+        <Route path="/public-profile/:userId" element={<PublicProfile />} />
         <Route path="/notifications" element={<NotificationsScreen />} />
         <Route path="/transactions" element={<TransactionHistory />} />
         <Route

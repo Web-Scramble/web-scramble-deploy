@@ -40,6 +40,7 @@ const ChallengeCreator = () => {
     useState<ChallengeFormData["challengeType"]>("task");
   const [isTimeLimited, setIsTimeLimited] = useState(false);
   const [isPrivate, setIsPrivate] = useState(true);
+  const [reward, setReward] = useState(false);
   const [isScheduled, setIsScheduled] = useState(false);
   const [editorContent, setEditorContent] = useState(
     `this is a blank placeholder for editor content`
@@ -91,7 +92,7 @@ const ChallengeCreator = () => {
   }, [data]);
   const handleCreateChallenge = async (data: ChallengeFormData) => {
     try {
-      setDataLoading(true)
+      setDataLoading(true);
       console.log(attachments);
       if (attachments.length > 0) {
         attachmentsUploadWithProgress(attachments).then(
@@ -115,21 +116,20 @@ const ChallengeCreator = () => {
             createMutate(challengeData, {
               onSettled(data, error) {
                 setDataLoading(false);
-                console.log(data)
+                console.log(data);
               },
               onSuccess() {
                 setShowInvitationModal(true);
               },
-              
             });
           }
         );
-        return
-      }else{
+        return;
+      } else {
         const challengeData = {
           challengeType: challengeType,
           is_public: !isPrivate,
-          reward_pool: data.reward,
+          reward_pool: !reward?null:data.reward,
           duration_value: data.duration_value,
           duration_unit: data.duration_unit,
           title: data.title,
@@ -143,12 +143,11 @@ const ChallengeCreator = () => {
         createMutate(challengeData, {
           onSettled(data, error) {
             setDataLoading(false);
-            console.log(data)
+            console.log(data);
           },
           onSuccess() {
             setShowInvitationModal(true);
           },
-          
         });
       }
     } catch (error) {
@@ -374,23 +373,32 @@ const ChallengeCreator = () => {
           </div>
         )}
 
-        {/* Reward */}
-        <div className="mb-4">
-          <Label className="text-xs text-gray-500 mb-1 text-left flex">
+        {/* Duration Settings */}
+        <div className="flex items-center justify-between mb-2">
+          <Label className="text-sm font-medium mb-2 block text-left">
             Reward
           </Label>
-          <Input
-            type="number"
-            placeholder="Enter prize"
-            className="h-9"
-            {...register("reward")}
-          />
-          {errors.reward && (
-            <span className="text-red-500 text-xs">
-              {errors.reward?.message}
-            </span>
-          )}
+          <Switch checked={reward} onCheckedChange={setReward} />
         </div>
+        {/* Reward */}
+        {reward && (
+          <div className="mb-4">
+            {/* <Label className="text-xs text-gray-500 mb-1 text-left flex">
+              Reward
+            </Label> */}
+            <Input
+              type="number"
+              placeholder="Enter prize"
+              className="h-9"
+              {...register("reward")}
+            />
+            {errors.reward && (
+              <span className="text-red-500 text-xs">
+                {errors.reward?.message}
+              </span>
+            )}
+          </div>
+        )}
 
         {/* Privacy Toggle */}
         <div className="flex items-center justify-between mb-4">
